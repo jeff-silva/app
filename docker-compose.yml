@@ -1,9 +1,21 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
+    nuxt2:
+      container_name: nuxt2
+      image: node:16.17.0
+      ports:
+        - 3000:3000
+      volumes:
+        - ./nuxt2:/nuxt2
+      working_dir: /nuxt2
+      command: bash -c "npm install && npm run dev"
+      environment:
+        - CHOKIDAR_USEPOLLING=true
+        
     laravel.test:
         build:
-            context: ./packages/laravel/vendor/laravel/sail/runtimes/8.1
+            context: ./laravel/vendor/laravel/sail/runtimes/8.1
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
@@ -19,7 +31,7 @@ services:
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
         volumes:
-            - './packages/laravel:/var/www/html'
+            - './laravel:/var/www/html'
         networks:
             - sail
         depends_on:
@@ -41,7 +53,7 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
             - 'sail-mysql:/var/lib/mysql'
-            - './packages/laravel/vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+            - './laravel/vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
         networks:
             - sail
         healthcheck:
