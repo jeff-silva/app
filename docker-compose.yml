@@ -1,19 +1,37 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
-    nuxt2:
-      container_name: nuxt2
-      image: node:16.17.0
-      ports:
-        - 3000:3000
-      volumes:
-        - ./nuxt2:/nuxt2
-      working_dir: /nuxt2
-      command: bash -c "npm install && npm run dev"
-      environment:
-        - CHOKIDAR_USEPOLLING=true
+    # nuxt2:
+    #     container_name: nuxt2
+    #     image: node:16.17.0
+    #     ports:
+    #         - 3000:3000
+    #     volumes:
+    #         - ./nuxt2:/nuxt2
+    #     working_dir: /nuxt2
+    #     command: bash -c "npm install && npm run dev"
+    #     environment:
+    #         - CHOKIDAR_USEPOLLING=true
+
+    nuxt3:
+        container_name: nuxt3
+        image: node:16.17.0
+        ports:
+            - 3000:3000
+            - 24679:24679
+        volumes:
+            - ./nuxt3:/nuxt3
+            - /nuxt3/node_modules
+        working_dir: /nuxt3
+        command: bash -c "yarn install && yarn dev"
+        environment:
+            - NODE_ENV=development
+            - CHOKIDAR_USEPOLLING=true
+            - HOST=${NUXT_HOST:-0.0.0.0}
+            - PORT=${NUXT_PORT:-3000}
         
-    laravel.test:
+    laravel:
+        container_name: laravel
         build:
             context: ./laravel/vendor/laravel/sail/runtimes/8.1
             dockerfile: Dockerfile
@@ -36,14 +54,15 @@ services:
             - sail
         depends_on:
             - mysql
-            - redis
-            - meilisearch
-            - mailhog
+            # - redis
+            # - meilisearch
+            # - mailhog
             - selenium
     mysql:
+        container_name: mysql
         image: 'mysql/mysql-server:8.0'
         ports:
-            - '${FORWARD_DB_PORT:-3306}:3306'
+            - '${DB_PORT:-3306}:3306'
         environment:
             MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ROOT_HOST: "%"
@@ -60,43 +79,48 @@ services:
             test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
             retries: 3
             timeout: 5s
-    redis:
-        image: 'redis:alpine'
-        ports:
-            - '${FORWARD_REDIS_PORT:-6379}:6379'
-        volumes:
-            - 'sail-redis:/data'
-        networks:
-            - sail
-        healthcheck:
-            test: ["CMD", "redis-cli", "ping"]
-            retries: 3
-            timeout: 5s
-    meilisearch:
-        image: 'getmeili/meilisearch:latest'
-        ports:
-            - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
-        volumes:
-            - 'sail-meilisearch:/meili_data'
-        networks:
-            - sail
-        healthcheck:
-            test: ["CMD", "wget", "--no-verbose", "--spider",  "http://localhost:7700/health"]
-            retries: 3
-            timeout: 5s
-    mailhog:
-        image: 'mailhog/mailhog:latest'
-        ports:
-            - '${FORWARD_MAILHOG_PORT:-1025}:1025'
-            - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
-        networks:
-            - sail
+    # redis:
+    #     container_name: redis
+    #     image: 'redis:alpine'
+    #     ports:
+    #         - '${FORWARD_REDIS_PORT:-6379}:6379'
+    #     volumes:
+    #         - 'sail-redis:/data'
+    #     networks:
+    #         - sail
+    #     healthcheck:
+    #         test: ["CMD", "redis-cli", "ping"]
+    #         retries: 3
+    #         timeout: 5s
+    # meilisearch:
+    #     container_name: meilisearch
+    #     image: 'getmeili/meilisearch:latest'
+    #     ports:
+    #         - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
+    #     volumes:
+    #         - 'sail-meilisearch:/meili_data'
+    #     networks:
+    #         - sail
+    #     healthcheck:
+    #         test: ["CMD", "wget", "--no-verbose", "--spider",  "http://localhost:7700/health"]
+    #         retries: 3
+    #         timeout: 5s
+    # mailhog:
+    #     container_name: mailhog
+    #     image: 'mailhog/mailhog:latest'
+    #     ports:
+    #         - '${FORWARD_MAILHOG_PORT:-1025}:1025'
+    #         - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
+    #     networks:
+    #         - sail
     selenium:
+        container_name: selenium
         image: 'selenium/standalone-chrome'
         volumes:
             - '/dev/shm:/dev/shm'
         networks:
             - sail
+
 networks:
     sail:
         driver: bridge

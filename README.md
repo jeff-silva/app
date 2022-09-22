@@ -5,5 +5,5 @@
 To start, install Docker then:
 
 ```bash
-docker-compose up
+docker-compose --env-file .env up
 ```
