@@ -9,5 +9,10 @@
   },
   "devDependencies": {
     "nuxt": "3.0.0-rc.11"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.0.96",
+    "axios": "^0.27.2",
+    "vuetify": "3.0.0-beta.11"
   }
 }
