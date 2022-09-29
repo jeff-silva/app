@@ -8,6 +8,9 @@
         <v-list-item to="/dev/auth">
           Auth
         </v-list-item>
+        <v-list-item to="/dev/test">
+          Test
+        </v-list-item>
       </v-list>
     </v-col>
     <v-col cols="9">

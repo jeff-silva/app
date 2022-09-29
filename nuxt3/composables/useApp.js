@@ -1,7 +1,7 @@
 // import { useState } from '#app';
 import { ref } from 'vue';
 import axios from 'axios';
-// import { useAppStore } from '@/stores/app';
+import { useStorage } from '@vueuse/core';
 
 
 export default function(params={}) {
@@ -9,8 +9,8 @@ export default function(params={}) {
     let req = ref({
         loading: false,
         user: false,
-        access_token: (localStorage.getItem('useApp.access_token') || ''),
-        accounts: JSON.parse(localStorage.getItem('useApp.accounts') || '[]'),
+        access_token: useStorage('useApp.access_token', ''),
+        accounts: useStorage('useApp.accounts', []),
         settings: {},
         login: async (credentials={email:'', password:''}) => {
             req.value.accountRemove(credentials.email);
@@ -31,13 +31,11 @@ export default function(params={}) {
                 email: user.email,
                 token: user.id,
             });
-            
-            req.value.storeData();
         },
         logout: () => {
             req.value.accountRemove(req.value.user.email);
             req.value.user = false;
-            req.value.storeData();
+            req.value.access_token = '';
         },
         accountSwitch: (email) => {
             req.value.accounts.forEach((acc, index) => {
@@ -50,7 +48,6 @@ export default function(params={}) {
                     req.value.access_token = acc.token;
                 }
             });
-            req.value.storeData();
         },
         accountRemove(email) {
             req.value.accounts.forEach((acc, index) => {
@@ -62,12 +59,6 @@ export default function(params={}) {
                     req.value.access_token = '';
                 }
             });
-
-            req.value.storeData();
-        },
-        storeData() {
-            localStorage.setItem('useApp.access_token', req.value.access_token);
-            localStorage.setItem('useApp.accounts', JSON.stringify(req.value.accounts));
         },
     });
 

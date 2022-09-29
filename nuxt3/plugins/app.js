@@ -38,20 +38,26 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 
 
-  // // Intercept axios
-  // axios.interceptors.request.use(config => {
-  //   config.headers['Content-Type'] = 'multipart/form-data';
+  // Intercept axios
+  axios.interceptors.request.use(config => {
+    const conf = useRuntimeConfig();
+    console.log(conf.APP_PORT);
+    
+    // const { hostname } = (new URL(location.href));
+    // config.url = config.url.replace('api://', `localhost:${process.env.APP_PORT}/`);
+    // config.headers['Content-Type'] = 'multipart/form-data';
 
-  //   if (devMode && (config.url||'').startsWith('/api')) {
-  //       const access_token = localStorage.getItem('access_token') || false;
-  //       if (access_token) {
-  //           config.headers = config.headers || {};
-  //           config.headers['Authorization'] = `Bearer ${access_token}`;
-  //       }
-  //   }
+    // if (devMode && (config.url||'').startsWith('/api')) {
+    //     const access_token = localStorage.getItem('access_token') || false;
+    //     if (access_token) {
+    //         config.headers = config.headers || {};
+    //         config.headers['Authorization'] = `Bearer ${access_token}`;
+    //     }
+    // }
 
-  //   return config;
-  // });
+    console.log('axios.config', config);
+    return config;
+  });
 
 
 
