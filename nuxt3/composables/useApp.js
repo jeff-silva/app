@@ -8,7 +8,7 @@ export default function(params={}) {
 
     let req = ref({
         loading: false,
-        user: {},
+        user: false,
         access_token: '',
         accounts: [],
         settings: {},
@@ -33,7 +33,7 @@ export default function(params={}) {
         },
         logout: () => {
             req.value.accountRemove(req.value.user.email);
-            req.value.user = {};
+            req.value.user = false;
         },
         accountSwitch: (email) => {
             req.value.accounts.forEach((acc, index) => {
@@ -53,7 +53,7 @@ export default function(params={}) {
                     req.value.accounts.splice(index, 1);
                 }
                 if (req.value.user.email==email) {
-                    req.value.user = {};
+                    req.value.user = false;
                     req.value.access_token = '';
                 }
             });
