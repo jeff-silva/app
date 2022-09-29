@@ -1,7 +1,7 @@
 import { defineNuxtPlugin } from '#app';
 import axios from 'axios';
 
-// import '@mdi/font/css/materialdesignicons.css';
+import '@mdi/font/css/materialdesignicons.css';
 
 import { createVuetify } from 'vuetify';
 import * as vuetifyComponents from 'vuetify/components';

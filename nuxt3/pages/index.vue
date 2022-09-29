@@ -26,8 +26,15 @@
               :disabled="acc.email==(app.user? app.user.email: '')"
               @click="app.accountSwitch(acc.email)"
               size="small"
-            >switch</v-btn>
-            <v-btn @click="app.accountRemove(acc.email)" size="small">remove</v-btn>
+              class="ms-2"
+              icon="mdi-account-switch"
+            />
+            <v-btn
+              @click="app.accountRemove(acc.email)"
+              size="small"
+              class="ms-2"
+              icon="mdi-logout"
+            />
           </template>
         </v-list-item>
       </v-list>
