@@ -5,5 +5,11 @@
 To start, install Docker then:
 
 ```bash
-docker-compose --env-file .env up
+
+# Run dev mode
+docker-compose --env-file /.env up
+
+# Deploy
+docker-compose -f docker-compose-prod.yml up
+
 ```

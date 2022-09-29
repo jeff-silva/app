@@ -9,8 +9,8 @@ export default function(params={}) {
     let req = ref({
         loading: false,
         user: false,
-        access_token: '',
-        accounts: [],
+        access_token: (localStorage.getItem('useApp.access_token') || ''),
+        accounts: JSON.parse(localStorage.getItem('useApp.accounts') || '[]'),
         settings: {},
         login: async (credentials={email:'', password:''}) => {
             req.value.accountRemove(credentials.email);
@@ -25,15 +25,19 @@ export default function(params={}) {
             };
 
             req.value.user = user;
+            req.value.access_token = user.id;
             req.value.loading = false;
             req.value.accounts.push({
                 email: user.email,
                 token: user.id,
             });
+            
+            req.value.storeData();
         },
         logout: () => {
             req.value.accountRemove(req.value.user.email);
             req.value.user = false;
+            req.value.storeData();
         },
         accountSwitch: (email) => {
             req.value.accounts.forEach((acc, index) => {
@@ -46,6 +50,7 @@ export default function(params={}) {
                     req.value.access_token = acc.token;
                 }
             });
+            req.value.storeData();
         },
         accountRemove(email) {
             req.value.accounts.forEach((acc, index) => {
@@ -57,6 +62,12 @@ export default function(params={}) {
                     req.value.access_token = '';
                 }
             });
+
+            req.value.storeData();
+        },
+        storeData() {
+            localStorage.setItem('useApp.access_token', req.value.access_token);
+            localStorage.setItem('useApp.accounts', JSON.stringify(req.value.accounts));
         },
     });
 

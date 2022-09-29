@@ -1,5 +1,5 @@
 # For more information: https://laravel.com/docs/sail
-version: '3'
+version: '3.7'
 services:
     # nuxt2:
     #     container_name: nuxt2
@@ -24,6 +24,8 @@ services:
             - /nuxt3/node_modules
         working_dir: /nuxt3
         command: bash -c "yarn install && yarn dev"
+        env_file:
+            - .env
         environment:
             - NODE_ENV=development
             - CHOKIDAR_USEPOLLING=true
@@ -40,6 +42,8 @@ services:
         image: sail-8.1/app
         extra_hosts:
             - 'host.docker.internal:host-gateway'
+        env_file:
+            - .env
         ports:
             - '${APP_PORT:-443}:80'
             - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
