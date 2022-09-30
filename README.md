@@ -35,7 +35,3 @@ docker run --rm -it -v ${PWD}/nuxt3:/app -w /app node bash
 - ⬛ Installation command
 - ⬛ Error "Windows named pipe error" using entrypoint or command at laravel service in docker-compose.yml
 
-## Dependencies
-
-Laravel Route Attributes <br>
-https://github.com/spatie/laravel-route-attributes
