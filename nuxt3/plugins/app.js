@@ -41,6 +41,13 @@ export default defineNuxtPlugin((nuxtApp) => {
   // Intercept axios
   axios.interceptors.request.use(config => {
     const conf = useRuntimeConfig();
+
+    // Set access token
+    const access_token = window.localStorage.getItem('useApp.access_token') || false;
+    if (access_token && config.url.startsWith('/api')) {
+        config.headers = config.headers || {};
+        config.headers['Authorization'] = `Bearer ${access_token}`;
+    }
     
     // Set base url api
     if (config.url[0] == '/') {
@@ -48,17 +55,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         hostname += `:${conf.APP_PORT}`;
         config.url = `${protocol}//${hostname}${config.url}`;
     }
-    
-    
-    // config.headers['Content-Type'] = 'multipart/form-data';
-
-    // if (devMode && (config.url||'').startsWith('/api')) {
-    //     const access_token = localStorage.getItem('access_token') || false;
-    //     if (access_token) {
-    //         config.headers = config.headers || {};
-    //         config.headers['Authorization'] = `Bearer ${access_token}`;
-    //     }
-    // }
 
     return config;
   });
