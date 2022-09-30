@@ -23,4 +23,6 @@ docker run --rm -it -v ${PWD}/laravel:/app -w /app composer bash
 ## TODO
 - ☑️ ~~Sync useApp data with Pinia~~
 - ☑️ ~~Resolve backend cors~~
-- ⬛ Make communication with backend port
+- ☑️ ~~Make communication with backend port~~
+- ⬛ Implement Laravel JWT
+- ⬛ Implement Settings

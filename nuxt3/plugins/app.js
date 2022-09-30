@@ -41,10 +41,15 @@ export default defineNuxtPlugin((nuxtApp) => {
   // Intercept axios
   axios.interceptors.request.use(config => {
     const conf = useRuntimeConfig();
-    console.log(conf.APP_PORT);
     
-    // const { hostname } = (new URL(location.href));
-    // config.url = config.url.replace('api://', `localhost:${process.env.APP_PORT}/`);
+    // Set base url api
+    if (config.url[0] == '/') {
+        let { protocol, hostname } = (new URL(location.href));
+        hostname += `:${conf.APP_PORT}`;
+        config.url = `${protocol}//${hostname}${config.url}`;
+    }
+    
+    
     // config.headers['Content-Type'] = 'multipart/form-data';
 
     // if (devMode && (config.url||'').startsWith('/api')) {
@@ -55,7 +60,6 @@ export default defineNuxtPlugin((nuxtApp) => {
     //     }
     // }
 
-    console.log('axios.config', config);
     return config;
   });
 

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <v-btn @click="axios.submit()">submit()</v-btn>
     <pre>axios: {{ axios }}</pre>
   </div>
 </template>
@@ -10,7 +11,7 @@ export default {
     return {
       axios: useAxios({
         method: 'get',
-        url: 'http://localhost:443/api/test',
+        url: '/api/test',
         submit: true,
       }),
     };

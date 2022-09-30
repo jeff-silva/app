@@ -12,7 +12,7 @@ export default function(compParams={}) {
         data: {},
         resp: {},
         err: {message:false, fields:{}},
-        submit: false,
+        submit: () => {},
         onSubmit: (resp) => {},
         onSuccess: (resp) => {},
         onError: (resp) => {},
