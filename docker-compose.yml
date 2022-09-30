@@ -40,6 +40,8 @@ services:
             args:
                 WWWGROUP: '${WWWGROUP}'
         image: sail-8.1/app
+        # entrypoint: /var/www/html/install.sh
+        # command: ["php", "artisan", "app:install"]
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         env_file:

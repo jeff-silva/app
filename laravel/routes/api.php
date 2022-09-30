@@ -20,3 +20,4 @@ use Illuminate\Support\Facades\Route;
 
 
 new \App\Http\Controllers\AppController;
+new \App\Http\Controllers\AuthController;

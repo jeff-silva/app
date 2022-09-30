@@ -20,5 +20,13 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        $user = \App\Models\Users::firstOrNew(['id' => 1], [
+            'name' => 'Root User',
+            'email' => 'root@grr.la',
+            'password' => \Hash::make('321321'),
+        ]);
+
+        $user->save();
     }
 }
