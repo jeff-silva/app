@@ -8,8 +8,8 @@ class AppController extends Controller
 {
     public function onInit()
     {
-        $this->route('get', 'app/load', 'load')->name('app-load');
-        $this->route('get', 'app/test', 'test')->name('app-test');
+        $this->routeMatch(['get'], '/app/load', 'load')->name('app-load');
+        $this->routeMatch(['get'], '/app/test', 'test')->name('app-test');
     }
 
     public function load()

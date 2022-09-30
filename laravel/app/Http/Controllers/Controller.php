@@ -22,7 +22,7 @@ class Controller extends BaseController
         // 
     }
 
-    public function route($methods, $path, $callback)
+    public function routeMatch($methods, $path, $callback)
     {
         $methods = is_array($methods)? $methods: [ $methods ];
         return Route::match($methods, $path, [get_called_class(), $callback]);
