@@ -10,7 +10,7 @@ export default {
     return {
       axios: useAxios({
         method: 'get',
-        url: 'api://uniqid',
+        url: 'http://localhost:443/api/test',
         submit: true,
       }),
     };

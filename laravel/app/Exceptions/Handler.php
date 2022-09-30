@@ -43,6 +43,37 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
+        if (request()->is('api/*')) {
+            $this->renderable(function (\Exception $e, $request) {
+                $resp = [
+                    'file' => ($e->getFile() .':'. $e->getLine()),
+                    'message' => '',
+                    'fields' => new \stdClass,
+                    'debug' => [],
+                    'data' => request()->all(),
+                ];
+
+                if ('production' == config('app.env')) {
+                    unset($resp['file']);
+                    unset($resp['debug']);
+                }
+                else {
+                    $resp['debug'] = array_map(function($debug) {
+                        return "{$debug['file']}:{$debug['line']}";
+                    }, debug_backtrace());
+                }
+
+                $json = json_decode($e->getMessage(), true);
+                if (is_array($json)) {
+                    $resp['message'] = 'Erros de validação';
+                    $resp['fields'] = $json;
+                }
+                else { $resp['message'] = $e->getMessage(); }
+                
+                return response()->json($resp, 500);
+            });
+        }
+        
         $this->reportable(function (Throwable $e) {
             //
         });
