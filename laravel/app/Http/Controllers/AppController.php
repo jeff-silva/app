@@ -3,11 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Spatie\RouteAttributes\Attributes\Get;
 
 class AppController extends Controller
 {
-    #[Get('app/test', name: "app-test")]
+    public function onInit()
+    {
+        $this->route('get', 'app/load', 'load')->name('app-load');
+        $this->route('get', 'app/test', 'test')->name('app-test');
+    }
+
+    public function load()
+    {
+        return [
+            'user' => false,
+            'settings' => false,
+        ];
+    }
+    
     public function test()
     {
         return [

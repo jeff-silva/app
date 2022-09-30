@@ -47,15 +47,15 @@ class Handler extends ExceptionHandler
             $this->renderable(function (\Exception $e, $request) {
                 $resp = [
                     'file' => ($e->getFile() .':'. $e->getLine()),
-                    'message' => '',
+                    'message' => $e->getMessage(),
                     'fields' => new \stdClass,
                     'debug' => [],
                     'data' => request()->all(),
                 ];
 
                 if ('production' == config('app.env')) {
-                    unset($resp['file']);
-                    unset($resp['debug']);
+                    // unset($resp['file']);
+                    // unset($resp['debug']);
                 }
                 else {
                     $resp['debug'] = array_map(function($debug) {

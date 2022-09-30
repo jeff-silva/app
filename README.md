@@ -27,3 +27,9 @@ docker run --rm -it -v ${PWD}/laravel:/app -w /app composer bash
 - ☑️ ~~Generate routes using PHP 8 native annotation syntax~~
 - ⬛ Implement Laravel JWT
 - ⬛ Implement Settings
+- ⬛ PHP Swoole websocket notification system
+
+## Dependencies
+
+Laravel Route Attributes <br>
+https://github.com/spatie/laravel-route-attributes

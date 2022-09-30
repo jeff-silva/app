@@ -11,7 +11,7 @@ export default {
     return {
       axios: useAxios({
         method: 'get',
-        url: '/api/test',
+        url: '/api/app/test',
         submit: true,
       }),
     };
