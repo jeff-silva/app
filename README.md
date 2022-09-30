@@ -19,3 +19,7 @@ docker run --rm -it -v ${PWD}/nuxt3:/app -w /app node bash
 docker run --rm -it -v ${PWD}/laravel:/app -w /app composer bash
 
 ```
+
+## TODO
+- ☑️ ~~Sync useApp data with Pinia~~
+- ⬛ Make communication with backend port

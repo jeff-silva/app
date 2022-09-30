@@ -7,10 +7,14 @@ export default defineNuxtConfig({
   },
 
   css: ['vuetify/lib/styles/main.css'],
+
   modules: [
 
     // https://vueuse.org/guide/
     ['@vueuse/nuxt', {}],
+    
+    // https://pinia.vuejs.org/
+    ['@pinia/nuxt', {}],
 
   ],
 

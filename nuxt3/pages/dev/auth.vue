@@ -1,6 +1,13 @@
 <template>
   <div>
-    <v-btn @click="app.login()">Login</v-btn>
+    <v-card v-if="app.user">
+      Bem vindo {{ app.user.email }}
+    </v-card>
+    <v-text-field label="E-mail" v-model="credentials.email" />
+    <v-text-field label="Senha" v-model="credentials.password" type="password" />
+    <v-btn @click="app.login(credentials)">Login</v-btn>
+    <v-divider />
+
     <v-btn @click="app.logout()">Logout</v-btn>
     <v-divider />
 
@@ -47,6 +54,10 @@ export default {
   data() {
     return {
       app: useApp(),
+      credentials: {
+        email: '',
+        password: '',
+      },
     };
   },
 };
