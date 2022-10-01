@@ -7,8 +7,9 @@ export const useAppStore = defineStore({
     id: 'app',
     
     state: () => ({
+      init: false,
       loading: false,
-      access_token: (window.localStorage.getItem('useApp.access_token') || ''),
+      access_token: (window.localStorage.getItem('access_token') || ''),
       user: false,
       accounts: JSON.parse(window.localStorage.getItem('useApp.accounts') || '[]'),
       settings: {},
@@ -16,47 +17,62 @@ export const useAppStore = defineStore({
 
     actions: {
       async load() {
-        if (!(!this.user && this.access_token)) return;
-        this.accounts.forEach(acc => {
-          if (acc.access_token != this.access_token) return;
-          this.user = { id: this.access_token, email: acc.email };
-        });
+        if (this.init) return;
+        this.init = true;
+
+        this.loading = 'load';
+        try {
+          const user = await axios.post('/api/auth/me');
+          this.user = user.data;
+        }
+        catch(e) {
+          await this.setAccessToken();
+        }
+        this.loading = false;
+      },
+
+      async setAccessToken(token='') {
+        window.localStorage.setItem('access_token', token);
+        return this.access_token = token;
       },
 
       async login(credentials={email:'', password:''}) {
-        this.loading = true;
-        const { data } = await axios.get('https://randomuser.me/api/?results=1');
-        this.user = {
-            id: data.results[0].login.uuid,
-            email: data.results[0].email,
-        };
-        this.access_token = this.user.id;
+        this.loading = 'login';
+        const login = await axios.post('/api/auth/login', credentials);
+        await this.setAccessToken(login.data.access_token);
         this.loading = false;
-        await this.accountAdd(this.user.email, this.access_token);
+
+        await this.accountAdd(credentials.email, this.access_token);
+
+        this.init = false;
         await this.load();
       },
 
       async logout() {
-        if (!this.user) return;
+        this.loading = 'logout';
+        try {
+          await axios.post('/api/auth/logout');
+        }
+        catch(e) {}
         this.accountRemove(this.user.email);
+        await this.setAccessToken();
         this.user = false;
-        this.access_token = '';
+        this.loading = false;
       },
 
       async accountAdd(email, access_token) {
         await this.accountRemove(email);
         this.accounts.push({ email, access_token });
-        this.storeData();
+        this.accountsStore();
       },
 
       async accountSwitch(email) {
-        this.accounts.forEach((acc, index) => {
+        this.accounts.forEach(async (acc, index) => {
           if (acc.email!=email) return;
-          this.access_token = acc.access_token;
-          this.user = { id:acc.access_token, email:acc.email };
+          await this.setAccessToken(acc.access_token);
+          this.init = false;
+          await this.load();
         });
-        await this.storeData();
-        await this.load();
       },
 
       async accountRemove(email) {
@@ -68,11 +84,10 @@ export const useAppStore = defineStore({
             this.access_token = '';
           }
         });
-        await this.storeData();
+        await this.accountsStore();
       },
 
-      async storeData() {
-        window.localStorage.setItem('useApp.access_token', this.access_token);
+      async accountsStore() {
         window.localStorage.setItem('useApp.accounts', JSON.stringify(this.accounts));
       },
     },

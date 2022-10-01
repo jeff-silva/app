@@ -5,19 +5,22 @@
     </v-card>
     <v-text-field label="E-mail" v-model="credentials.email" />
     <v-text-field label="Senha" v-model="credentials.password" type="password" />
-    <v-btn @click="app.login(credentials)">Login</v-btn>
-    <v-divider />
 
-    <v-btn @click="app.logout()">Logout</v-btn>
-    <v-divider />
+    <div class="d-flex">
+      <v-spacer />
+      <v-btn class="ms-2" @click="app.login(credentials)" :loading="app.loading=='login'">Login</v-btn>
+      <v-btn class="ms-2" @click="app.logout()" :loading="app.loading=='logout'">Logout</v-btn>
+    </div>
 
     <v-card v-if="app.user">
       Bem vindo {{ app.user.email }}
     </v-card>
-    <v-divider />
 
     <v-card>
       <v-list>
+        <v-list-item-subtitle>
+          Aaa
+        </v-list-item-subtitle>
         <v-list-item v-if="app.accounts.length==0">
           Nenhum login
         </v-list-item>
@@ -33,6 +36,7 @@
               size="small"
               class="ms-2"
               icon="mdi-account-switch"
+              :loading="app.loading=='load'"
             />
             <v-btn
               @click="app.accountRemove(acc.email)"
@@ -55,8 +59,8 @@ export default {
     return {
       app: useApp(),
       credentials: {
-        email: '',
-        password: '',
+        email: 'root@grr.la',
+        password: '321321',
       },
     };
   },

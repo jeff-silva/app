@@ -9,90 +9,90 @@ import * as vuetifyDirectives from 'vuetify/directives';
 
 const devMode = process.env.NODE_ENV !== 'production';
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(async (nuxtApp) => {
 
-  // Vuetify
-  nuxtApp.vueApp.use(createVuetify({
-    components: vuetifyComponents,
-    directives: vuetifyDirectives,
-    icons: { defaultSet: 'mdi' },
-    defaults: {
-        VTextField: {
-            variant: 'outlined',
-        },
-    },
-    theme: {
-        defaultTheme: 'light',
-        themes: {
-            light: {
-                dark: false,
-                colors: {},
-            },
-            dark: {
-                dark: true,
-                colors: {},
-            },
-        },
-    },
-  }));
-
-
-
-  // Intercept axios
-  axios.interceptors.request.use(config => {
-    const conf = useRuntimeConfig();
-
-    // Set access token
-    const access_token = window.localStorage.getItem('useApp.access_token') || false;
-    if (access_token && config.url.startsWith('/api')) {
-        config.headers = config.headers || {};
-        config.headers['Authorization'] = `Bearer ${access_token}`;
-    }
-    
-    // Set base url api
-    if (config.url[0] == '/') {
-        let { protocol, hostname } = (new URL(location.href));
-        hostname += `:${conf.APP_PORT}`;
-        config.url = `${protocol}//${hostname}${config.url}`;
-    }
-
-    return config;
-  });
+	// Vuetify
+	nuxtApp.vueApp.use(createVuetify({
+		components: vuetifyComponents,
+		directives: vuetifyDirectives,
+		icons: { defaultSet: 'mdi' },
+		defaults: {
+			VTextField: {
+				variant: 'outlined',
+			},
+		},
+		theme: {
+			defaultTheme: 'light',
+			themes: {
+				light: {
+					dark: false,
+					colors: {},
+				},
+				dark: {
+					dark: true,
+					colors: {},
+				},
+			},
+		},
+	}));
 
 
 
-  // Filters:
-  // {{ $filter.method(param) }}
-  nuxtApp.vueApp.config.globalProperties.$filter = {
-    dateHuman(value, format='DD/MM/YYYY ') {
-        const formatted = useDateFormat(value, format).value;
-        return formatted.includes('NaN')? '': formatted;
-    },
-    timeHuman(value, format='HH:mm') {
-        const formatted = useDateFormat(value, format).value;
-        return formatted.includes('NaN')? '': formatted;
-    },
-    dateTimeHuman(value, format='DD/MM/YYYY - HH:mm') {
-        const formatted = useDateFormat(value, format).value;
-        return formatted.includes('NaN')? '': formatted;
-    },
-    filesizeHuman(value) {
-        if (!value || isNaN(value)) return '0kB';
-        let i = Math.floor( Math.log(+value) / Math.log(1024) );
-        return ( +value / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
-    },
-    singularPlural(number, singular, plural) {
-        return number==1? singular: plural;
-    },
-  };
+	// Intercept axios
+	axios.interceptors.request.use(config => {
+		const conf = useRuntimeConfig();
+
+		// Set access token
+		const access_token = window.localStorage.getItem('access_token') || false;
+		if (access_token && config.url.startsWith('/api')) {
+			config.headers = config.headers || {};
+			config.headers['Authorization'] = `Bearer ${access_token}`;
+		}
+		
+		// Set base url api
+		if (config.url[0] == '/') {
+			let { protocol, hostname } = (new URL(location.href));
+			hostname += `:${conf.APP_PORT}`;
+			config.url = `${protocol}//${hostname}${config.url}`;
+		}
+
+		return config;
+	});
 
 
-  // Provide
-  // this.$provider
-  nuxtApp.provide('axios', axios);
-  nuxtApp.provide('devMode', devMode);
-  nuxtApp.provide('log', console.log);
-  nuxtApp.provide('key', function(value) {
-      return typeof value=='object'? JSON.stringify(value): value;
+
+	// Filters:
+	// {{ $filter.method(param) }}
+	nuxtApp.vueApp.config.globalProperties.$filter = {
+		dateHuman(value, format='DD/MM/YYYY ') {
+			const formatted = useDateFormat(value, format).value;
+			return formatted.includes('NaN')? '': formatted;
+		},
+		timeHuman(value, format='HH:mm') {
+			const formatted = useDateFormat(value, format).value;
+			return formatted.includes('NaN')? '': formatted;
+		},
+		dateTimeHuman(value, format='DD/MM/YYYY - HH:mm') {
+			const formatted = useDateFormat(value, format).value;
+			return formatted.includes('NaN')? '': formatted;
+		},
+		filesizeHuman(value) {
+			if (!value || isNaN(value)) return '0kB';
+			let i = Math.floor( Math.log(+value) / Math.log(1024) );
+			return ( +value / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+		},
+		singularPlural(number, singular, plural) {
+			return number==1? singular: plural;
+		},
+	};
+
+
+	// Provide
+	// this.$provider
+	nuxtApp.provide('axios', axios);
+	nuxtApp.provide('devMode', devMode);
+	nuxtApp.provide('log', console.log);
+	nuxtApp.provide('key', function(value) {
+	  return typeof value=='object'? JSON.stringify(value): value;
   });
 });

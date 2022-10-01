@@ -30,6 +30,7 @@ docker run --rm -it -v ${PWD}/nuxt3:/app -w /app node bash
 - ☑️ ~~Make communication with backend port~~
 - ☑️ ~~Generate routes using PHP 8 native annotation syntax~~
 - ☑️ ~~Implement Laravel JWT~~
+- ☑️ ~~Implement front end useApp~~
 - ⬛ Implement Settings
 - ⬛ PHP Swoole websocket notification system
 - ⬛ Installation command
