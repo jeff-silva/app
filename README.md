@@ -33,6 +33,11 @@ docker run --rm -it -v ${PWD}/nuxt3:/app -w /app node bash
 - ☑️ ~~Implement front end useApp~~
 - ⬛ Implement Settings
 - ⬛ PHP Swoole websocket notification system
+- ⬛ Implement crontab
 - ⬛ Installation command
 - ⬛ Error "Windows named pipe error" using entrypoint or command at laravel service in docker-compose.yml
+- ⬛ Ports in settings .env
+- ⬛ Admin area
+- ⬛ Model File to upload
+- ⬛ Model Address to manage system addresses
 
