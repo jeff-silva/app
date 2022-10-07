@@ -6,11 +6,15 @@ To start, install Docker then:
 
 ```bash
 
-# Run dev mode
-docker-compose --env-file /.env up
+# Run dev mode at default address http://localhost:3000
+docker-compose up
 
 # Deploy
 docker-compose -f docker-compose-prod.yml up
+
+# In erro case, try commands above, then go out/in ssh:
+sudo groupadd docker
+sudo usermod -aG docker ${USER}
 
 # To create initial installation (avoid "Windows named pipe error" error at laravel service command)
 docker run --rm -it -v ${PWD}/laravel:/app -w /app composer composer install
