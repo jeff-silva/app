@@ -43,7 +43,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 		const conf = useRuntimeConfig();
 
 		// Set access token
-		const access_token = window.localStorage.getItem('access_token') || false;
+		const access_token = process.client? (localStorage.getItem('access_token') || false): '';
 		if (access_token && config.url.startsWith('/api')) {
 			config.headers = config.headers || {};
 			config.headers['Authorization'] = `Bearer ${access_token}`;

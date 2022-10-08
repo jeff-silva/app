@@ -3,15 +3,29 @@ import axios from 'axios';
 
 // import * as nuxt from '#app';
 
+const storeSet = (name, value) => {
+  if (! process.client) return;
+  if (typeof value=='object') value = JSON.stringify(value);
+  localStorage.setItem(name, value);
+  return value;
+};
+
+const storeGet = (name, valueDefault='') => {
+  if (! process.client) return;
+  let value = localStorage.getItem(name);
+  let valueParsed = JSON.parse(value);
+  return valueParsed || value || valueDefault;
+};
+
 export const useAppStore = defineStore({
     id: 'app',
     
     state: () => ({
       init: false,
       loading: false,
-      access_token: (window.localStorage.getItem('access_token') || ''),
+      access_token: storeGet('access_token', ''),
       user: false,
-      accounts: JSON.parse(window.localStorage.getItem('useApp.accounts') || '[]'),
+      accounts: storeGet('useApp.accounts', []),
       settings: {},
     }),
 
@@ -32,8 +46,7 @@ export const useAppStore = defineStore({
       },
 
       async setAccessToken(token='') {
-        window.localStorage.setItem('access_token', token);
-        return this.access_token = token;
+        return storeSet('access_token', token);
       },
 
       async login(credentials={email:'', password:''}) {
@@ -88,7 +101,7 @@ export const useAppStore = defineStore({
       },
 
       async accountsStore() {
-        window.localStorage.setItem('useApp.accounts', JSON.stringify(this.accounts));
+        return storeSet('accounts', this.accounts);
       },
     },
 });

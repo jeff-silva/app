@@ -16,7 +16,7 @@
       Bem vindo {{ app.user.email }}
     </v-card>
 
-    <v-card>
+    <!-- <v-card>
       <v-list>
         <v-list-item-subtitle>
           Aaa
@@ -47,9 +47,9 @@
           </template>
         </v-list-item>
       </v-list>
-    </v-card>
+    </v-card> -->
 
-    <pre>$data: {{ $data }}</pre>
+    <!-- <pre>$data: {{ $data }}</pre> -->
   </div>
 </template>
 

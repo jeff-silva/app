@@ -1,6 +1,15 @@
 # For more information: https://laravel.com/docs/sail
 version: '3.7'
 services:
+
+    generator:
+        container_name: generator
+        image: node:16.17.0
+        volumes:
+            - ./nuxt3:/nuxt3
+        working_dir: /nuxt3
+        command: bash -c "yarn install && yarn generate"
+
     web:
         container_name: web
         image: nginx:latest
@@ -8,6 +17,9 @@ services:
             - ./nuxt3/.output/public:/usr/share/nginx/html/
         ports:
             - 80:80
+        depends_on:
+            generator:
+                condition: service_completed_successfully
         
     laravel:
         container_name: laravel

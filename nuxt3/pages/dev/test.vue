@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-btn @click="axios.submit()">submit()</v-btn>
-    <pre>axios: {{ axios }}</pre>
+    <!-- <pre>axios: {{ axios }}</pre> -->
   </div>
 </template>
 
