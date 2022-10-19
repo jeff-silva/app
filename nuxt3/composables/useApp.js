@@ -4,7 +4,15 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import useStorage from '@/composables/useStorage';
 
-export default function() {
+export default function(params = {}) {
+
+    params = {
+        onLogin: (loginData, error) => ({}),
+        onLogout: (logoutData, error) => ({}),
+        onAccountSwitch: (account, error) => ({}),
+        ...params
+    };
+
     return defineStore({
         id: 'app',
         
@@ -28,16 +36,17 @@ export default function() {
                 if (this.init) return;
                 this.init = true;
 
-        
-                this.loading = 'load';
-                try {
-                    const { data: user } = await axios.post('/api/auth/me');
-                    this.user = user;
+                if (this.localStorage.access_token) {
+                    this.loading = 'load';
+                    try {
+                        const { data: user } = await axios.post('/api/auth/me');
+                        this.user = user;
+                    }
+                    catch(e) {
+                        await this.setAccessToken();
+                    }
+                    this.loading = false;
                 }
-                catch(e) {
-                    await this.setAccessToken();
-                }
-                this.loading = false;
             },
         
             async login(credentials={email:'', password:''}) {
@@ -47,9 +56,10 @@ export default function() {
                     const { data: loginData } = await axios.post('/api/auth/login', credentials);
                     await this.setAccessToken(loginData.access_token);
                     await this.accountAdd(credentials.email, loginData.access_token);
+                    params.onLogin(loginData, false);
                 }
                 catch(err) {
-                    console.log(err);
+                    params.onLogin(false, err);
                 }
 
                 this.loading = false;
@@ -59,13 +69,16 @@ export default function() {
             async logout() {
                 this.loading = 'logout';
                 try {
-                await axios.post('/api/auth/logout');
+                    const { data: logoutData } = await axios.post('/api/auth/logout');
+                    await this.accountRemove(this.user.email);
+                    await this.setAccessToken();
+                    this.user = false;
+                    this.loading = false;
+                    params.onLogout(logoutData, false);
                 }
-                catch(e) {}
-                this.accountRemove(this.user.email);
-                await this.setAccessToken();
-                this.user = false;
-                this.loading = false;
+                catch(err) {
+                    params.onLogout(false, err);
+                }
             },
 
             async setAccessToken(access_token='') {

@@ -6,7 +6,7 @@
 
     <div class="d-flex align-center">
       <v-spacer />
-      <v-btn class="ms-2" @click="app.login(credentials)" :loading="app.loading=='login'">Cadastrar</v-btn>
+      <v-btn class="ms-2" type="submit">Cadastrar</v-btn>
     </div>
   </form>
 </template>
