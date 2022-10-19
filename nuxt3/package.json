@@ -10,13 +10,13 @@
   "devDependencies": {
     "@vueuse/core": "^9.3.0",
     "@vueuse/nuxt": "^9.3.0",
-    "nuxt": "3.0.0-rc.11"
+    "nuxt": "3.0.0-rc.12"
   },
   "dependencies": {
     "@mdi/font": "^7.0.96",
     "@pinia/nuxt": "^0.4.2",
     "axios": "^0.27.2",
     "sass": "^1.55.0",
-    "vuetify": "3.0.0-beta.11"
+    "vuetify": "3.0.0-beta.14"
   }
 }

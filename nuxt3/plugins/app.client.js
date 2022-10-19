@@ -1,11 +1,14 @@
 import { defineNuxtPlugin } from '#app';
 import axios from 'axios';
 
-import '@mdi/font/css/materialdesignicons.css';
+// import '@mdi/font/css/materialdesignicons.css';
 
 import { createVuetify } from 'vuetify';
 import * as vuetifyComponents from 'vuetify/components';
 import * as vuetifyDirectives from 'vuetify/directives';
+
+import useStorage from '@/composables/useStorage';
+import useApp from '@/composables/useApp';
 
 const devMode = process.env.NODE_ENV !== 'production';
 
@@ -43,10 +46,14 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 		const conf = useRuntimeConfig();
 
 		// Set access token
-		const access_token = process.client? (localStorage.getItem('access_token') || false): '';
-		if (access_token && config.url.startsWith('/api')) {
+		let storage = useStorage('app', {
+			access_token: '',
+			accounts: [],
+		});
+
+		if (storage.access_token && config.url.startsWith('/api')) {
 			config.headers = config.headers || {};
-			config.headers['Authorization'] = `Bearer ${access_token}`;
+			config.headers['Authorization'] = `Bearer ${storage.access_token}`;
 		}
 		
 		// Set base url api
@@ -95,4 +102,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 	nuxtApp.provide('key', function(value) {
 	  return typeof value=='object'? JSON.stringify(value): value;
   });
+
+	await useApp().load();
 });

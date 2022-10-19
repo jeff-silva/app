@@ -7,11 +7,8 @@ docker-compose up
 
 ## Start prod server
 ```bash
-docker-compose -f docker-compose-install.yml up && docker-compose -f docker-compose-prod.yml up
+docker-compose -f docker-compose-prod.yml up
 ```
-
-
-To start, install Docker then:
 
 ## TODO
 - ☑️ ~~Sync useApp data with Pinia~~
@@ -30,9 +27,10 @@ To start, install Docker then:
 - ⬛ Model File to upload
 - ⬛ Model Address to manage system addresses
 
+<hr />
 
-------
-The stream or file "/laravel/storage/logs/laravel.log" could not be opened in append mode: Failed to open stream: Permission denied
+Nuxt Releases <br />
+https://github.com/vuetifyjs/vuetify/releases
 
-
-chmod -R 777 ./laravel/storage/logs/laravel.log
+Vuetify Releases <br />
+https://github.com/nuxt/framework/releases

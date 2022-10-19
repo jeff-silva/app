@@ -14,7 +14,7 @@
       </v-list>
     </v-col>
     <v-col cols="9">
-      <nuxt-child />
+      <nuxt-page />
     </v-col>
   </v-row>
 </template>

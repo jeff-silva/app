@@ -13,18 +13,23 @@
     </div>
 
     <v-card v-if="app.user">
-      Bem vindo {{ app.user.email }}
-    </v-card>
-
-    <!-- <v-card>
+      <v-card-text>
+        <div class="d-flex align-center">
+          <div class="flex-grow-1">
+            Bem vindo(a) {{ app.user.email }}
+          </div>
+          <v-btn size="small" flat icon="mdi-logout" @click="app.logout()"></v-btn>
+        </div>
+      </v-card-text>
+      <v-divider />
       <v-list>
-        <v-list-item-subtitle>
-          Aaa
+        <v-list-item-subtitle class="pa-3">
+          Accounts
         </v-list-item-subtitle>
-        <v-list-item v-if="app.accounts.length==0">
+        <v-list-item v-if="app.localStorage.accounts.length==0">
           Nenhum login
         </v-list-item>
-        <v-list-item v-for="acc in app.accounts" :key="acc.id" color="success">
+        <v-list-item v-for="acc in app.localStorage.accounts" :key="acc.id" color="success">
           <div>
             {{ acc.email }}
           </div>
@@ -47,13 +52,16 @@
           </template>
         </v-list-item>
       </v-list>
-    </v-card> -->
+    </v-card>
 
-    <!-- <pre>$data: {{ $data }}</pre> -->
+    <a href="">refresh</a>
+    <app-dd v-model="app" />
   </div>
 </template>
 
 <script>
+import useApp from '@/composables/useApp';
+
 export default {
   data() {
     return {

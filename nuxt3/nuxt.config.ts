@@ -8,7 +8,10 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ['vuetify/lib/styles/main.css'],
+  css: [
+    'vuetify/lib/styles/main.css',
+    '@mdi/font/css/materialdesignicons.css',
+  ],
 
   modules: [
 
@@ -26,6 +29,7 @@ export default defineNuxtConfig({
 
   vite: {
     define: {
+      // 'process.env.DEBUG': false,
       'process.env.DEBUG': false,
     },
     server: {
