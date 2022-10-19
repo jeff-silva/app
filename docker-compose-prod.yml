@@ -23,14 +23,13 @@ services:
         
     laravel:
         container_name: laravel
+        image: sail-8.1/app
+        entrypoint: bash -c "composer install && php artisan app:install && start-container"
         build:
             context: ./laravel/vendor/laravel/sail/runtimes/8.1
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP:-1000}'
-        image: sail-8.1/app
-        # entrypoint: /var/www/html/install.sh
-        # command: ["php", "artisan", "app:install"]
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:

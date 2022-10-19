@@ -27,8 +27,14 @@ class AppInstall extends Command
      */
     public function handle()
     {
-        $this->info('-------- App Instalation');
-        $this->call('migrate');
-        $this->call('db:seed');
+        $app_name = env('APP_NAME');
+        $this->info("-------- Installing {$app_name} --------");
+
+        $this->call('cache:clear');
+        $this->call('config:clear');
+        $this->call('route:clear');
+
+        $this->call('migrate', ['--force' => true]);
+        $this->call('db:seed', ['--force' => true]);
     }
 }
