@@ -1,7 +1,7 @@
 <template>
-  <v-row>
-    <v-col cols="3">
-      <v-list>
+  <nuxt-layout name="admin">
+    <template #sidebar>
+      <v-list variant="elevated">
         <v-list-item to="/dev">
           Home
         </v-list-item>
@@ -12,9 +12,8 @@
           Test
         </v-list-item>
       </v-list>
-    </v-col>
-    <v-col cols="9">
-      <nuxt-page />
-    </v-col>
-  </v-row>
+    </template>
+
+    <nuxt-page />
+  </nuxt-layout>
 </template>

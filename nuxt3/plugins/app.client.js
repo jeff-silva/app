@@ -21,7 +21,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 		icons: { defaultSet: 'mdi' },
 		defaults: {
 			VTextField: {
-				variant: 'outlined',
+				// variant: 'outlined',
 			},
 		},
 		theme: {
@@ -103,5 +103,5 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 	  return typeof value=='object'? JSON.stringify(value): value;
   });
 
-	await useApp().load();
+	// await useApp().load();
 });

@@ -13,7 +13,7 @@ export default function(params = {}) {
         ...params
     };
 
-    return defineStore({
+    const app =  defineStore({
         id: 'app',
         
         state: () => ({
@@ -110,4 +110,8 @@ export default function(params = {}) {
             },
         },
     })();
+
+    app.load();
+
+    return app;
 };

@@ -1,5 +1,5 @@
 <template>
-  <pre class="pa-2 rounded" style="background:#222; color:lime;">{{ typeof modelValue }}: {{ jsonString }}</pre>
+  <pre class="pa-2 rounded" style="background:#222; color:lime; overflow:auto;">{{ typeof modelValue }}: {{ jsonString }}</pre>
 </template>
 
 <script>
