@@ -42,8 +42,9 @@ export default function() {
                 if (this.localStorage.access_token) {
                     this.loading = 'load';
                     try {
-                        const { data: user } = await axios.post('/api/auth/me');
-                        this.user = user;
+                        const { data } = await axios.post('/api/auth/me');
+                        this.user = data.user;
+                        this.settings = data.settings;
                     }
                     catch(e) {
                         await this.setAccessToken();
@@ -73,8 +74,8 @@ export default function() {
             },
         
             async logout() {
-                this.loading = 'logout';
                 try {
+                    this.loading = 'logout';
                     const { data: logoutData } = await axios.post('/api/auth/logout');
                     await this.accountRemove(this.user.email);
                     await this.setAccessToken();
@@ -87,8 +88,12 @@ export default function() {
                 }
             },
 
-            async setAccessToken(access_token='') {
-                this.localStorage.access_token = access_token;
+            async setAccessToken(access_token=false) {
+                this.localStorage.access_token = access_token || '';
+            },
+            
+            getAccessToken() {
+                return this.localStorage.access_token || '';
             },
         
             async accountAdd(email, access_token) {
@@ -107,11 +112,10 @@ export default function() {
         
             async accountRemove(email) {
                 this.localStorage.accounts.forEach(async (acc, index) => {
-                    if (acc.email!=email) return;
+                    if (email != acc.email) return;
                     this.localStorage.accounts.splice(index, 1);
-                    if (this.user.email==email) {
-                        this.user = false;
-                        await this.setAccessToken();
+                    if (acc.access_token==this.getAccessToken()) {
+                        await this.setAccessToken(false);
                     }
                 });
             },

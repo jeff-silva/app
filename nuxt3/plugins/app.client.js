@@ -22,6 +22,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 		defaults: {
 			VTextField: {
 				// variant: 'outlined',
+				// hideDetails: true,
 			},
 		},
 		theme: {

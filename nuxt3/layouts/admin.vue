@@ -17,8 +17,8 @@
               <app-nav variant="plain" :items="[
                 {to:'/admin', name:'Dashboard'},
                 {to:'/admin', name:'Users', icon:'mdi-account', children: [
-                  {to:'/admin?page=users/search', name:'Search'},
-                  {to:'/admin?page=users/new', name:'Create'},
+                  {to:'/admin/users', name:'Search'},
+                  {to:'/admin/users/new', name:'Create'},
                 ]},
                 {to:'/admin', name:'Products', icon:'mdi-tshirt-crew', children: [
                   {to:'/admin?page=products/search', name:'Search'},

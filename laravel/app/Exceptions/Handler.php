@@ -59,6 +59,8 @@ class Handler extends ExceptionHandler
                 }
                 else {
                     $resp['debug'] = array_map(function($debug) {
+                        $debug['file'] = isset($debug['file'])? $debug['file']: 'undefined';
+                        $debug['line'] = isset($debug['line'])? $debug['line']: 'undefined';
                         return "{$debug['file']}:{$debug['line']}";
                     }, debug_backtrace());
                 }

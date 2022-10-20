@@ -2,15 +2,18 @@
 
 return [
   'secret' => [
-    'mailers.smtp.host' => '',
-    'mailers.smtp.port' => '',
-    'mailers.smtp.encryption' => '',
-    'mailers.smtp.username' => '',
-    'mailers.smtp.password' => '',
+    'mail.default',
+    'mail.mailers.smtp.host',
+    'mail.mailers.smtp.port',
+    'mail.mailers.smtp.encryption',
+    'mail.mailers.smtp.username',
+    'mail.mailers.smtp.password',
+    'mail.from.address',
+    'mail.from.name',
   ],
-
+  
   'public' => [
-    'app.name' => '',
-    'jwt.ttl' => '',
+    'app.name',
+    'jwt.ttl',
   ],
 ];

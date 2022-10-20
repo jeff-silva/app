@@ -1,7 +1,7 @@
 <template>
   <v-list>
     <v-list-item-subtitle class="pa-3">
-      Accounts
+      Alterar para:
     </v-list-item-subtitle>
     <v-list-item v-if="app.localStorage.accounts.length==0">
       Nenhum login
@@ -13,18 +13,20 @@
 
       <template v-slot:append>
         <v-btn
-          :disabled="acc.email==(app.user? app.user.email: '')"
           @click="app.accountSwitch(acc.email)"
           size="small"
           class="ms-2"
           icon="mdi-account-switch"
-          :loading="app.loading=='load'"
+          :disabled="app.loading=='load'"
+          :loading="app.loading=='load' && app.localStorage.access_token==acc.access_token"
         />
         <v-btn
           @click="app.accountRemove(acc.email)"
           size="small"
           class="ms-2"
           icon="mdi-logout"
+          :disabled="app.loading=='load' || (app.loading=='load' && app.localStorage.access_token==acc.access_token)"
+          :loading="app.loading=='logout' && app.localStorage.access_token==acc.access_token"
         />
       </template>
     </v-list-item>

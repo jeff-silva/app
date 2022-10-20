@@ -47,6 +47,16 @@ class AuthController extends Controller
 
     public function me()
     {
-        return auth()->user();
+        $user = auth()->user();
+        
+        $settings = [];
+        foreach(config('app-models-settings.public') as $key) {
+            $settings[ $key ] = config($key);
+        }
+
+        return [
+            'user' => $user,
+            'settings' => $settings,
+        ];
     }
 }
