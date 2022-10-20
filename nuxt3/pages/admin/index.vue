@@ -1,5 +1,5 @@
 <template>
   <nuxt-layout name="admin">
-    Hello
+    Bem vindo
   </nuxt-layout>
 </template>
