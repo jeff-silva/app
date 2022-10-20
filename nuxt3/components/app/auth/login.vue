@@ -11,15 +11,30 @@
 </template>
 
 <script>
+import { useEventBus } from '@vueuse/core';
+
 export default {
   data() {
     return {
       app: useApp(),
-      credentials: {
+      credentials: this.credentialsDefault(),
+    };
+  },
+
+  methods: {
+    credentialsDefault() {
+      return {
         email: '',
         password: '',
-      },
-    };
+      };
+    },
+  },
+
+  mounted() {
+    useEventBus('useApp:onLogin').on((data, err) => {
+      this.credentials = this.credentialsDefault();
+      this.$emit('success', data);
+    });
   },
 };
 </script>

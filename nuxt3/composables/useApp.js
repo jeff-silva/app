@@ -3,15 +3,14 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import useStorage from '@/composables/useStorage';
+import { useEventBus } from '@vueuse/core';
 
-export default function(params = {}) {
-
-    params = {
-        onLogin: (loginData, error) => ({}),
-        onLogout: (logoutData, error) => ({}),
-        onAccountSwitch: (account, error) => ({}),
-        ...params
-    };
+export default function() {
+    const onInit = useEventBus('useApp:onInit');
+    const onLoad = useEventBus('useApp:onLoad');
+    const onLogin = useEventBus('useApp:onLogin');
+    const onLogout = useEventBus('useApp:onLogout');
+    const onSwitch = useEventBus('useApp:onSwitch');
 
     const app =  defineStore({
         id: 'app',
@@ -28,12 +27,16 @@ export default function(params = {}) {
         }),
     
         actions: {
-            async load(params = {}) {
-                if (params.forced) {
+            async load(loadParams = {}) {
+                if (loadParams.forced) {
                     this.init = false;
                 }
 
-                if (this.init) return;
+                if (this.init) {
+                    onInit.emit(true, false);
+                    return;
+                }
+
                 this.init = true;
 
                 if (this.localStorage.access_token) {
@@ -47,6 +50,9 @@ export default function(params = {}) {
                     }
                     this.loading = false;
                 }
+
+                onInit.emit(true, false);
+                onLoad.emit(true, false);
             },
         
             async login(credentials={email:'', password:''}) {
@@ -56,10 +62,10 @@ export default function(params = {}) {
                     const { data: loginData } = await axios.post('/api/auth/login', credentials);
                     await this.setAccessToken(loginData.access_token);
                     await this.accountAdd(credentials.email, loginData.access_token);
-                    params.onLogin(loginData, false);
+                    onLogin.emit(loginData, false);
                 }
                 catch(err) {
-                    params.onLogin(false, err);
+                    onLogin.emit(false, err);
                 }
 
                 this.loading = false;
@@ -74,10 +80,10 @@ export default function(params = {}) {
                     await this.setAccessToken();
                     this.user = false;
                     this.loading = false;
-                    params.onLogout(logoutData, false);
+                    onLogout.emit(logoutData, false);
                 }
                 catch(err) {
-                    params.onLogout(false, err);
+                    onLogout.emit(false, err);
                 }
             },
 
@@ -95,6 +101,7 @@ export default function(params = {}) {
                     if (acc.email!=email) return;
                     await this.setAccessToken(acc.access_token);
                     await this.load({ forced: true });
+                    onSwitch.emit(acc, false);
                 });
             },
         

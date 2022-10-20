@@ -38,5 +38,11 @@ export default {
       app: useApp(),
     };
   },
+
+  mounted() {
+    useEventBus('useApp:onSwitch').on((data, err) => {
+      this.$emit('success', data);
+    });
+  },
 };
 </script>
