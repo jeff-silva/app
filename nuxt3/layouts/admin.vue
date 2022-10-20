@@ -8,28 +8,35 @@
         }"
       >
         <div class="d-flex flex-column" style="height:100vh;">
-          <v-sheet class="pa-3">
-            Sheet
+          <v-sheet class="pa-3" v-if="app.user">
+            <div>{{ app.user.name }}</div>
           </v-sheet>
           <v-divider />
           <div class="flex-grow-1" style="overflow:auto;">
-            <app-nav variant="plain" :items="[
-              {to:'/admin', name:'Dashboard'},
-              {to:'/admin', name:'Users', icon:'mdi-account', children: [
-                {to:'/admin?page=users/search', name:'Search'},
-                {to:'/admin?page=users/new', name:'Create'},
-              ]},
-              {to:'/admin', name:'Products', icon:'mdi-tshirt-crew', children: [
-                {to:'/admin?page=products/search', name:'Search'},
-                {to:'/admin?page=products/new', name:'Create'},
-              ]},
-            ]" />
+            <slot name="sidebar">
+              <app-nav variant="plain" :items="[
+                {to:'/admin', name:'Dashboard'},
+                {to:'/admin', name:'Users', icon:'mdi-account', children: [
+                  {to:'/admin?page=users/search', name:'Search'},
+                  {to:'/admin?page=users/new', name:'Create'},
+                ]},
+                {to:'/admin', name:'Products', icon:'mdi-tshirt-crew', children: [
+                  {to:'/admin?page=products/search', name:'Search'},
+                  {to:'/admin?page=products/new', name:'Create'},
+                ]},
+                {to:'/', name:'Settings', icon:'mdi-cog', children: [
+                  {to:'/admin/settings', name:'Configurações'},
+                  {to:'/dev', name:'Dev'},
+                ]},
+              ]" />
+            </slot>
           </div>
           <v-divider />
           <app-nav
             variant="plain"
             density="compact"
             :items="[
+              {to:'/auth?redirect=back', name:'Trocar conta'},
               {name:'Sair', onClick:app.logout},
             ]"
           />

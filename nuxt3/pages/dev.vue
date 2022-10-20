@@ -1,17 +1,16 @@
 <template>
   <nuxt-layout name="admin">
     <template #sidebar>
-      <v-list variant="elevated">
-        <v-list-item to="/dev">
-          Home
-        </v-list-item>
-        <v-list-item to="/dev/auth">
-          Auth
-        </v-list-item>
-        <v-list-item to="/dev/test">
-          Test
-        </v-list-item>
-      </v-list>
+      <app-nav variant="plain" :items="[
+        {to:'/dev', name:'Home'},
+        {to:'/dev/auth', name:'Auth'},
+        {to:'/dev/test', name:'Test'},
+      ]" />
+      <v-divider />
+      <app-nav variant="plain" :items="[
+        {to:'/', name:'Home'},
+        {to:'/admin', name:'Admin'},
+      ]" />
     </template>
 
     <nuxt-page />

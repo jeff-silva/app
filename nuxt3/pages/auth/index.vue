@@ -21,7 +21,13 @@ export default {
   },
   methods: {
     redirect(loginData) {
-      this.$router.push('/admin');
+      let redirectUrl = this.$route.query.redirect || '/admin';
+
+      if (redirectUrl=='back') {
+        return this.$router.go(-1);
+      }
+
+      this.$router.push(redirectUrl);
     },
   },
 };
