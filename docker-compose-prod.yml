@@ -2,25 +2,19 @@
 version: '3.7'
 services:
 
-    generator:
-        container_name: generator
+    nuxt3:
+        container_name: nuxt3
         image: node:16.17.0
+        command: bash -c "yarn install && yarn generate"
         volumes:
             - ./nuxt3:/nuxt3
+            - ./laravel/public:/nuxt3/.laravel-public
         working_dir: /nuxt3
-        command: bash -c "yarn install && yarn generate"
-
-    web:
-        container_name: web
-        image: nginx:latest
-        volumes:
-            - ./nuxt3/.output/public:/usr/share/nginx/html/
-        ports:
-            - 80:80
-        depends_on:
-            generator:
-                condition: service_completed_successfully
-        
+        env_file: .env
+        environment:
+            - HOST=${NUXT_HOST:-0.0.0.0}
+            - PORT=${NUXT_PORT:-3000}
+    
     laravel:
         container_name: laravel
         image: sail-8.1/app
@@ -32,6 +26,7 @@ services:
                 WWWGROUP: '${WWWGROUP:-1000}'
         extra_hosts:
             - 'host.docker.internal:host-gateway'
+        env_file: .env
         ports:
             - '${APP_PORT:-443}:80'
             - '${VITE_PORT:-5173}:5173'
@@ -40,16 +35,12 @@ services:
             LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-            APP_KEY: 'base64:yDzcRA19eDEveAlejlZxOB3WZ8IGpyP5oAwuldfssA8='
         volumes:
             - './laravel:/var/www/html'
         networks:
             - sail
         depends_on:
             - mysql
-            # - redis
-            # - meilisearch
-            # - mailhog
     mysql:
         container_name: mysql
         image: 'mysql/mysql-server:8.0'
@@ -77,8 +68,4 @@ networks:
         driver: bridge
 volumes:
     sail-mysql:
-        driver: local
-    sail-redis:
-        driver: local
-    sail-meilisearch:
         driver: local

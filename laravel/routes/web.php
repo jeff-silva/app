@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+// Route::get('/', function () {
+//     return view('index');
+// });
+
+Route::get('{path}', function() {
+    if ($content = realpath(public_path('app.html'))) { return file_get_contents($content); }
+    return 'execute o comando "yarn generate" para que a view seja renderizada corretamente';
+})->where('path', '(.*)');

@@ -14,8 +14,7 @@ services:
             - /nuxt3/node_modules
             - ./laravel/public:/nuxt3/.laravel-public
         working_dir: /nuxt3
-        env_file:
-            - .env
+        env_file: .env
         environment:
             - NODE_ENV=development
             - CHOKIDAR_USEPOLLING=true
@@ -33,8 +32,7 @@ services:
                 WWWGROUP: '${WWWGROUP:-1000}'
         extra_hosts:
             - 'host.docker.internal:host-gateway'
-        env_file:
-            - .env
+        env_file: .env
         ports:
             - '${APP_PORT:-443}:80'
             - '${VITE_PORT:-5173}:5173'
