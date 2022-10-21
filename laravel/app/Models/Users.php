@@ -11,7 +11,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Users extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable, App\Traits\Models;
+    use HasApiTokens, HasFactory, Notifiable, \App\Traits\Model;
 
     protected $singular = 'Usuário';
     protected $plural = 'Usuários';

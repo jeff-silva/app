@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Places extends Model
 {
-    use HasFactory, App\Traits\Models;
+    use HasFactory, \App\Traits\Model;
 
     protected $singular = 'Local';
     protected $plural = 'Locais';

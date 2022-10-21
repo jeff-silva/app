@@ -9,10 +9,10 @@ class AuthController extends Controller
     public function onInit()
     {
         $this->middleware('auth:api', ['except' => ['login']]);
-        $this->routeMatch(['post'], 'auth/login', 'login')->name('auth-login');
-        $this->routeMatch(['post'], 'auth/logout', 'logout')->name('auth-logout');
-        $this->routeMatch(['post'], 'auth/refresh', 'refresh')->name('auth-refresh');
-        $this->routeMatch(['post'], 'auth/me', 'me')->name('auth-me');
+        $this->routeMatch(['post'], 'auth/login', 'login')->name('auth.login');
+        $this->routeMatch(['post'], 'auth/logout', 'logout')->name('auth.logout');
+        $this->routeMatch(['post'], 'auth/refresh', 'refresh')->name('auth.refresh');
+        $this->routeMatch(['post'], 'auth/me', 'me')->name('auth.me');
     }
 
     public function login()

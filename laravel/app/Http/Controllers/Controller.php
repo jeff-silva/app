@@ -74,7 +74,7 @@ class Controller extends BaseController
         return ['?'];
     }
 
-    public function find()
+    public function find($id)
     {
         return ['?'];
     }

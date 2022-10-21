@@ -5,6 +5,19 @@ namespace App\Traits;
 trait Model
 {
 
+  // protected $singular = 'Modelo';
+  // protected $plural = 'Modelos';
+
+  public function getSingular()
+  {
+    return $this->singular;
+  }
+
+  public function getPlural()
+  {
+    return $this->plural;
+  }
+
   public function searchOptions()
   {
 

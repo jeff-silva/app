@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Files extends Model
 {
-    use HasFactory, App\Traits\Models;
+    use HasFactory, \App\Traits\Model;
 
     protected $singular = 'Arquivo';
     protected $plural = 'Arquivos';
