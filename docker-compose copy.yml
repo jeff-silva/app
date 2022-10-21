@@ -12,7 +12,6 @@ services:
         volumes:
             - ./nuxt3:/nuxt3
             - /nuxt3/node_modules
-            - ./laravel/public:/nuxt3/.laravel-public
         working_dir: /nuxt3
         env_file:
             - .env
