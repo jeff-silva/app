@@ -21,3 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 new \App\Http\Controllers\AppController;
 new \App\Http\Controllers\AuthController;
+new \App\Http\Controllers\FilesController;
+new \App\Http\Controllers\PlacesController;
+new \App\Http\Controllers\SettingsController;
+new \App\Http\Controllers\UsersController;
