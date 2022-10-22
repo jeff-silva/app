@@ -12,8 +12,12 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public $model = false;
+
     public function __construct()
     {
+        $model = '\App\Models\\'. str_replace('Controller', '', \Arr::last(explode('\\', get_called_class())));
+        try { $this->model = app($model); } catch(\Exception $e) {}
         $this->onInit();
     }
 
@@ -80,21 +84,23 @@ class Controller extends BaseController
 
     public function search()
     {
-        return ['?'];
+        return request()->all();
     }
 
     public function find($id)
     {
-        return ['?'];
+        return request()->all();
     }
 
     public function save()
     {
-        return ['?'];
+        $id = request()->input('id', null);
+        $model = $this->model->firstOrNew(['id' => $id], request()->all());
+        return $model;
     }
     
     public function delete()
     {
-        return ['?'];
+        return request()->all();
     }
 }

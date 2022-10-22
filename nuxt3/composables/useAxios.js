@@ -45,8 +45,8 @@ export default function(compParams={}) {
             axios({
                 method: compParams.method,
                 url: compParams.url,
-                params: JSON.parse(JSON.stringify(compParams.params)),
-                data: JSON.parse(JSON.stringify(compParams.data)),
+                params: compParams.params,
+                data: compParams.data,
                 cancelToken: axiosCancelSource.token,
             })
             .then(resp => {
@@ -85,9 +85,9 @@ export default function(compParams={}) {
         req.value.data = {};
     };
 
-    if (compParams.submit) {
-        req.value.submit();
-    }
+    // if (compParams.submit) {
+    //     req.value.submit();
+    // }
 
     return req;
 };

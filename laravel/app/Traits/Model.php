@@ -5,8 +5,7 @@ namespace App\Traits;
 trait Model
 {
 
-  // protected $singular = 'Modelo';
-  // protected $plural = 'Modelos';
+  // Search
 
   public function getSingular()
   {
@@ -50,6 +49,18 @@ trait Model
     $return = $query->paginate($params->per_page);
     $return->options = $this->searchOptions($return, $params);
     return $return;
+  }
+
+  // Database migration and seed
+
+  public function onMigrate()
+  {
+    return [];
+  }
+
+  public function onSeed()
+  {
+    // 
   }
 
   //   public static function bootModel()

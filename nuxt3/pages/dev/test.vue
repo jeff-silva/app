@@ -1,12 +1,14 @@
 <template>
   <div>
-    <form @submit.prevent="test()">
-      <v-text-field label="Nome" />
+    <app-form v-model="post" method="post" action="/api/files/save">
+      <v-text-field label="Nome" v-model="post.name" />
+      <v-file-input label="Arquivo" v-bind="{showSize:true, dirty:true}" @update:modelValue="post.file=$event[0]||false" />
       
       <app-actions>
         <v-btn type="submit">Enviar</v-btn>
       </app-actions>
-    </form>
+    </app-form>
+    <pre>post: {{ post }}</pre>
   </div>
 </template>
 
@@ -19,6 +21,9 @@ export default {
       //   url: '/api/app/test',
       //   submit: true,
       // }),
+      post: {
+        name: 'John',
+      },
     };
   },
 
