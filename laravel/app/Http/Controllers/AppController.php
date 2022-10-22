@@ -25,14 +25,6 @@ class AppController extends Controller
                 'contact' => [
                     'email' => 'support@grr.la',
                 ],
-                'license' => [
-                    'name' => 'Apache 2.0',
-                    'url' => 'http://www.apache.org/licenses/LICENSE-2.0.html',
-                ],
-            ],
-            'externalDocs' => [
-                'description' => 'Find out more about Swagger',
-                'url' => 'http://swagger.io',
             ],
             'servers' => [
                 [
@@ -42,7 +34,6 @@ class AppController extends Controller
             'tags' => [
                 [
                     'name' => 'app',
-                    'description' => 'Aplicação',
                 ],
             ],
             'paths' => [],

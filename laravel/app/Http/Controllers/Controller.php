@@ -56,7 +56,7 @@ class Controller extends BaseController
             ],
             (object) [
                 'id' => 'delete',
-                'methods' => ['post'],
+                'methods' => ['delete'],
                 'path' => "/{$params->namespace}/delete",
                 'callback' => 'delete',
             ],
