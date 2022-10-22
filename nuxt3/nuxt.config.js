@@ -37,13 +37,6 @@ export default defineNuxtConfig({
       // 'process.env.DEBUG': false,
       'process.env.DEBUG': false,
     },
-    server: {
-      proxy: {
-        '/api/': { target: process.env.APP_URL },
-        '/uploads/': { target: process.env.APP_URL },
-        '/files/': { target: process.env.APP_URL },
-      },
-    },
   },
 
   hooks: {

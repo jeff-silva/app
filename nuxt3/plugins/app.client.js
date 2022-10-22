@@ -56,6 +56,12 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 			config.headers = config.headers || {};
 			config.headers['Authorization'] = `Bearer ${storage.access_token}`;
 		}
+		
+		// Set base url api
+		if (config.url[0] == '/') {
+			let { protocol, hostname } = (new URL(location.href));
+			config.url = `${protocol}//${hostname}:${conf.APP_PORT}${config.url}`;
+		}
 
 		return config;
 	});

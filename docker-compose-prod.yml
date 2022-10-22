@@ -5,7 +5,7 @@ services:
     nuxt3:
         container_name: nuxt3
         image: node:16.17.0
-        command: bash -c "yarn install && yarn generate"
+        command: bash -c "yarn install --check-files && yarn generate"
         volumes:
             - ./nuxt3:/nuxt3
             - ./laravel/public:/nuxt3/.laravel-public

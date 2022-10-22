@@ -46,33 +46,24 @@ class Handler extends ExceptionHandler
         if (request()->is('api/*')) {
             $this->renderable(function (\Exception $e, $request) {
                 $resp = [
-                    'file' => ($e->getFile() .':'. $e->getLine()),
+                    'status' => 500,
                     'message' => $e->getMessage(),
-                    'fields' => new \stdClass,
-                    'debug' => [],
-                    'data' => request()->all(),
+                    'fields' => [],
                 ];
 
-                if ('production' == config('app.env')) {
-                    // unset($resp['file']);
-                    // unset($resp['debug']);
+                if (is_array($err = json_decode($e->getMessage(), true))) {
+                    $resp = array_merge($resp, $err);
                 }
-                else {
+
+                if ('production' != config('app.env')) {
                     $resp['debug'] = array_map(function($debug) {
                         $debug['file'] = isset($debug['file'])? $debug['file']: 'undefined';
                         $debug['line'] = isset($debug['line'])? $debug['line']: 'undefined';
                         return "{$debug['file']}:{$debug['line']}";
                     }, debug_backtrace());
                 }
-
-                $json = json_decode($e->getMessage(), true);
-                if (is_array($json)) {
-                    $resp['message'] = 'Erros de validação';
-                    $resp['fields'] = $json;
-                }
-                else { $resp['message'] = $e->getMessage(); }
                 
-                return response()->json($resp, 500);
+                return response()->json($resp, $resp['status']);
             });
         }
         

@@ -69,6 +69,15 @@ class Controller extends BaseController
         }
     }
 
+    public function error($status, $message, $fields=[])
+    {
+        throw new \Exception(json_encode([
+            'status' => $status,
+            'message' => $message,
+            'fields' => $fields,
+        ]));
+    }
+
     public function search()
     {
         return ['?'];
