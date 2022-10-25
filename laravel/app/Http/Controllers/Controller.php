@@ -13,11 +13,17 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public $model = false;
+    public $namespace = false;
 
     public function __construct()
     {
         $model = '\App\Models\\'. str_replace('Controller', '', \Arr::last(explode('\\', get_called_class())));
-        try { $this->model = app($model); } catch(\Exception $e) {}
+        try {
+            $this->model = app($model);
+            if ($this->model) {
+                $this->namespace = $this->model->getTable();
+            }
+        } catch(\Exception $e) {}
         $this->onInit();
     }
 
@@ -35,7 +41,6 @@ class Controller extends BaseController
     public function apiResource($params=[])
     {
         $params = (object) array_merge([
-            'namespace' => 'app',
             'except' => [],
         ], $params);
 
@@ -43,25 +48,25 @@ class Controller extends BaseController
             (object) [
                 'id' => 'search',
                 'methods' => ['get'],
-                'path' => "/{$params->namespace}/search",
+                'path' => "/{$this->namespace}/search",
                 'callback' => 'search',
             ],
             (object) [
                 'id' => 'find',
                 'methods' => ['get'],
-                'path' => "/{$params->namespace}/find/{id}",
+                'path' => "/{$this->namespace}/find/{id}",
                 'callback' => 'find',
             ],
             (object) [
                 'id' => 'save',
                 'methods' => ['post'],
-                'path' => "/{$params->namespace}/save",
+                'path' => "/{$this->namespace}/save",
                 'callback' => 'save',
             ],
             (object) [
                 'id' => 'delete',
                 'methods' => ['delete'],
-                'path' => "/{$params->namespace}/delete",
+                'path' => "/{$this->namespace}/delete",
                 'callback' => 'delete',
             ],
         ];
@@ -69,7 +74,7 @@ class Controller extends BaseController
         foreach($routes as $route) {
             if (in_array($route->id, $params->except)) return;
             $this->routeMatch($route->methods, $route->path, $route->callback)
-                ->name("{$params->namespace}.{$route->id}");
+                ->name("{$this->namespace}.{$route->id}");
         }
     }
 
@@ -84,7 +89,7 @@ class Controller extends BaseController
 
     public function search()
     {
-        return request()->all();
+        return $this->model->search(request()->all());
     }
 
     public function find($id)

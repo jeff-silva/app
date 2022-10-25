@@ -58,10 +58,7 @@ class AppInstall extends Command
 
             \Schema::table($model->getTable(), function($table) use($model) {
                 $columns = \Schema::getColumnListing($model->getTable());
-                foreach($model->onMigrate() as $field => $call) {
-                    if (in_array($field, $columns)) continue;
-                    call_user_func($call, $table);
-                }
+                $model->onMigrate($table, $columns);
             });
         }
     }

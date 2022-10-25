@@ -8,8 +8,6 @@ class UsersController extends Controller
 {
     public function onInit()
     {
-        $this->apiResource([
-            'namespace' => 'users',
-        ]);
+        $this->apiResource();
     }
 }

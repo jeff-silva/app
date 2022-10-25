@@ -65,4 +65,13 @@ class Users extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function onMigrate($table, $columns)
+    {
+        if (! in_array('group_id', $columns)) {
+            return $table->integer('group_id')->nullable()->after('email');
+        }
+
+        // $table->foreign('group_id')->references('id')->on('users_groups');
+    }
 }

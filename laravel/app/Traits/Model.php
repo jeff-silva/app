@@ -17,9 +17,9 @@ trait Model
     return $this->plural;
   }
 
-  public function searchOptions()
+  public function searchOptions($pagination, $params=[])
   {
-
+    return [];
   }
 
   public function searchParamsDefault($merge=[])
@@ -46,16 +46,21 @@ trait Model
   {
     $params = $this->searchParamsDefault($params);
     $query = $this->searchQuery(self::query(), $params);
-    $return = $query->paginate($params->per_page);
-    $return->options = $this->searchOptions($return, $params);
-    return $return;
+    $return = (object) $query->paginate($params->per_page)->toArray();
+    return [
+      'current_page' => $return->current_page,
+      'from' => $return->from,
+      'last_page' => $return->last_page,
+      'data' => $return->data,
+      'options' => $this->searchOptions($return, $params),
+    ];
   }
 
   // Database migration and seed
 
-  public function onMigrate()
+  public function onMigrate($table, $columns)
   {
-    return [];
+    // 
   }
 
   public function onSeed()

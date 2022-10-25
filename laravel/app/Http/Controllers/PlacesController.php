@@ -8,8 +8,6 @@ class PlacesController extends Controller
 {
     public function onInit()
     {
-        $this->apiResource([
-            'namespace' => 'places',
-        ]);
+        $this->apiResource();
     }
 }

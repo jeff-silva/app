@@ -21,24 +21,23 @@ class Files extends Model
         'file',
     ];
 
-    public function onMigrate()
+    public function onMigrate($table, $columns)
     {
-        $columns['slug'] = function($table) {
+        if (! in_array('slug', $columns)) {
             return $table->string('slug')->after('id');
-        };
-        $columns['size'] = function($table) {
+        }
+        if (! in_array('size', $columns)) {
             return $table->integer('size')->after('name');
-        };
-        $columns['mime'] = function($table) {
+        }
+        if (! in_array('mime', $columns)) {
             return $table->string('mime', 10)->after('size');
-        };
-        $columns['folder'] = function($table) {
+        }
+        if (! in_array('folder', $columns)) {
             return $table->string('folder')->after('mime');
-        };
-        $columns['file'] = function($table) {
+        }
+        if (! in_array('file', $columns)) {
             return $table->binary('file')->after('folder');
-        };
-        return $columns;
+        }
     }
 
     public function onSeed()

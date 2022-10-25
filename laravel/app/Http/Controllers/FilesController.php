@@ -8,8 +8,6 @@ class FilesController extends Controller
 {
     public function onInit()
     {
-        $this->apiResource([
-            'namespace' => 'files',
-        ]);
+        $this->apiResource();
     }
 }
