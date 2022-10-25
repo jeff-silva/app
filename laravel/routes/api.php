@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-
 new \App\Http\Controllers\AppController;
 new \App\Http\Controllers\AuthController;
 new \App\Http\Controllers\FilesController;

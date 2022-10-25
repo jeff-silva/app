@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\Route;
 //     return view('index');
 // });
 
+Route::get('/api/swagger', function() {
+    return view('api-swagger');
+});
+
 Route::get('{path}', function() {
     if ($content = realpath(public_path('app.html'))) { return file_get_contents($content); }
     return 'execute o comando "yarn generate" para que a view seja renderizada corretamente';

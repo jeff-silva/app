@@ -53,6 +53,7 @@ class AppController extends Controller
 
         foreach(app()->routes->getRoutes() as $route) {
             if (! \Str::startsWith($route->uri, 'api')) continue;
+            if (! isset($route->action['controller'])) continue;
             $method = strtolower(collect($route->methods)->first());
 
             $model = '\App\Models\\'. preg_replace('/.+\\\(.+?)Controller.+/', '$1', $route->action['controller']);
