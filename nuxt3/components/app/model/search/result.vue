@@ -17,7 +17,14 @@
           </td>
           <slot name="table-row" v-bind="slotBind({ selected: itemSelected(item), index, item })"></slot>
           <td width="30px">
-            <v-btn icon="mdi-menu" size="x-small"></v-btn>
+            <app-over type="menu" :overBind="{location:'start'}">
+              <template #activator="{ props }">
+                <v-btn icon="mdi-menu" size="x-small" v-bind="props"></v-btn>
+                <!-- <v-btn icon="mdi-menu" size="x-small" @click="$log(props)"></v-btn> -->
+              </template>
+
+              Hello
+            </app-over>
           </td>
         </tr>
       </tbody>

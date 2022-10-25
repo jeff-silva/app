@@ -117,5 +117,5 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 		},
 	});
 
-	// await useApp().load();
+	useApp().load();
 });
