@@ -66,11 +66,6 @@ trait Model
     ];
   }
 
-  public function onMigrate($table, $columns)
-  {
-    // 
-  }
-
   public function onSeed()
   {
     // 

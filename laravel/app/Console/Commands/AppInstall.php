@@ -45,6 +45,8 @@ class AppInstall extends Command
 
     public function migrate()
     {
+        // $this->call('migrate', ['--force' => true]);
+        
         foreach($this->getClasses('/app/models') as $model) {
             $schema = $model->migrationSchema();
             if (empty($schema['fields'])) continue;
@@ -72,27 +74,10 @@ class AppInstall extends Command
 
                 $this->info($sql);
                 \DB::statement($sql);
-                
+
                 $field_name_last = $field_name;
             }
         }
-        
-        // $this->call('migrate', ['--force' => true]);
-
-        // foreach($this->getClasses('/app/models') as $model) {
-        //     if (! \Schema::hasTable($model->getTable())) {
-        //         \Schema::create($model->getTable(), function ($table) {
-        //             $table->id();
-        //             $table->string('name');
-        //             $table->timestamps();
-        //         });
-        //     }
-
-        //     \Schema::table($model->getTable(), function($table) use($model) {
-        //         $columns = \Schema::getColumnListing($model->getTable());
-        //         $model->onMigrate($table, $columns);
-        //     });
-        // }
     }
 
     public function seed()
