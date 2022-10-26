@@ -80,11 +80,7 @@ class Controller extends BaseController
 
     public function error($status, $message, $fields=[])
     {
-        throw new \Exception(json_encode([
-            'status' => $status,
-            'message' => $message,
-            'fields' => $fields,
-        ]));
+        return \App\Utils::error($status, $message, $fields);
     }
 
     public function search()
@@ -101,6 +97,7 @@ class Controller extends BaseController
     {
         $id = request()->input('id', null);
         $model = $this->model->firstOrNew(['id' => $id], request()->all());
+        $model->save();
         return $model;
     }
     

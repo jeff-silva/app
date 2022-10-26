@@ -41,12 +41,18 @@ export default function(compParams={}) {
             compParams.onSubmit(req.value);
     
             axiosCancelSource = axiosCancelToken.source();
+
+            let formData = new FormData();
+            for(let i in compParams.data) {
+                formData.append(i, compParams.data[i]);
+            }
     
             axios({
                 method: compParams.method,
                 url: compParams.url,
                 params: compParams.params,
-                data: compParams.data,
+                data: formData,
+                headers: {'Content-Type': 'multipart/form-data'},
                 cancelToken: axiosCancelSource.token,
             })
             .then(resp => {

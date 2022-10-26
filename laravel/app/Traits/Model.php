@@ -5,6 +5,87 @@ namespace App\Traits;
 trait Model
 {
 
+  public static function bootModel()
+  {
+    static::retrieved(function($model) {
+      $model->mutatorRetrieve();
+    });
+
+    static::saving(function($model) {
+      $model->mutatorSave();
+
+      $validate = $model->validate();
+      if ($validate->fails()) {
+        throw new \Exception(json_encode($validate->errors()));
+      }
+
+      if (in_array('slug', $model->getFillable()) AND !$model->slug AND $model->name) {
+        $model->slug = \Str::slug($model->name);
+      }
+
+      foreach($model->attributes as $name => $value) {
+        if ($file = request()->file($name)) {
+          $value = $model->upload($file);
+        }
+
+        else if (in_array($value, ['null', 'false', 'undefined', ''])) {
+          $value = null;
+        }
+        
+        else if (in_array($value, ['true'])) {
+          $value = true;
+        }
+
+        else if (is_array($value)) {
+          $value = json_encode($value);
+        }
+
+        $model->attributes[ $name ] = $value;
+      }
+      
+      return $model;
+    });
+
+    static::saved(function($model) {
+        $model->mutatorRetrieve();
+    });
+  }
+
+
+  public function mutatorSave()
+  {
+      // 
+  }
+
+
+  public function mutatorRetrieve()
+  {
+      // 
+  }
+
+
+  // Validation
+  public function validationRules()
+  {
+    return [
+      'name' => ['required'],
+    ];
+  }
+
+  public function validationMessages()
+  {
+    return [];
+  }
+
+  public function validate($data=null)
+  {
+      $data = $data===null? $this->attributes: $data;
+      $rules = $this->validationRules();
+      $messages = $this->validationMessages();
+      return \Validator::make($data, $rules, $messages);
+  }
+
+
   // Search
 
   public function getSingular()
@@ -71,64 +152,23 @@ trait Model
     // 
   }
 
-  //   public static function bootModel()
-  //   {
-  //       static::retrieved(function($model) {
-  //           $model->mutatorRetrieve();
-  //       });
 
-  //       static::saving(function($model) {
-  //           $model->mutatorSave();
-
-  //           $validate = $model->validate();
-  //           if ($validate->fails()) {
-  //               throw new \Exception(json_encode($validate->errors()));
-  //           }
-
-  //           if (in_array('slug', $model->getFillable()) AND !$model->slug AND $model->name) {
-  //               $model->slug = \Str::slug($model->name);
-  //           }
-
-  //           foreach($model->attributes as $name => $value) {
-
-  //               if ($file = request()->file($name)) {
-  //                   $value = $model->upload($file);
-  //               }
-
-  //               else if (in_array($value, ['null', 'false', 'undefined', ''])) {
-  //                   $value = null;
-  //               }
-                
-  //               else if (in_array($value, ['true'])) {
-  //                   $value = true;
-  //               }
-
-  //               else if (is_array($value)) {
-  //                   $value = json_encode($value);
-  //               }
-
-  //               $model->attributes[ $name ] = $value;
-  //           }
-            
-  //           return $model;
-  //       });
-
-  //       static::saved(function($model) {
-  //           $model->mutatorRetrieve();
-  //       });
-  //   }
-
-
-  //   public function mutatorSave()
-  //   {
-  //       // 
-  //   }
-
-
-  //   public function mutatorRetrieve()
-  //   {
-  //       // 
-  //   }
+  // Upload
+  public function upload($file)
+  {
+    $save = [
+      'slug' => \Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) .'.'. $file->getClientOriginalExtension(),
+      'name' => $file->getClientOriginalName(),
+      'mime' => $file->getClientMimeType(),
+      'ext' => $file->getClientOriginalExtension(),
+      'size' => $file->getSize(),
+      'folder' => '',
+      'file' => $file->openFile()->fread($file->getSize()),
+    ];
+    // dump($save);
+    $save = \App\Models\Files::create($save);
+    return $save->id;
+  }
 
 
   //   public function find($id)
@@ -142,71 +182,6 @@ trait Model
         
   //       return parent::find($id);
   //   }
-
-
-  //   public static function permissions()
-  //   {
-  //       return [];
-  //   }
-
-
-  //   public function schemaFields()
-  //   {
-  //       return [
-  //           'id' => 'default',
-  //           'name' => 'default',
-  //           'created_at' => 'default',
-  //           'updated_at' => 'default',
-  //           'deleted_at' => 'default',
-  //       ];
-  //   }
-
-
-  //   public function getSchemaFields()
-  //   {
-  //       $defaults = [
-  //           'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
-  //           'slug' => 'VARCHAR(255) NULL DEFAULT NULL',
-  //           'name' => 'VARCHAR(255) NULL DEFAULT NULL',
-  //           'created_at' => 'DATETIME NULL DEFAULT NULL',
-  //           'updated_at' => 'DATETIME NULL DEFAULT NULL',
-  //           'deleted_at' => 'DATETIME NULL DEFAULT NULL',
-  //       ];
-        
-  //       $fields = [];
-
-  //       foreach($this->schemaFields() as $field => $type) {
-  //           if ($type=='default') {
-  //               $type = $defaults[ $field ];
-  //           }
-
-  //           else if (is_array($type)) {
-  //               $type = 'BIGINT(20) UNSIGNED NULL DEFAULT NULL';
-  //           }
-
-  //           $fields[ $field ] = $type;
-  //       }
-
-  //       return $fields;
-  //   }
-
-
-  //   public function getSchemaForeignKeys()
-  //   {
-  //       $fks = [];
-
-  //       foreach($this->schemaFields() as $field => $type) {
-  //           if (is_array($type)) {
-  //               $fks[ $field ] = [
-  //                   'class' => $type[0],
-  //                   'table' => app($type[0])->getTable(),
-  //                   'field' => $type[1],
-  //               ];
-  //           }
-  //       }
-
-  //       return $fks;
-  //   }
     
     
   //   public static function seed()
@@ -215,60 +190,11 @@ trait Model
   //   }
 
 
-  //   public function getSingular()
-  //   {
-  //       return $this->singular? $this->singular: 'Item';
-  //   }
-
-
-  //   public function getPlural()
-  //   {
-  //       return $this->plural? $this->plural: 'Ítens';
-  //   }
-
-
-  //   public function userCan($pkeys)
-  //   {
-  //       $pkeys = is_array($pkeys)? $pkeys: [$pkeys];
-  //       $userPermissions = [];
-
-  //       if ($user = auth()->user()) {
-  //           if ($user->id==1 OR $user->group_id==1) return true;
-  //           if ($group = \App\Models\UsersGroups::select(['permissions'])->find($user->group_id)) {
-  //               $userPermissions = is_array($group->permissions)? $group->permissions: [];
-  //           }
-  //       }
-
-  //       foreach($pkeys as $i => $pkey) {
-  //           if ($pkey[0]==':') {
-  //               $pkey = $this->getTable() . $pkey;
-  //           }
-
-  //           if (! config("permissions.keys.{$pkey}")) {
-  //               continue;
-  //           }
-
-  //           if (! in_array($pkey, $userPermissions)) {
-  //               return false;
-  //           }
-  //       }
-
-  //       return true;
-  //   }
-
-
   //   public function validationRules()
 	// {
   //       return [
 	// 		'name' => ['required'],
 	// 	];
-  //   }
-    
-
-  //   public function validate($data=null)
-  //   {
-  //       $data = $data===null? $this->attributes: $data;
-  //       return \Validator::make($data, $this->validationRules());
   //   }
 
 
