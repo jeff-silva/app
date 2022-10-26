@@ -5,20 +5,15 @@ namespace App;
 class Utils
 {
 
-  static function error($status, $message, $fields=[])
+  static function error($status, $message, $fields=[], $extra=[])
   {
-    throw new \Exception(json_encode([
-      'status' => $status,
-      'message' => $message,
+    $json = [
+      'status' => ($status? $status: 500),
+      'message' => ($message? $message: 'Error'),
       'fields' => $fields,
-    ]));
-  }
-
-  static function dd()
-  {
-    foreach(func_get_args() as $data) {
-      echo print_r($data, true);
-    }
+    ];
+    if ($extra) $json['extra'] = $extra;
+    throw new \Exception(json_encode($json));
   }
 
 }

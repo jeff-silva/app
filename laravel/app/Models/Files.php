@@ -32,7 +32,7 @@ class Files extends Model
                 'ext' => 'VARCHAR(5) DEFAULT NULL',
                 'size' => 'INT(10) DEFAULT NULL',
                 'folder' => 'VARCHAR(255) DEFAULT NULL',
-                'file' => 'BLOB DEFAULT NULL',
+                'file' => 'LONGBLOB NULL DEFAULT NULL',
                 'created_at' => 'DATETIME DEFAULT NULL',
                 'updated_at' => 'DATETIME DEFAULT NULL',
             ],

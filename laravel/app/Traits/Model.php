@@ -16,7 +16,7 @@ trait Model
 
       $validate = $model->validate();
       if ($validate->fails()) {
-        throw new \Exception(json_encode($validate->errors()));
+        \App\Utils::error(500, 'Erros de validação', $validate->errors());
       }
 
       if (in_array('slug', $model->getFillable()) AND !$model->slug AND $model->name) {
@@ -28,17 +28,17 @@ trait Model
           $value = $model->upload($file);
         }
 
-        else if (in_array($value, ['null', 'false', 'undefined', ''])) {
-          $value = null;
-        }
+        // else if (in_array($value, ['null', 'false', 'undefined', ''])) {
+        //   $value = null;
+        // }
         
-        else if (in_array($value, ['true'])) {
-          $value = true;
-        }
+        // else if (in_array($value, ['true'])) {
+        //   $value = true;
+        // }
 
-        else if (is_array($value)) {
-          $value = json_encode($value);
-        }
+        // else if (is_array($value)) {
+        //   $value = json_encode($value);
+        // }
 
         $model->attributes[ $name ] = $value;
       }
@@ -154,34 +154,39 @@ trait Model
 
 
   // Upload
-  public function upload($file)
+  public function upload($file, $folder='')
   {
-    $save = [
+    $file_content = mb_convert_encoding(file_get_contents($file), 'UTF-8', 'UTF-8');
+
+    if ('files'==$this->getTable()) {
+      return $file_content;
+    }
+
+    $save = \App\Models\Files::create([
       'slug' => \Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) .'.'. $file->getClientOriginalExtension(),
       'name' => $file->getClientOriginalName(),
       'mime' => $file->getClientMimeType(),
       'ext' => $file->getClientOriginalExtension(),
       'size' => $file->getSize(),
-      'folder' => '',
-      'file' => $file->openFile()->fread($file->getSize()),
-    ];
-    // dump($save);
-    $save = \App\Models\Files::create($save);
+      'folder' => $folder,
+      'file' => $file_content,
+    ]);
     return $save->id;
   }
 
 
-  //   public function find($id)
-  //   {
-  //       if (in_array('slug', $this->fillable)) {
-  //           return $this->where(function($q) use($id) {
-  //               $q->where('id', $id);
-  //               $q->orWhere('slug', $id);
-  //           })->first();
-  //       }
-        
-  //       return parent::find($id);
-  //   }
+  // Find
+  static function find($id)
+  {
+    if (in_array('slug', (new self)->fillable)) {
+      return self::where(function($q) use($id) {
+        $q->where('id', $id);
+        $q->orWhere('slug', $id);
+      })->first();
+    }
+    
+    return parent::find($id);
+  }
     
     
   //   public static function seed()
@@ -385,7 +390,6 @@ trait Model
 
   //   public function scopeExport($query, $format)
   //   {
-  //       // dd(\App\Converters\Converter::format($format)->export($query));
   //       return \App\Converters\Converter::format($format)->export($query);
   //   }
 

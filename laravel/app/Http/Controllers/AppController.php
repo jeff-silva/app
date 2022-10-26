@@ -135,15 +135,6 @@ class AppController extends Controller
             //     ];
             // }
 
-            // if ($model) {
-            //     dd($model->getSingular(), $item);
-            // }
-
-            // if (\Str::endsWith($route->uri, '{id}')) {
-            //     dd(get_class_methods($route));
-            //     // dd($route->parameterNames());
-            // }
-
             $json['paths']["/{$route->uri}"][ $method ] = $item;
         }
 
