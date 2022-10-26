@@ -21,27 +21,26 @@ class Files extends Model
         'file',
     ];
 
-    // public function onMigrate($table, $columns)
-    // {
-    //     if (! in_array('slug', $columns)) {
-    //         return $table->string('slug')->after('id');
-    //     }
-    //     if (! in_array('size', $columns)) {
-    //         return $table->integer('size')->after('name');
-    //     }
-    //     if (! in_array('mime', $columns)) {
-    //         return $table->string('mime', 10)->after('size');
-    //     }
-    //     if (! in_array('folder', $columns)) {
-    //         return $table->string('folder')->after('mime');
-    //     }
-    //     if (! in_array('file', $columns)) {
-    //         return $table->binary('file')->after('folder');
-    //     }
-    // }
+    public function migrationSchema()
+    {
+        return [
+            'fields' => [
+                'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
+                'slug' => 'VARCHAR(255) DEFAULT NULL',
+                'name' => 'VARCHAR(255) DEFAULT NULL',
+                'size' => 'INT(10) DEFAULT NULL',
+                'mime' => 'VARCHAR(10) DEFAULT NULL',
+                'folder' => 'VARCHAR(255) DEFAULT NULL',
+                'file' => 'BLOB DEFAULT NULL',
+                'created_at' => 'DATETIME DEFAULT NULL',
+                'updated_at' => 'DATETIME DEFAULT NULL',
+            ],
+            'fks' => [],
+        ];
+    }
 
-    // public function onSeed()
-    // {
-    //     // 
-    // }
+    public function onSeed()
+    {
+        // 
+    }
 }

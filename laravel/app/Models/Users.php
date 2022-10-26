@@ -66,12 +66,20 @@ class Users extends Authenticatable implements JWTSubject
         return [];
     }
 
-    // public function onMigrate($table, $columns)
-    // {
-    //     if (! in_array('group_id', $columns)) {
-    //         return $table->integer('group_id')->nullable()->after('email');
-    //     }
-
-    //     // $table->foreign('group_id')->references('id')->on('users_groups');
-    // }
+    public function migrationSchema()
+    {
+        return [
+            'fields' => [
+                'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
+                'name' => 'VARCHAR(255) DEFAULT NULL',
+                'email' => 'VARCHAR(255) DEFAULT NULL',
+                'email_verified_at' => 'TIMESTAMP NULL DEFAULT NULL',
+                'password' => 'VARCHAR(255) NOT NULL',
+                'remember_token' => 'VARCHAR(100) NULL DEFAULT NULL',
+                'created_at' => 'DATETIME DEFAULT NULL',
+                'updated_at' => 'DATETIME DEFAULT NULL',
+            ],
+            'fks' => [],
+        ];
+    }
 }

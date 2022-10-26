@@ -58,6 +58,14 @@ trait Model
 
   // Database migration and seed
 
+  public function migrationSchema()
+  {
+    return [
+      'fields' => [],
+      'fks' => [],
+    ];
+  }
+
   public function onMigrate($table, $columns)
   {
     // 

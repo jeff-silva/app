@@ -45,22 +45,54 @@ class AppInstall extends Command
 
     public function migrate()
     {
-        $this->call('migrate', ['--force' => true]);
-
         foreach($this->getClasses('/app/models') as $model) {
+            $schema = $model->migrationSchema();
+            if (empty($schema['fields'])) continue;
+
             if (! \Schema::hasTable($model->getTable())) {
-                \Schema::create($model->getTable(), function ($table) {
-                    $table->id();
-                    $table->string('name');
-                    $table->timestamps();
-                });
+                $sql = ["CREATE TABLE `{$model->getTable()}` ("];
+                foreach($schema['fields'] as $field_name => $field_type) {
+                    $sql[] = "\t`{$field_name}` {$field_type},";
+                }
+                $sql[] = "\tPRIMARY KEY (`id`) USING BTREE";
+                $sql[] = ") COLLATE='utf8mb4_unicode_ci' ENGINE=InnoDB";
+                $sql = implode("\n", $sql);
+                
+                $this->info($sql);
+                \DB::statement($sql);
             }
 
-            \Schema::table($model->getTable(), function($table) use($model) {
-                $columns = \Schema::getColumnListing($model->getTable());
-                $model->onMigrate($table, $columns);
-            });
+            $field_name_last = false;
+            foreach($schema['fields'] as $field_name => $field_type) {
+                $sql = ["ALTER TABLE {$model->getTable()}"];
+                $sql[] = \Schema::hasColumn($model->getTable(), $field_name)? 'MODIFY COLUMN': 'ADD COLUMN';
+                $sql[] = "`{$field_name}` {$field_type}";
+                if ($field_name_last) $sql[] = "AFTER `{$field_name_last}`";
+                $sql = implode(' ', $sql);
+
+                $this->info($sql);
+                \DB::statement($sql);
+                
+                $field_name_last = $field_name;
+            }
         }
+        
+        // $this->call('migrate', ['--force' => true]);
+
+        // foreach($this->getClasses('/app/models') as $model) {
+        //     if (! \Schema::hasTable($model->getTable())) {
+        //         \Schema::create($model->getTable(), function ($table) {
+        //             $table->id();
+        //             $table->string('name');
+        //             $table->timestamps();
+        //         });
+        //     }
+
+        //     \Schema::table($model->getTable(), function($table) use($model) {
+        //         $columns = \Schema::getColumnListing($model->getTable());
+        //         $model->onMigrate($table, $columns);
+        //     });
+        // }
     }
 
     public function seed()
