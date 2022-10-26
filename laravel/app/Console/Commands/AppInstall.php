@@ -51,7 +51,21 @@ class AppInstall extends Command
             $schema = $model->migrationSchema();
             if (empty($schema['fields'])) continue;
 
-            if (! \Schema::hasTable($model->getTable())) {
+            if (\Schema::hasTable($model->getTable())) {
+                $field_name_last = false;
+                foreach($schema['fields'] as $field_name => $field_type) {
+                    $sql = ["ALTER TABLE {$model->getTable()}"];
+                    $sql[] = \Schema::hasColumn($model->getTable(), $field_name)? 'MODIFY COLUMN': 'ADD COLUMN';
+                    $sql[] = "`{$field_name}` {$field_type}";
+                    if ($field_name_last) $sql[] = "AFTER `{$field_name_last}`";
+                    $sql = implode(' ', $sql);
+
+                    $this->info($sql);
+                    \DB::statement($sql);
+
+                    $field_name_last = $field_name;
+                }
+            } else {
                 $sql = ["CREATE TABLE `{$model->getTable()}` ("];
                 foreach($schema['fields'] as $field_name => $field_type) {
                     $sql[] = "\t`{$field_name}` {$field_type},";
@@ -62,20 +76,6 @@ class AppInstall extends Command
                 
                 $this->info($sql);
                 \DB::statement($sql);
-            }
-
-            $field_name_last = false;
-            foreach($schema['fields'] as $field_name => $field_type) {
-                $sql = ["ALTER TABLE {$model->getTable()}"];
-                $sql[] = \Schema::hasColumn($model->getTable(), $field_name)? 'MODIFY COLUMN': 'ADD COLUMN';
-                $sql[] = "`{$field_name}` {$field_type}";
-                if ($field_name_last) $sql[] = "AFTER `{$field_name_last}`";
-                $sql = implode(' ', $sql);
-
-                $this->info($sql);
-                \DB::statement($sql);
-
-                $field_name_last = $field_name;
             }
         }
     }
