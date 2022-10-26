@@ -30,9 +30,9 @@ class AppInstall extends Command
         $app_name = env('APP_NAME');
 
         $this->info("-------- Installing {$app_name} --------");
-        // $this->clearCache();
+        $this->clearCache();
         $this->migrate();
-        // $this->seed();
+        $this->seed();
         $this->info("-------- Installing {$app_name} --------");
     }
 
