@@ -47,7 +47,7 @@ class AppInstall extends Command
     {
         // $this->call('migrate', ['--force' => true]);
         
-        foreach($this->getClasses('/app/models') as $model) {
+        foreach($this->getClasses('/app/Models') as $model) {
             $schema = $model->migrationSchema();
             if (empty($schema['fields'])) continue;
 
@@ -89,12 +89,10 @@ class AppInstall extends Command
     {
         $path = realpath(base_path(trim($folder, '/')));
         $files = glob("{$path}/*");
-
-        return array_map(function($file) {
-            $file = str_replace(base_path(), '', $file);
-            $file = str_replace('.php', '', $file);
-            $file = array_filter(explode(DIRECTORY_SEPARATOR, $file));
-            $file = '\\'. implode('\\', array_map('ucfirst', $file));
+        
+        return array_filter(array_map(function($file) use($folder) {
+            $file = pathinfo($file, PATHINFO_FILENAME);
+            $file = '\\'. implode('\\', array_map('ucfirst', array_filter(preg_split('/[^a-zA-Z0-9]/', $folder)))) . "\\{$file}";
 
             try {
                 return app($file);
@@ -103,6 +101,6 @@ class AppInstall extends Command
                 return false;
             }
             return $file;
-        }, $files);
+        }, $files));
     }
 }
