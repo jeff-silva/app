@@ -13,6 +13,13 @@
         </tr>
       </thead>
       <tbody>
+        <tr v-if="search.resp.data.length==0 && !search.loading">
+          <td colspan="100%" class="text-center">
+            <slot name="table-empty">
+              Nenhum item encontrado
+            </slot>
+          </td>
+        </tr>
         <tr v-for="(item, index) in items">
           <td width="50px">
             <v-checkbox :hide-details="true" />
@@ -21,13 +28,12 @@
             <td>&lt;template #table-row="row"&gt;&lt;/template&gt;</td>
           </slot>
           <td width="30px">
-            <app-over type="menu" :overBind="{location:'start'}">
+            <app-over type="side" :overBind="{location:'start'}">
               <template #activator="{ props }">
-                <v-btn icon="mdi-menu" size="x-small" v-bind="props"></v-btn>
-                <!-- <v-btn icon="mdi-menu" size="x-small" @click="$log(props)"></v-btn> -->
+                <v-btn icon="mdi-menu" flat v-bind="props"></v-btn>
               </template>
 
-              Hello
+              <slot name="table-actions" v-bind="slotBind(item)"></slot>
             </app-over>
           </td>
         </tr>

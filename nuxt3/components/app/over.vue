@@ -23,6 +23,17 @@
       </v-card>
     </v-menu>
 
+    <!-- Side -->
+    <v-menu v-else-if="type=='side'" v-bind="{...overBind}">
+      <template #activator="bind">
+        <slot name="activator" v-bind="bind" />
+      </template>
+
+      <div style="display:flex; gap:5px; margin:0 10px;">
+        <slot />
+      </div>
+    </v-menu>
+
     <!-- Drawer -->
     <div v-else-if="type=='drawer'">
       <slot name="activator" v-bind="drawerBind()" />
@@ -41,7 +52,7 @@ export default {
   props: {
     type: {
       type: String,
-      default: 'dialog', // dialog, menu, drawer
+      default: 'dialog', // dialog, menu, side, drawer
     },
     overBind: {
       type: Object,

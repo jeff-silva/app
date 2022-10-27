@@ -1,13 +1,19 @@
 <template>
   <form @submit.prevent>
-    <v-text-field label="Busca" />
-    <v-select label="Ordem" :items="[
-      {value:'id:asc', title:'Primeiro &raquo; Último'},
-      {value:'id:desc', title:'Último &raquo; Primeiro'},
-      {value:'name:asc', title:'Nome crescente'},
-      {value:'name:desc', title:'Nome decrescente'},
-    ]" />
-    <v-btn type="submit" block>Buscar</v-btn>
+    <div class="pa-3">
+      <v-text-field label="Busca" />
+      <v-select label="Ordem" :items="[
+        {value:'id:asc', title:'Primeiro &raquo; Último'},
+        {value:'id:desc', title:'Último &raquo; Primeiro'},
+        {value:'name:asc', title:'Nome crescente'},
+        {value:'name:desc', title:'Nome decrescente'},
+      ]" />
+    </div>
+    <v-divider />
+    <div class="d-flex flex-column pa-3" style="gap:10px;">
+      <v-btn type="submit" color="primary" block>Buscar</v-btn>
+      <slot name="form-actions" />
+    </div>
   </form>
 </template>
 

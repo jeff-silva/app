@@ -20,6 +20,14 @@
                   {to:'/admin/users', name:'Search'},
                   {to:'/admin/users/new', name:'Create'},
                 ]},
+                {to:'/admin', name:'Arquivos', icon:'mdi-account', children: [
+                  {to:'/admin/files', name:'Search'},
+                  {to:'/admin/files/new', name:'Create'},
+                ]},
+                {to:'/admin', name:'Endereços', icon:'mdi-account', children: [
+                  {to:'/admin/places', name:'Search'},
+                  {to:'/admin/places/new', name:'Create'},
+                ]},
                 {to:'/admin', name:'Products', icon:'mdi-tshirt-crew', children: [
                   {to:'/admin?page=products/search', name:'Search'},
                   {to:'/admin?page=products/new', name:'Create'},

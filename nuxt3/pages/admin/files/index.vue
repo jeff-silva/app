@@ -1,6 +1,6 @@
 <template>
   <nuxt-layout name="admin">
-    <app-model-search model="users">
+    <app-model-search model="files">
       <template #table-header>
         <th>Nome</th>
         <th>Email</th>
@@ -12,9 +12,7 @@
       </template>
 
       <template #table-actions="row">
-        <v-btn icon="mdi-alpha-a-circle" @click="click()"></v-btn>
-        <v-btn icon="mdi-alpha-a-circle" @click="click()"></v-btn>
-        <v-btn icon="mdi-alpha-a-circle" @click="click()"></v-btn>
+        <v-btn icon="mdi-pencil" :to="`/admin/files/${row.item.id}`"></v-btn>
       </template>
     </app-model-search>
   </nuxt-layout>

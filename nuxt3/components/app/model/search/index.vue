@@ -1,14 +1,6 @@
 <template>
-  <v-row>
-    <v-col cols="12" md="3">
-      <div class="d-md-none">
-        <v-btn type="button" block>Buscar</v-btn>
-      </div>
-      <app-model-search-form  ref="form" class="d-none d-md-block" :model="model">
-        <!-- <slot></slot> -->
-      </app-model-search-form>
-    </v-col>
-    <v-col cols="12" md="9">
+  <div>
+    <v-container>
       <app-model-search-table ref="table" :model="model">
         <template #table-header>
           <slot name="table-header"></slot>
@@ -17,9 +9,21 @@
         <template #table-row="row">
           <slot name="table-row" v-bind="row"></slot>
         </template>
+
+        <template #table-actions="row">
+          <slot name="table-actions" v-bind="row"></slot>
+        </template>
       </app-model-search-table>
-    </v-col>
-  </v-row>
+    </v-container>
+
+    <v-navigation-drawer location="end">
+      <app-model-search-form  ref="form" :model="model">
+        <template #form-actions>
+          <v-btn :to="`/admin/${model}/new`">Criar</v-btn>
+        </template>
+      </app-model-search-form>
+    </v-navigation-drawer>
+  </div>
 </template>
 
 <script>
