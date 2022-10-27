@@ -10,3 +10,14 @@
     <v-btn type="submit" block>Buscar</v-btn>
   </form>
 </template>
+
+<script>
+  export default {
+    props: {
+      model: {
+        type: String,
+        default: 'users',
+      },
+    },
+  };
+</script>

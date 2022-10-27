@@ -19,7 +19,7 @@ trait Model
         \App\Utils::error(500, 'Erros de validação', $validate->errors());
       }
 
-      if (in_array('slug', $model->getFillable()) AND !$model->slug AND $model->name) {
+      if (in_array('slug', $model->getFillable()) AND $model->name AND !$model->slug) {
         $model->slug = \Str::slug($model->name);
       }
 
@@ -156,22 +156,27 @@ trait Model
   // Upload
   public function upload($file, $folder='')
   {
-    $file_content = mb_convert_encoding(file_get_contents($file), 'UTF-8', 'UTF-8');
+    try {
+      $file_content = mb_convert_encoding(file_get_contents($file), 'UTF-8', 'UTF-8');
 
-    if ('files'==$this->getTable()) {
-      return $file_content;
+      if ('files'==$this->getTable()) {
+        return $file_content;
+      }
+
+      $save = \App\Models\Files::create([
+        'slug' => \Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) .'.'. $file->getClientOriginalExtension(),
+        'name' => $file->getClientOriginalName(),
+        'mime' => $file->getClientMimeType(),
+        'ext' => $file->getClientOriginalExtension(),
+        'size' => $file->getSize(),
+        'folder' => $folder,
+        'file' => $file_content,
+      ]);
+      return $save->id;
     }
-
-    $save = \App\Models\Files::create([
-      'slug' => \Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) .'.'. $file->getClientOriginalExtension(),
-      'name' => $file->getClientOriginalName(),
-      'mime' => $file->getClientMimeType(),
-      'ext' => $file->getClientOriginalExtension(),
-      'size' => $file->getSize(),
-      'folder' => $folder,
-      'file' => $file_content,
-    ]);
-    return $save->id;
+    catch(\Exception $e) {
+      \App\Utils::error(500, $e->getMessage());
+    }
   }
 
 
@@ -617,20 +622,20 @@ trait Model
 
 
 
-  //   public static function scopeToRawSql($query)
-  //   {
-  //       $sqlQuery = \Str::replaceArray(
-  //       '?',
-  //       collect($query->getBindings())
-  //           ->map(function ($i) {
-  //           if (is_object($i)) {
-  //               $i = (string)$i;
-  //           }
-  //           return (is_string($i)) ? "'$i'" : $i;
-  //           })->all(),
-  //       $query->toSql()
-  //       );
+  public static function scopeToRawSql($query)
+  {
+    $sqlQuery = \Str::replaceArray(
+    '?',
+    collect($query->getBindings())
+      ->map(function ($i) {
+      if (is_object($i)) {
+        $i = (string) $i;
+      }
+      return (is_string($i)) ? "'$i'" : $i;
+      })->all(),
+    $query->toSql()
+    );
 
-  //       return $sqlQuery;
-  //   }
+    return $sqlQuery;
+  }
 }

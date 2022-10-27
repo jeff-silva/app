@@ -1,8 +1,6 @@
 <template>
   <form @submit.prevent="request.submit()">
     <slot />
-    <pre>$props: {{ $props }}</pre>
-    <pre>$data: {{ $data }}</pre>
   </form>
 </template>
 

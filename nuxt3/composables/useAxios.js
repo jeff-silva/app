@@ -12,6 +12,7 @@ export default function(compParams={}) {
         data: {},
         resp: {},
         err: {message:false, fields:{}},
+        autoSubmit: false,
         submit: () => {},
         onSubmit: (resp) => {},
         onSuccess: (resp) => {},
@@ -38,6 +39,7 @@ export default function(compParams={}) {
     
             req.value.loading = true;
             req.value.status = false;
+            req.value.err = {message:'', fields:[]};
             compParams.onSubmit(req.value);
     
             axiosCancelSource = axiosCancelToken.source();
@@ -69,6 +71,7 @@ export default function(compParams={}) {
                 compParams.onError(err);
                 compParams.onResponse(err.response);
                 reject(err);
+                req.value.err = err.response.data;
             });
         });
     };
@@ -91,9 +94,9 @@ export default function(compParams={}) {
         req.value.data = {};
     };
 
-    // if (compParams.submit) {
-    //     req.value.submit();
-    // }
+    if (compParams.autoSubmit) {
+        req.value.submit();
+    }
 
     return req;
 };

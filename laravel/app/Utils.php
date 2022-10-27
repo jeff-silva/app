@@ -16,4 +16,19 @@ class Utils
     throw new \Exception(json_encode($json));
   }
 
+  static function dd()
+  {
+    // \Log::shareContext('This is some useful information.');
+
+    // $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+    // $out->writeln(print_r(['test' => true], true));
+
+    // \Illuminate\Support\Facades\Log::channel('stderr')->build(['Something happened!']);
+
+    foreach(func_get_args() as $data) {
+      print_r($data);
+      error_log(print_r($data, true) . PHP_EOL);
+    }
+  }
+
 }

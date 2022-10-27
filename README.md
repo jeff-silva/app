@@ -10,6 +10,12 @@ docker-compose up
 docker-compose -f docker-compose-prod.yml up
 ```
 
+## Permission error
+In case of permission erro, run this in the laravel folder:
+```bash
+chmod -R 777 storage/
+```
+
 ## TODO
 - ☑️ ~~Sync useApp data with Pinia~~
 - ☑️ ~~Resolve backend cors~~
