@@ -90,7 +90,7 @@ class Controller extends BaseController
 
     public function find($id)
     {
-        return request()->all();
+        return $this->model->find($id);
     }
 
     public function save()

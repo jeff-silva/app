@@ -24,6 +24,8 @@ export default function(compParams={}) {
     let req = ref({
         loading: false,
         status: false,
+        method: compParams.method,
+        url: compParams.url,
         params: JSON.parse(JSON.stringify(compParams.params)),
         data: JSON.parse(JSON.stringify(compParams.data)),
         resp: compParams.resp,

@@ -32,7 +32,9 @@
               <template #activator="{ props }">
                 <v-btn icon="mdi-menu" flat v-bind="props"></v-btn>
               </template>
-
+              
+              <v-btn icon="mdi-pencil" color="primary" :to="`/admin/${model}/${item.item.id}`"></v-btn>
+              <v-btn icon="mdi-delete" color="error"></v-btn>
               <slot name="table-actions" v-bind="slotBind(item)"></slot>
             </app-over>
           </td>

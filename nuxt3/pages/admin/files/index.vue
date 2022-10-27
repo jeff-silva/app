@@ -12,7 +12,7 @@
       </template>
 
       <template #table-actions="row">
-        <v-btn icon="mdi-pencil" :to="`/admin/files/${row.item.id}`"></v-btn>
+        <!-- <v-btn icon="mdi-pencil" :to="`/admin/files/${row.item.id}`"></v-btn> -->
       </template>
     </app-model-search>
   </nuxt-layout>
