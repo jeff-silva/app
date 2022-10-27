@@ -82,4 +82,18 @@ class Users extends Authenticatable implements JWTSubject
             'fks' => [],
         ];
     }
+
+    public function demo()
+    {
+        $resp = \Http::get('https://randomuser.me/api/?results=5')->json();
+        if (isset($resp['results']) AND is_array($resp['results'])) {
+            foreach($resp['results'] as $user) {
+                \App\Models\Users::create([
+                    'name' => implode(' ', [ $user['name']['first'], $user['name']['last'] ]),
+                    'email' => $user['email'],
+                    'password' => \Hash::make('321321'),
+                ]);
+            }
+        }
+    }
 }

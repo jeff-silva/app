@@ -95,8 +95,10 @@ class Controller extends BaseController
 
     public function save()
     {
-        $id = request()->input('id', null);
-        $model = $this->model->firstOrNew(['id' => $id], request()->all());
+        $model = $this->model->firstOrNew([
+            'id' => request()->input('id', null),
+        ], request()->all());
+        
         $model->save();
         return $model;
     }

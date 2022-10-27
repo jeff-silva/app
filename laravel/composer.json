@@ -10,6 +10,8 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "mll-lab/laravel-graphiql": "^1.0",
+        "nuwave/lighthouse": "^5.63",
         "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {

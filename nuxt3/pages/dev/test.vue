@@ -69,6 +69,34 @@ export default {
       console.log(ev);
       // this.files.submit();
     },
+
+    async graphql(query) {
+      const { data } = await this.$axios({
+        url: '/graphql',
+        method: 'post',
+        data: { query },
+      });
+      
+      console.log(query, data.data);
+    },
+  },
+
+  mounted() {
+    this.graphql(`{
+      users(page:4, first:5) {
+        data {
+          id
+          name
+          email
+        }
+        paginatorInfo {
+          currentPage
+          total
+          perPage
+          hasMorePages
+        }
+      }
+    }`);
   },
 };
 </script>

@@ -12,9 +12,7 @@
       </template>
 
       <template #table-actions="row">
-        <v-btn icon="mdi-alpha-a-circle" @click="click()"></v-btn>
-        <v-btn icon="mdi-alpha-a-circle" @click="click()"></v-btn>
-        <v-btn icon="mdi-alpha-a-circle" @click="click()"></v-btn>
+        <!-- <v-btn icon="mdi-alpha-a-circle" @click="click()"></v-btn> -->
       </template>
     </app-model-search>
   </nuxt-layout>

@@ -108,7 +108,7 @@ trait Model
     $default = [
       'q' => null,
       'page' => 1,
-      'per_page' => 20,
+      'per_page' => 10,
     ];
     return (object) array_merge($default, $this->searchParams(), $merge);
   }
@@ -191,6 +191,12 @@ trait Model
     }
     
     return parent::find($id);
+  }
+
+
+  public function demo()
+  {
+    // 
   }
     
     
