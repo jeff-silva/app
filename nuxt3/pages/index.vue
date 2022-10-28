@@ -1,5 +1,5 @@
 <template>
-  <div>
-    <v-btn to="/dev">/dev</v-btn>
-  </div>
+  <nuxt-layout name="site-sidebar">
+    Bem vindo
+  </nuxt-layout>
 </template>
