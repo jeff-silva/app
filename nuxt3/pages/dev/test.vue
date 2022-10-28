@@ -93,8 +93,8 @@ export default {
           first: 5,
         },
         query: (data) => `{
-          user(id: ${data.userId}) { id name email }
-          users(page:${data.page}, first:${data.first}) {
+          usersFind(id: ${data.userId}) { id name email }
+          usersSearch(page:${data.page}, first:${data.first}) {
             paginatorInfo { currentPage total perPage lastPage hasMorePages }
             data { id name email }
           }
