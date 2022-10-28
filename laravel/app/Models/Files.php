@@ -68,9 +68,4 @@ class Files extends Model
             'fks' => [],
         ];
     }
-
-    public function onSeed()
-    {
-        // 
-    }
 }

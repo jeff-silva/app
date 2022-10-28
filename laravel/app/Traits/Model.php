@@ -147,7 +147,7 @@ trait Model
     ];
   }
 
-  public function onSeed()
+  public function seed()
   {
     // 
   }

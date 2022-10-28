@@ -26,6 +26,8 @@ class Users extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'photo_id',
+        'group_id',
     ];
 
     /**
@@ -87,6 +89,20 @@ class Users extends Authenticatable implements JWTSubject
                 'users_groups' => 'FOREIGN KEY (`group_id`) REFERENCES `users_groups` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION',
             ],
         ];
+    }
+
+    public $seedAfter = 'users_groups';
+    public function seed()
+    {
+        
+        $model = self::firstOrNew(['id' => 1], [
+            'name' => 'Root User',
+            'email' => 'root@grr.la',
+            'password' => \Hash::make('321321'),
+        ]);
+
+        $model->group_id = 1;
+        $model->save();
     }
 
     public function demo()

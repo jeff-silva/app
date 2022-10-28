@@ -13,6 +13,12 @@ class UsersGroups extends Model
     protected $plural = 'Grupos de usuários';
     protected $table = 'users_groups';
 
+    protected $fillable = [
+        'id',
+        'name',
+        'permissions',
+    ];
+
     public function migrationSchema()
     {
         return [
@@ -25,5 +31,14 @@ class UsersGroups extends Model
             ],
             'fks' => [],
         ];
+    }
+
+    public function seed()
+    {
+        $model = self::firstOrNew(['id' => 1], [
+            'name' => 'Root Group',
+        ]);
+
+        $model->save();
     }
 }

@@ -29,11 +29,21 @@ class AppInstall extends Command
     {
         $app_name = env('APP_NAME');
 
-        $this->info("-------- Installing {$app_name} --------");
+        $this->infoTitle("Installing {$app_name}");
         $this->clearCache();
         $this->migrate();
         $this->seed();
-        $this->info("-------- Installing {$app_name} --------");
+    }
+
+    public function infoTitle($title)
+    {
+        $str = '•';
+        $this->info('');
+        $this->info(implode(' ', [
+            str_repeat($str, 10),
+            $title,
+            str_repeat($str, 60 - strlen($title)),
+        ]));
     }
 
     public function clearCache()
@@ -51,7 +61,7 @@ class AppInstall extends Command
         foreach($this->getClasses('/app/Models') as $model) {
             $schema = $model->migrationSchema();
             if (empty($schema['fields'])) continue;
-            $this->info("-------- Table: {$model->getTable()} --------");
+            $this->infoTitle("Table: {$model->getTable()}");
 
             if (\Schema::hasTable($model->getTable())) {
                 $field_name_last = false;
@@ -88,7 +98,7 @@ class AppInstall extends Command
             }
         }
 
-        $this->info("-------- Foreign keys --------");
+        $this->infoTitle('Foreign keys');
         foreach($this->databaseFks() as $fk) {
             $sql = "ALTER TABLE `{$fk->TABLE_NAME}` DROP FOREIGN KEY `{$fk->CONSTRAINT_NAME}`;";
             \DB::statement($sql);
@@ -104,15 +114,36 @@ class AppInstall extends Command
 
     public function seed()
     {
-        $this->call('db:seed', ['--force' => true]);
+        $this->infoTitle('Seed');
+        // $this->call('db:seed', ['--force' => true]);
+        $seeds = $this->getClasses('/app/Models');
+
+        usort($seeds, function($a, $b) {
+            if(!$a->seedAfter || $a->getTable() == $b->seedAfter)
+                return -1;
+            if(!$b->seedAfter || $b->getTable() == $a->seedAfter)
+                return 1;
+            return 0;
+        });
+
+        foreach($seeds as $model) {
+            $model->seed();
+            $this->info($model->getTable());
+        }
     }
 
+    public $getClasses = [];
     public function getClasses($folder)
     {
         $path = realpath(base_path(trim($folder, '/')));
+
+        if (isset($this->getClasses[ $path ])) {
+            return $this->getClasses[ $path ];
+        }
+
         $files = glob("{$path}/*");
         
-        return array_filter(array_map(function($file) use($folder) {
+        return $this->getClasses[ $path ] = array_filter(array_map(function($file) use($folder) {
             $file = pathinfo($file, PATHINFO_FILENAME);
             $file = '\\'. implode('\\', array_map('ucfirst', array_filter(preg_split('/[^a-zA-Z0-9]/', $folder)))) . "\\{$file}";
 
