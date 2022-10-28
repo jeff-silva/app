@@ -11,6 +11,7 @@ class Places extends Model
 
     protected $singular = 'Local';
     protected $plural = 'Locais';
+    protected $table = 'places';
 
     public function migrationSchema()
     {

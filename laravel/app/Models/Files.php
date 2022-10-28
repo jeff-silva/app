@@ -11,6 +11,8 @@ class Files extends Model
 
     protected $singular = 'Arquivo';
     protected $plural = 'Arquivos';
+    protected $table = 'files';
+
     protected $fillable = [
         'id',
         'slug',

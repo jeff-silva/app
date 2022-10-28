@@ -47,9 +47,11 @@ class AppInstall extends Command
     {
         // $this->call('migrate', ['--force' => true]);
         
+        $foreign_keys = [];
         foreach($this->getClasses('/app/Models') as $model) {
             $schema = $model->migrationSchema();
             if (empty($schema['fields'])) continue;
+            $this->info("-------- Table: {$model->getTable()} --------");
 
             if (\Schema::hasTable($model->getTable())) {
                 $field_name_last = false;
@@ -58,7 +60,7 @@ class AppInstall extends Command
                     $sql[] = \Schema::hasColumn($model->getTable(), $field_name)? 'MODIFY COLUMN': 'ADD COLUMN';
                     $sql[] = "`{$field_name}` {$field_type}";
                     if ($field_name_last) $sql[] = "AFTER `{$field_name_last}`";
-                    $sql = implode(' ', $sql);
+                    $sql = implode(' ', $sql) .';';
 
                     $this->info($sql);
                     \DB::statement($sql);
@@ -77,6 +79,26 @@ class AppInstall extends Command
                 $this->info($sql);
                 \DB::statement($sql);
             }
+
+            foreach($schema['fks'] as $fk_name => $fk) {
+                $foreign_keys[ $fk_name ] = (object) [
+                    'table' => $model->getTable(),
+                    'fk' => $fk,
+                ];
+            }
+        }
+
+        $this->info("-------- Foreign keys --------");
+        foreach($this->databaseFks() as $fk) {
+            $sql = "ALTER TABLE `{$fk->TABLE_NAME}` DROP FOREIGN KEY `{$fk->CONSTRAINT_NAME}`;";
+            \DB::statement($sql);
+            $this->info($sql);
+        }
+
+        foreach($foreign_keys as $fk_name => $fk) {
+            $sql = "ALTER TABLE `{$fk->table}` ADD CONSTRAINT `{$fk_name}` {$fk->fk};";
+            \DB::statement($sql);
+            $this->info($sql);
         }
     }
 
@@ -102,5 +124,15 @@ class AppInstall extends Command
             }
             return $file;
         }, $files));
+    }
+
+    public $databaseFks = false;
+    public function databaseFks()
+    {
+        if (!$this->databaseFks) {
+            $this->databaseFks = collect(\DB::select("SELECT * from INFORMATION_SCHEMA.TABLE_CONSTRAINTS where CONSTRAINT_TYPE = 'FOREIGN KEY'"));
+        }
+
+        return $this->databaseFks;
     }
 }
