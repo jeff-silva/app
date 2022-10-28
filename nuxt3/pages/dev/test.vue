@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-form v-model="post" method="post" action="/api/files/save" @success="onSuccess($event)">
+    <!-- <app-form v-model="post" method="post" action="/api/files/save" @success="onSuccess($event)">
       <v-text-field label="Nome" v-model="post.name" />
       <v-file-input label="Arquivo" v-bind="{showSize:true, dirty:true}" @update:modelValue="post.file=$event[0]||false" />
       <v-text-field label="Pasta" v-model="post.folder" />
@@ -8,9 +8,9 @@
       <app-actions>
         <v-btn type="submit">Enviar</v-btn>
       </app-actions>
-    </app-form>
+    </app-form> -->
 
-    <app-model-search model="files">
+    <!-- <app-model-search model="files">
       <template #table-header>
         <th>Nome</th>
         <th>URL</th>
@@ -20,7 +20,8 @@
         <td>{{ row.item.name }}</td>
         <td>{{ row.item.url }}</td>
       </template>
-    </app-model-search>
+    </app-model-search> -->
+
     <!-- <v-row>
       <v-col cols="6">
         <pre style="overflow:auto;">post: {{ post }}</pre>
@@ -43,16 +44,62 @@
         </v-table>
       </v-col>
     </v-row> -->
+
+    <v-row>
+      <v-col cols="6">
+        <v-text-field
+          label="Page"
+          v-model.number="graphql.data.page"
+          type="number"
+          @input="graphql.submit()"
+        />
+      </v-col>
+      <v-col cols="6">
+        <v-text-field
+          label="Perpage"
+          v-model.number="graphql.data.first"
+          type="number"
+          @input="graphql.submit()"
+        />
+      </v-col>
+    </v-row>
+
+    <app-dd>$data: {{ $data }}</app-dd>
   </div>
 </template>
 
 <script>
+import useGraphql from '@/composables/useGraphql';
+
 export default {
   data() {
     return {
       post: {
         name: 'Descrição do arquivo',
       },
+      graphql: useGraphql({
+        autoSubmit: true,
+        data: {
+          page: 1,
+          first: 5,
+        },
+        query: (data) => `{
+          users(page:${data.page}, first:${data.first}) {
+            paginatorInfo {
+              currentPage
+              total
+              perPage
+              lastPage
+              hasMorePages
+            }
+            data {
+              id
+              name
+              email
+            }
+          }
+        }`,
+      }),
       // files: useAxios({
       //   method: 'get',
       //   url: '/api/files/search',
@@ -70,33 +117,34 @@ export default {
       // this.files.submit();
     },
 
-    async graphql(query) {
-      const { data } = await this.$axios({
-        url: '/graphql',
-        method: 'post',
-        data: { query },
-      });
+    // async graphql(query) {
+    //   const { data } = await this.$axios({
+    //     url: '/graphql',
+    //     method: 'post',
+    //     data: { query },
+    //   });
       
-      console.log(query, data.data);
-    },
+    //   console.log(query, data.data);
+    // },
   },
 
   mounted() {
-    this.graphql(`{
-      users(page:4, first:5) {
-        data {
-          id
-          name
-          email
-        }
-        paginatorInfo {
-          currentPage
-          total
-          perPage
-          hasMorePages
-        }
-      }
-    }`);
+    // this.graphql(`{
+    //   users(page:1, first:3) {
+    //     paginatorInfo {
+    //       currentPage
+    //       total
+    //       perPage
+    //       lastPage
+    //       hasMorePages
+    //     }
+    //     data {
+    //       id
+    //       name
+    //       email
+    //     }
+    //   }
+    // }`);
   },
 };
 </script>
