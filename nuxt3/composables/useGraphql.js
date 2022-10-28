@@ -19,7 +19,7 @@ export default function(params = {}) {
         data: params.data,
         query: '',
         resp: {},
-        error: {},
+        errors: {},
         async submit() {
             this.loading = true;
             try {
@@ -27,7 +27,10 @@ export default function(params = {}) {
                     query: this.query,
                 });
                 this.resp = resp.data.data;
-                params.onSuccess(resp);
+                this.errors = resp.data.errors || [];
+                this.errors.length?
+                    params.onError(resp):
+                    params.onSuccess(resp);
             }
             catch(err) {
                 this.error = err.response.data;

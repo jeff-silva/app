@@ -46,18 +46,26 @@
     </v-row> -->
 
     <v-row>
-      <v-col cols="6">
+      <v-col cols="4">
         <v-text-field
-          label="Page"
+          label="page"
           v-model.number="graphql.data.page"
           type="number"
           @input="graphql.submit()"
         />
       </v-col>
-      <v-col cols="6">
+      <v-col cols="4">
         <v-text-field
-          label="Perpage"
+          label="first"
           v-model.number="graphql.data.first"
+          type="number"
+          @input="graphql.submit()"
+        />
+      </v-col>
+      <v-col cols="4">
+        <v-text-field
+          label="userId"
+          v-model.number="graphql.data.userId"
           type="number"
           @input="graphql.submit()"
         />
@@ -80,23 +88,15 @@ export default {
       graphql: useGraphql({
         autoSubmit: true,
         data: {
+          userId: 2,
           page: 1,
           first: 5,
         },
         query: (data) => `{
+          user(id: ${data.userId}) { id name email }
           users(page:${data.page}, first:${data.first}) {
-            paginatorInfo {
-              currentPage
-              total
-              perPage
-              lastPage
-              hasMorePages
-            }
-            data {
-              id
-              name
-              email
-            }
+            paginatorInfo { currentPage total perPage lastPage hasMorePages }
+            data { id name email }
           }
         }`,
       }),
