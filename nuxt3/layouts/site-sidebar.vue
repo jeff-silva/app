@@ -16,7 +16,9 @@
                   {to:'/tools/search', name:'Busca'},
                   {to:'/tools/whatsapp', name:'Whatsapp link'},
                 ]},
-                {to:'/dev', name:'Dev'},
+                {to:'/dev', name:'Dev', icon:'mdi-cog', children: [
+                  {to:'/dev/api', name:'API'},
+                ]},
               ]" />
             </slot>
           </div>
