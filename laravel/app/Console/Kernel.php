@@ -17,9 +17,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        // $schedule->call(function () {
-        //     file_put_contents(base_path('crontab.test'), date('Y-m-d H:i:s'));
-        // })->everyMinute();
+        $schedule->call(function () {
+            (new \App\Models\LotoMegasena)->lotoImport();
+        })->daily();
     }
 
     /**
@@ -32,10 +32,5 @@ class Kernel extends ConsoleKernel
         $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
-
-        \Artisan::command('loto:import', function () {
-            $this->info('Loto import');
-            (new \App\Models\LotoMegasena)->lotoImport();
-        });
     }
 }
