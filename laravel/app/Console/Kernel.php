@@ -32,5 +32,10 @@ class Kernel extends ConsoleKernel
         $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
+
+        \Artisan::command('loto:import', function () {
+            $this->info('Loto import');
+            (new \App\Models\LotoMegasena)->lotoImport();
+        });
     }
 }
