@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function () {
             (new \App\Models\LotoMegasena)->lotoImport();
+            (new \App\Models\LotoLotofacil)->lotoImport();
         })->daily();
     }
 
