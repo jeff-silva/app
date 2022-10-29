@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class LotoMegasenaController extends Controller
+class LotoLotofacilController extends Controller
 {
     public function onInit()
     {
@@ -12,11 +12,11 @@ class LotoMegasenaController extends Controller
             'except' => ['save', 'delete'],
         ]);
 
-        $this->routeMatch(['post'], 'loto_megasena/import', 'import')->name('loto_megasena.import');
+        $this->routeMatch(['post'], 'loto_lotofacil/import', 'import')->name('loto_lotofacil.import');
     }
 
     public function import()
     {
-        return (new \App\Models\LotoMegasena)->lotoImport();
+        return (new \App\Models\LotoLotofacil)->lotoImport();
     }
 }

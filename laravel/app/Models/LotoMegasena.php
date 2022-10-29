@@ -65,13 +65,14 @@ class LotoMegasena extends Model
             foreach($tr->getElementsByTagName('td') as $td_index => $td) {
                 $values[] = $td->nodeValue;
             }
-            $return[] = $values;
             if ($save = $this->lotoParseRow($values, $tr_index)) {
                 $model = self::firstOrNew(['contest' => $save['contest']], $save);
                 $model->fill($save);
                 $model->save();
+                $return[] = $model;
             }
         }
+        return $return;
     }
 
     public function migrationSchema()

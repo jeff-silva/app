@@ -19,6 +19,7 @@
                 {to:'/dev', name:'Dev', icon:'mdi-cog', children: [
                   {to:'/dev/api', name:'API'},
                 ]},
+                {to:'/admin', name:'Admin', icon:'mdi-cog'},
               ]" />
             </slot>
           </div>

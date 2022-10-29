@@ -32,6 +32,10 @@
                   {to:'/admin?page=products/search', name:'Search'},
                   {to:'/admin?page=products/new', name:'Create'},
                 ]},
+                {to:'/admin', name:'Loto', icon:'mdi-slot-machine', children: [
+                  {to:'/admin/loto/loto_megasena', name:'Megasena'},
+                  {to:'/admin/loto/loto_lotofacil', name:'Lotofácil'},
+                ]},
                 {to:'/', name:'Settings', icon:'mdi-cog', children: [
                   {to:'/admin/settings', name:'Configurações'},
                   {to:'/dev', name:'Dev'},

@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="app-model-search">
     <v-container>
-      <app-model-search-table ref="table" :model="model">
+      <app-model-search-table ref="table" :model="model" v-bind="{ tableSizes }">
         <template #table-header>
           <slot name="table-header"></slot>
         </template>
@@ -17,11 +17,24 @@
     </v-container>
 
     <v-navigation-drawer location="end">
-      <app-model-search-form  ref="form" :model="model">
-        <template #form-actions>
-          <v-btn :to="`/admin/${model}/new`">Criar</v-btn>
-        </template>
-      </app-model-search-form>
+      <form @submit.prevent>
+        <div class="pa-3">
+          <v-text-field label="Busca" />
+          <v-select label="Ordem" :items="[
+            {value:'id:asc', title:'Primeiro &raquo; Último'},
+            {value:'id:desc', title:'Último &raquo; Primeiro'},
+            {value:'name:asc', title:'Nome crescente'},
+            {value:'name:desc', title:'Nome decrescente'},
+          ]" />
+        </div>
+        <v-divider />
+        <div class="app-model-search-form-actions d-flex flex-column pa-3">
+          <v-btn type="submit" color="primary" block>
+            <v-icon icon="mdi-magnify" /> Buscar
+          </v-btn>
+          <slot name="form-actions" />
+        </div>
+      </form>
     </v-navigation-drawer>
   </div>
 </template>
@@ -33,6 +46,19 @@
         type: String,
         default: 'users',
       },
+      tableSizes: {
+        type: Array,
+        default: () => ([]),
+      },
     },
   };
 </script>
+
+<style>
+  .app-model-search-form-actions {
+    gap: 10px;
+  }
+  .app-model-search-form-actions .v-btn .v-icon {
+    margin: 0 8px;
+  }
+</style>

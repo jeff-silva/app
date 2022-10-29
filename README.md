@@ -31,6 +31,8 @@ reset && docker-compose up --force-recreate && docker-compose down
   - ☑️ ~~Error "Windows named pipe error" using entrypoint or command at laravel service in docker-compose.yml~~
   - ⬛ Admin area
   - ⬛ Implement Settings
+  - ⬛ Implement Swal2
+    - ⬛ Use axios confirmation
 - ⬛ Laravel
   - ☑️ ~~Resolve backend cors~~
   - ☑️ ~~Implement Laravel JWT~~

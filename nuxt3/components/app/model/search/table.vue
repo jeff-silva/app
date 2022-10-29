@@ -1,6 +1,11 @@
 <template>
   <div>
     <v-table v-bind="{fixedHeader:true, density:'compact'}">
+      <colgroup>
+        <col width="50px">
+        <col v-for="s in tableSizes" :width="s">
+        <col width="50px">
+      </colgroup>
       <thead>
         <tr>
           <th>
@@ -52,6 +57,10 @@ export default {
     model: {
       type: String,
       default: 'users',
+    },
+    tableSizes: {
+      type: Array,
+      default: () => ([]),
     },
   },
 
