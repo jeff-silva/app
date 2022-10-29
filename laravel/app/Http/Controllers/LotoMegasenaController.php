@@ -8,6 +8,8 @@ class LotoMegasenaController extends Controller
 {
     public function onInit()
     {
-        $this->apiResource();
+        $this->apiResource([
+            'except' => ['save', 'delete'],
+        ]);
     }
 }
