@@ -54,7 +54,7 @@
           />
         </div>
       </v-navigation-drawer>
-      <v-main style="height:100vh; overflow-y:scroll; overflow-x:hidden;">
+      <v-main style="height:100vh; overflow-y:scroll; overflow-x:hidden; overflow-y:auto;">
         <v-app-bar class="px-md-3" v-bind="{height:50, color:'grey-lighten-4', elevation:0, location:'top'}">
           <v-btn icon="mdi-menu" size="small" @click="drawer=true" v-if="!breakpoints.xs"></v-btn>
         </v-app-bar>
