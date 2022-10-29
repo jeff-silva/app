@@ -26,7 +26,7 @@
         <v-app-bar class="px-md-3" v-bind="{height:50, color:'grey-lighten-4', elevation:0, location:'top'}">
           <v-btn icon="mdi-menu" size="small" @click="drawer=true" v-if="!breakpoints.xs"></v-btn>
         </v-app-bar>
-        <v-container>
+        <v-container style="max-width:1200px;">
           <slot />
         </v-container>
       </v-main>

@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="12" md="6">
-        <v-text-field label="Termo" v-model="term"></v-text-field>
+        <v-text-field label="Buscar pessoas, produtos, vagas de emprego..." v-model="term"></v-text-field>
       </v-col>
       <v-col cols="12" md="6">
         <v-text-field label="Cidade" v-model="place"></v-text-field>
@@ -106,6 +106,36 @@
             name: 'Procurar pessoas',
             url: `https://www.procurarpessoas.net/busca/?cx=partner-pub-0265720870061805%3A9931338853&cof=FORID%3A10&ie=UTF-8&q=${term}&siteurl=www.procurarpessoas.net%2F&ref=www.google.com%2F&ss=3128j722372j25`,
             categories: ['people'],
+          });
+          
+          links.push({
+            name: 'Indeed',
+            url: `https://br.indeed.com/empregos?q=${term}&l=${place}`,
+            categories: ['work'],
+          });
+          
+          links.push({
+            name: 'IT Jobs',
+            url: `https://www.itjobs.pt/emprego?q=${term}`,
+            categories: ['work'],
+          });
+          
+          links.push({
+            name: 'Vagas',
+            url: `https://www.vagas.com.br/vagas/pesquisas?q=Motorista%20Belo%20Horizonte`,
+            categories: ['work'],
+          });
+          
+          links.push({
+            name: 'Catho',
+            url: `https://www.catho.com.br/vagas/?q=Motorista`,
+            categories: ['work'],
+          });
+          
+          links.push({
+            name: '99 Freelas',
+            url: `https://www.99freelas.com.br/freelancers?q=Motorista`,
+            categories: ['work'],
           });
         }
 

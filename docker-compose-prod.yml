@@ -20,7 +20,7 @@ services:
         image: sail-8.1/app
         entrypoint: bash -c "composer install && php artisan app:install && start-container"
         build:
-            context: ./laravel/vendor/laravel/sail/runtimes/8.1
+            context: ./laravel/docker
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP:-1000}'
