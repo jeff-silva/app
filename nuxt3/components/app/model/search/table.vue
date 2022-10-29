@@ -19,7 +19,7 @@
       </thead>
       <tbody>
         <tr v-if="search.resp.data.length==0 && !search.loading">
-          <td colspan="100%" class="text-center">
+          <td colspan="100%" class="text-center py-5">
             <slot name="table-empty">
               Nenhum item encontrado
             </slot>
@@ -46,8 +46,16 @@
         </tr>
       </tbody>
     </v-table>
-    <pre>items: {{ items }}</pre>
-    <pre>search: {{ search }}</pre>
+    <v-divider class="mb-4" />
+    <v-pagination
+      v-model="search.params.page"
+      density="comfortable"
+      :length="search.resp.last_page"
+      :total-visible="10"
+      @update:modelValue="$debounce('app-model-search-table-page', 1000, search.submit)"
+    ></v-pagination>
+    <!-- <pre>items: {{ items }}</pre> -->
+    <!-- <pre>search: {{ search }}</pre> -->
   </div>
 </template>
 
@@ -62,6 +70,10 @@ export default {
       type: Array,
       default: () => ([]),
     },
+    params: {
+      type: Object,
+      default: () => ({}),
+    },
   },
 
   methods: {
@@ -71,6 +83,16 @@ export default {
 
     submit() {
       alert('submit');
+    },
+
+    paramsMerge(merge={}) {
+      const defs = {
+        q: '',
+        page: 1,
+        per_page: 10,
+        order: 'id:desc',
+      };
+      return { ...defs, ...this.params, ...merge };
     },
   },
 
@@ -88,9 +110,10 @@ export default {
       search: useAxios({
         method: 'get',
         url: `/api/${this.model}/search`,
-        params: {},
+        params: this.paramsMerge(),
         autoSubmit: true,
         resp: {
+          last_page: 1,
           data: [],
         },
       }),

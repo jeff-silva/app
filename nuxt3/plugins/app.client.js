@@ -99,6 +99,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 	nuxtApp.provide('axios', axios);
 	nuxtApp.provide('devMode', devMode);
 	nuxtApp.provide('log', console.log);
+	nuxtApp.provide('debounce', function(id, time, callback) {
+	  window.nuxtDebounce = window.nuxtDebounce || {};
+		if (window.nuxtDebounce[id]) clearTimeout(window.nuxtDebounce[id]);
+		window.nuxtDebounce[id] = setTimeout(callback, time);
+  });
 	nuxtApp.provide('key', function(value) {
 	  return typeof value=='object'? JSON.stringify(value): value;
   });
