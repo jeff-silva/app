@@ -58,7 +58,7 @@ class AppInstall extends Command
         // $this->call('migrate', ['--force' => true]);
         
         $foreign_keys = [];
-        foreach($this->getClasses('/app/Models') as $model) {
+        foreach($this->getModels() as $model) {
             $schema = $model->migrationSchema();
             if (empty($schema['fields'])) continue;
             $this->infoTitle("Table: {$model->getTable()}");
@@ -116,7 +116,7 @@ class AppInstall extends Command
     {
         $this->infoTitle('Seed');
         // $this->call('db:seed', ['--force' => true]);
-        $seeds = $this->getClasses('/app/Models');
+        $seeds = $this->getModels();
 
         usort($seeds, function($a, $b) {
             if(!$a->seedAfter || $a->getTable() == $b->seedAfter)
@@ -155,6 +155,12 @@ class AppInstall extends Command
             }
             return $file;
         }, $files));
+    }
+
+    public function getModels() {
+        return array_filter(array_map(function($model) {
+            return (in_array(\App\Traits\Model::class, class_uses_recursive(get_class($model))))? $model: false;
+        }, $this->getClasses('/app/Models')));
     }
 
     public $databaseFks = false;
