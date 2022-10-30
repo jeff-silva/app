@@ -4,22 +4,9 @@
 docker-compose up
 ```
 
-
 ## Start prod server
 ```bash
 docker-compose -f docker-compose-prod.yml up
-```
-
-## Permission error
-In case of permission erro, run this in the laravel folder:
-```bash
-chmod -R 777 storage/
-```
-
-## Run whilte changing docker-compose.yml
-In case of permission erro, run this in the laravel folder:
-```bash
-reset && docker-compose up --force-recreate && docker-compose down
 ```
 
 ## TODO
