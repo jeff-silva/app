@@ -18,6 +18,8 @@
                 ]},
                 {to:'/dev', name:'Dev', icon:'mdi-cog', children: [
                   {to:'/dev/api', name:'API'},
+                  {to:'/dev/auth', name:'Auth'},
+                  {to:'/dev/test', name:'Test'},
                 ]},
                 {to:'/admin', name:'Admin', icon:'mdi-cog'},
               ]" />
