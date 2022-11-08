@@ -1,11 +1,14 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="12" md="6">
-        <v-text-field label="Buscar pessoas, produtos, vagas de emprego..." v-model="term"></v-text-field>
+      <v-col cols="12" md="4">
+        <v-select label="Tipo de busca" :items="categories" item-title="name" item-value="id" v-model="filter.category"></v-select>
       </v-col>
-      <v-col cols="12" md="6">
-        <v-text-field label="Cidade" v-model="place"></v-text-field>
+      <v-col cols="12" md="4">
+        <v-text-field label="Buscar pessoas, produtos, vagas de emprego..." v-model="filter.term"></v-text-field>
+      </v-col>
+      <v-col cols="12" md="4">
+        <v-text-field label="Cidade" v-model="filter.place"></v-text-field>
       </v-col>
       <v-col cols="12">
         <div class="d-flex">
@@ -34,36 +37,40 @@
   export default {
     data() {
       return {
-        term: '',
-        place: '',
-        category: false,
+        filter: {
+          category: '',
+          term: '',
+          place: '',
+        },
+        categories: [
+          {id:'people', icon:'mdi-account-group', name:'Pessoas'},
+          {id:'shop', icon:'mdi-cart', name:'Produtos'},
+          {id:'work', icon:'mdi-briefcase', name:'Trabalho'},
+        ],
       };
     },
 
     computed: {
       results() {
-        let term = encodeURI(this.term);
-        let place = encodeURI(this.place);
-
-        let categories = [
-          {id:'work', icon:'mdi-briefcase', rawName:'Trabalho'},
-          {id:'people', icon:'mdi-account-group', rawName:'Pessoas'},
-          {id:'shop', icon:'mdi-cart', rawName:'Produtos'},
-        ];
+        let category = this.filter.category;
+        let term = encodeURI(this.filter.term);
+        let place = encodeURI(this.filter.place);
 
         let links = [];
 
-        if (this.term) {
+        if (term) {
+
+          // People
           links.push({
             name: 'Google',
             url: `https://www.google.com/search?q=${term}+${place}&newwindow=1`,
-            categories: categories.map(cat => cat.id),
+            categories: this.categories.map(cat => cat.id),
           });
           
           links.push({
             name: 'Google - CNPJ',
             url: `https://www.google.com/search?q=${term}+${place}+%2BCNPJ&newwindow=1`,
-            categories: categories.map(cat => cat.id),
+            categories: this.categories.map(cat => cat.id),
           });
           
           links.push({
@@ -77,12 +84,22 @@
             url: `https://webmii.com/people?n=%22${term}%22#gsc.tab=0&gsc.q=%22${term}%22&gsc.sort=date`,
             categories: ['people'],
           });
-          
+
+          // Shop
+
           // links.push({
           //   name: 'Mercado Livre',
           //   url: `https://lista.mercadolivre.com.br/produto#D[A:${term}]`,
           //   categories: ['shop'],
           // });
+          
+          links.push({
+            name: 'Shopee',
+            url: `https://shopee.com.br/search?keyword=${term}`,
+            categories: ['shop'],
+          });
+
+          // Work
           
           links.push({
             name: 'Linkedin - Vagas',
@@ -122,34 +139,39 @@
           
           links.push({
             name: 'Vagas',
-            url: `https://www.vagas.com.br/vagas/pesquisas?q=Motorista%20Belo%20Horizonte`,
+            url: `https://www.vagas.com.br/vagas/pesquisas?q=${term}%20${place}`,
             categories: ['work'],
           });
           
           links.push({
             name: 'Catho',
-            url: `https://www.catho.com.br/vagas/?q=Motorista`,
+            url: `https://www.catho.com.br/vagas/?q=${term}`,
             categories: ['work'],
           });
           
           links.push({
             name: '99 Freelas',
-            url: `https://www.99freelas.com.br/freelancers?q=Motorista`,
+            url: `https://www.99freelas.com.br/freelancers?q=${term}`,
             categories: ['work'],
           });
         }
 
-
         links = links.map(link => {
-          link.categories = categories.filter(cat => link.categories.includes(cat.id));
+          link.categories = this.categories.filter(cat => link.categories.includes(cat.id));
           return link;
         });
 
-        categories = categories.map(cat => {
+        let categories = JSON.parse(JSON.stringify(this.categories)).map(cat => {
           cat.total = links.filter(link => link.categories.map(cat => cat.id).includes(cat.id)).length;
-          cat.name = `${cat.rawName} (${cat.total})`;
+          cat.name = `${cat.name} (${cat.total})`;
           return cat;
         });
+
+        if (category) {
+          links = links.filter((link) => {
+            return link.categories.filter(cat => cat.id==category).length > 0;
+          });
+        }
 
         return { categories, links };
       },
