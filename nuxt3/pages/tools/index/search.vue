@@ -2,13 +2,28 @@
   <div>
     <v-row>
       <v-col cols="12" md="4">
-        <v-select label="Tipo de busca" :items="categories" item-title="name" item-value="id" v-model="filter.category"></v-select>
+        <v-select
+          v-model="filter.category"
+          label="Tipo de busca"
+          :hide-details="true"
+          :items="categories"
+          item-title="name"
+          item-value="id"
+        />
       </v-col>
       <v-col cols="12" md="4">
-        <v-text-field label="Buscar pessoas, produtos, vagas de emprego..." v-model="filter.term"></v-text-field>
+        <v-text-field
+          v-model="filter.term"
+          label="Buscar pessoas, produtos, vagas de emprego..."
+          :hide-details="true"
+        />
       </v-col>
       <v-col cols="12" md="4">
-        <v-text-field label="Cidade" v-model="filter.place"></v-text-field>
+        <v-text-field
+          v-model="filter.place"
+          label="Cidade"
+          :hide-details="true"
+        />
       </v-col>
       <v-col cols="12">
         <div class="d-flex">
