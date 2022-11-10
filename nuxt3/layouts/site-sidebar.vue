@@ -25,6 +25,7 @@
                   {to:'/tools/regex-extractor', name:'Extrator de dados de texto'},
                   {to:'/tools/search', name:'Busca'},
                   {to:'/tools/text-case', name:'Texto para maiúsculo, minúsculo e capitalizado'},
+                  {to:'/tools/text-charset', name:'Charset'},
                   {to:'/tools/text-sort', name:'Ordenador lista'},
                   {to:'/tools/whatsapp', name:'Whatsapp link'},
                 ]},
