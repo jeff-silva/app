@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="6">
-      <v-textarea label="Texto" v-model="params.text" />
+      <v-textarea label="Texto" v-model="params.text" auto-grow />
     </v-col>
     <v-col cols="6">
       <v-select label="Converter para" v-model="params.type" :items="items" />
