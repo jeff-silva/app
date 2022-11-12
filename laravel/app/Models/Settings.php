@@ -26,4 +26,11 @@ class Settings extends Model
             'fks' => [],
         ];
     }
+
+    public function updateCronTime()
+    {
+        $set = self::firstOrNew(['name' => 'cron-update']);
+        $set->value = \Carbon\Carbon::now();
+        $set->save();
+    }
 }

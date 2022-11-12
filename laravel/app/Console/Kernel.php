@@ -21,6 +21,10 @@ class Kernel extends ConsoleKernel
             (new \App\Models\LotoMegasena)->lotoImport();
             (new \App\Models\LotoLotofacil)->lotoImport();
         })->daily();
+        
+        $schedule->call(function () {
+            (new \App\Models\Settings)->updateCronTime();
+        })->everyMinute();
     }
 
     /**

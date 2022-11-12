@@ -14,6 +14,7 @@
               <app-nav variant="plain" :items="[
                 {to:'/tools', name:'Ferramentas', icon:'mdi-cog', children: [
                   {to:'/tools/color', name:'Color tools'},
+                  {to:'/tools/fuso', name:'Fuso horário'},
                   {to:'/tools/img-paste', name:'Colar e customizar prints e imagens'},
                   {to:'/tools/ip-info', name:'Informações de IP e geolocalização'},
                   {to:'/tools/linkedin-cv', name:'Estilizador de currículo Linkedin'},

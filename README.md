@@ -20,6 +20,8 @@ docker-compose -f docker-compose-prod.yml up
   - ⬛ Implement Settings
   - ⬛ Implement Swal2
     - ⬛ Use axios confirmation
+  - ⬛ Masks
+  - ⬛ Validation
 - ⬛ Laravel
   - ☑️ ~~Resolve backend cors~~
   - ☑️ ~~Implement Laravel JWT~~
