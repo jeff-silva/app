@@ -12,26 +12,20 @@ class UsersGroups extends Model
     protected $singular = 'Grupo de usuário';
     protected $plural = 'Grupos de usuários';
     protected $table = 'users_groups';
+    protected $tableFields = [
+        'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
+        'name' => 'VARCHAR(255) DEFAULT NULL',
+        'permissions' => 'TEXT',
+        'created_at' => 'DATETIME DEFAULT NULL',
+        'updated_at' => 'DATETIME DEFAULT NULL',
+    ];
+    protected $tableFks = [];
 
     protected $fillable = [
         'id',
         'name',
         'permissions',
     ];
-
-    public function migrationSchema()
-    {
-        return [
-            'fields' => [
-                'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
-                'name' => 'VARCHAR(255) DEFAULT NULL',
-                'permissions' => 'TEXT',
-                'created_at' => 'DATETIME DEFAULT NULL',
-                'updated_at' => 'DATETIME DEFAULT NULL',
-            ],
-            'fks' => [],
-        ];
-    }
 
     public function seed()
     {

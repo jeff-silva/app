@@ -138,13 +138,14 @@ trait Model
   }
 
   // Database migration and seed
-
-  public function migrationSchema()
+  public function getTableFields()
   {
-    return [
-      'fields' => [],
-      'fks' => [],
-    ];
+    return isset($this->tableFields)? $this->tableFields: [];
+  }
+
+  public function getTableFks()
+  {
+    return isset($this->tableFks)? $this->tableFks: [];
   }
 
   public function seed()

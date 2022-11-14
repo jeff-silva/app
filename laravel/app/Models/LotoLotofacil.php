@@ -39,20 +39,4 @@ class LotoLotofacil extends LotoMegasena
         
         return $save;
     }
-
-    public function migrationSchema()
-    {
-        return [
-            'fields' => [
-                'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
-                'name' => 'VARCHAR(255) DEFAULT NULL',
-                'contest' => 'INT(10) DEFAULT NULL',
-                'date' => 'DATETIME DEFAULT NULL',
-                'numbers' => 'VARCHAR(255) DEFAULT NULL',
-                'created_at' => 'DATETIME DEFAULT NULL',
-                'updated_at' => 'DATETIME DEFAULT NULL',
-            ],
-            'fks' => [],
-        ];
-    }
 }

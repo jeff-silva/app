@@ -16,6 +16,22 @@ class Users extends Authenticatable implements JWTSubject
     protected $singular = 'Usuário';
     protected $plural = 'Usuários';
     protected $table = 'users';
+    protected $tableFields = [
+        'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
+        'name' => 'VARCHAR(255) DEFAULT NULL',
+        'email' => 'VARCHAR(255) DEFAULT NULL',
+        'email_verified_at' => 'TIMESTAMP NULL DEFAULT NULL',
+        'password' => 'VARCHAR(255) NOT NULL',
+        'photo_id' => 'BIGINT(20) UNSIGNED DEFAULT NULL',
+        'group_id' => 'BIGINT(20) UNSIGNED DEFAULT NULL',
+        'remember_token' => 'VARCHAR(100) NULL DEFAULT NULL',
+        'created_at' => 'DATETIME DEFAULT NULL',
+        'updated_at' => 'DATETIME DEFAULT NULL',
+    ];
+    protected $tableFks = [
+        'users_photos' => 'FOREIGN KEY (`photo_id`) REFERENCES `files` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION',
+        'users_groups' => 'FOREIGN KEY (`group_id`) REFERENCES `users_groups` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -67,28 +83,6 @@ class Users extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
-    }
-
-    public function migrationSchema()
-    {
-        return [
-            'fields' => [
-                'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
-                'name' => 'VARCHAR(255) DEFAULT NULL',
-                'email' => 'VARCHAR(255) DEFAULT NULL',
-                'email_verified_at' => 'TIMESTAMP NULL DEFAULT NULL',
-                'password' => 'VARCHAR(255) NOT NULL',
-                'photo_id' => 'BIGINT(20) UNSIGNED DEFAULT NULL',
-                'group_id' => 'BIGINT(20) UNSIGNED DEFAULT NULL',
-                'remember_token' => 'VARCHAR(100) NULL DEFAULT NULL',
-                'created_at' => 'DATETIME DEFAULT NULL',
-                'updated_at' => 'DATETIME DEFAULT NULL',
-            ],
-            'fks' => [
-                'users_photos' => 'FOREIGN KEY (`photo_id`) REFERENCES `files` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION',
-                'users_groups' => 'FOREIGN KEY (`group_id`) REFERENCES `users_groups` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION',
-            ],
-        ];
     }
 
     public $seedAfter = 'users_groups';

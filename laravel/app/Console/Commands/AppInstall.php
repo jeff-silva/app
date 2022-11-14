@@ -60,13 +60,15 @@ class AppInstall extends Command
         
         $foreign_keys = [];
         foreach($this->getModels() as $model) {
-            $schema = $model->migrationSchema();
-            if (empty($schema['fields'])) continue;
+            $schemaFields = $model->getTableFields();
+            $schemaFks = $model->getTableFks();
+            if (empty($schemaFields)) continue;
+            
             $this->infoTitle("Table: {$model->getTable()}");
 
             if (\Schema::hasTable($model->getTable())) {
                 $field_name_last = false;
-                foreach($schema['fields'] as $field_name => $field_type) {
+                foreach($schemaFields as $field_name => $field_type) {
                     $sql = ["ALTER TABLE {$model->getTable()}"];
                     $sql[] = \Schema::hasColumn($model->getTable(), $field_name)? 'MODIFY COLUMN': 'ADD COLUMN';
                     $sql[] = "`{$field_name}` {$field_type}";
@@ -80,7 +82,7 @@ class AppInstall extends Command
                 }
             } else {
                 $sql = ["CREATE TABLE `{$model->getTable()}` ("];
-                foreach($schema['fields'] as $field_name => $field_type) {
+                foreach($schemaFields as $field_name => $field_type) {
                     $sql[] = "\t`{$field_name}` {$field_type},";
                 }
                 $sql[] = "\tPRIMARY KEY (`id`) USING BTREE";
@@ -91,7 +93,7 @@ class AppInstall extends Command
                 \DB::statement($sql);
             }
 
-            foreach($schema['fks'] as $fk_name => $fk) {
+            foreach($schemaFks as $fk_name => $fk) {
                 $foreign_keys[ $fk_name ] = (object) [
                     'table' => $model->getTable(),
                     'fk' => $fk,

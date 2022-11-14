@@ -12,6 +12,19 @@ class Files extends Model
     protected $singular = 'Arquivo';
     protected $plural = 'Arquivos';
     protected $table = 'files';
+    protected $tableFields = [
+        'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
+        'slug' => 'VARCHAR(255) DEFAULT NULL',
+        'name' => 'VARCHAR(255) DEFAULT NULL',
+        'mime' => 'VARCHAR(20) DEFAULT NULL',
+        'ext' => 'VARCHAR(5) DEFAULT NULL',
+        'size' => 'INT(10) DEFAULT NULL',
+        'folder' => 'VARCHAR(255) DEFAULT NULL',
+        'file' => 'LONGBLOB NULL DEFAULT NULL',
+        'created_at' => 'DATETIME DEFAULT NULL',
+        'updated_at' => 'DATETIME DEFAULT NULL',
+    ];
+    protected $tableFks = [];
 
     protected $fillable = [
         'id',
@@ -48,24 +61,5 @@ class Files extends Model
             $this->ext = $file->getClientOriginalExtension();
             $this->size = $file->getSize();
         }
-    }
-
-    public function migrationSchema()
-    {
-        return [
-            'fields' => [
-                'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
-                'slug' => 'VARCHAR(255) DEFAULT NULL',
-                'name' => 'VARCHAR(255) DEFAULT NULL',
-                'mime' => 'VARCHAR(20) DEFAULT NULL',
-                'ext' => 'VARCHAR(5) DEFAULT NULL',
-                'size' => 'INT(10) DEFAULT NULL',
-                'folder' => 'VARCHAR(255) DEFAULT NULL',
-                'file' => 'LONGBLOB NULL DEFAULT NULL',
-                'created_at' => 'DATETIME DEFAULT NULL',
-                'updated_at' => 'DATETIME DEFAULT NULL',
-            ],
-            'fks' => [],
-        ];
     }
 }

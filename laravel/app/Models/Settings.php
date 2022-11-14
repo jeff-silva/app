@@ -12,20 +12,14 @@ class Settings extends Model
     protected $singular = 'Configuração';
     protected $plural = 'Configurações';
     protected $table = 'settings';
-
-    public function migrationSchema()
-    {
-        return [
-            'fields' => [
-                'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
-                'name' => 'VARCHAR(255) DEFAULT NULL',
-                'value' => 'TEXT',
-                'created_at' => 'DATETIME DEFAULT NULL',
-                'updated_at' => 'DATETIME DEFAULT NULL',
-            ],
-            'fks' => [],
-        ];
-    }
+    protected $tableFields = [
+        'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
+        'name' => 'VARCHAR(255) DEFAULT NULL',
+        'value' => 'TEXT',
+        'created_at' => 'DATETIME DEFAULT NULL',
+        'updated_at' => 'DATETIME DEFAULT NULL',
+    ];
+    protected $tableFks = [];
 
     public function updateCronTime()
     {
