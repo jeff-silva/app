@@ -24,7 +24,8 @@ services:
     laravel:
         container_name: laravel
         image: sail-8.1/app
-        entrypoint: bash -c "composer install && start-container"
+        # entrypoint: bash -c "composer install && php artisan app:install && start-container"
+        entrypoint: bash -c "composer install && php artisan app:install && php artisan serve --host=0.0.0.0 --port=80"
         build:
             context: ./laravel/docker
             dockerfile: Dockerfile

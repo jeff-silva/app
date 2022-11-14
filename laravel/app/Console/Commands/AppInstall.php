@@ -33,6 +33,7 @@ class AppInstall extends Command
         $this->clearCache();
         $this->migrate();
         $this->seed();
+        $this->databaseUML();
     }
 
     public function infoTitle($title)
@@ -171,5 +172,30 @@ class AppInstall extends Command
         }
 
         return $this->databaseFks;
+    }
+    
+    public $databaseTables = null;
+    public function databaseTables()
+    {
+        if ($this->databaseTables === null) {
+            $this->databaseTables = collect(\DB::select('SHOW TABLES'));
+        }
+
+        return $this->databaseTables;
+    }
+
+    public function databaseUML()
+    {
+        // dd($this->databaseTables());
+        // $schema = [];
+        // foreach($this->getModels() as $model) {
+        //     $tableData = [];
+        //     foreach($model->getFillable() as $name) {
+        //         $tableData[ $name ] = '';
+        //     }
+        //     $schema[ $model->getTable() ] = $tableData;
+        // }
+        // dd($schema);
+        // https://docs.kroki.io/kroki/setup/encode-diagram/#php
     }
 }
