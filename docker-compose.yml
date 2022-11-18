@@ -2,30 +2,29 @@
 version: '3.7'
 services:
 
-    # nuxt3:
-    #     container_name: nuxt3
-    #     image: node:16.17.0
-    #     command: bash -c "yarn install --check-files && yarn dev"
-    #     ports:
-    #         - 3000:3000
-    #         - 24679:24679
-    #     volumes:
-    #         - ./nuxt3:/nuxt3
-    #         - /nuxt3/node_modules
-    #         - ./laravel/public:/nuxt3/.laravel-public
-    #     working_dir: /nuxt3
-    #     env_file: .env
-    #     environment:
-    #         - NODE_ENV=development
-    #         - CHOKIDAR_USEPOLLING=true
-    #         - HOST=${NUXT_HOST:-0.0.0.0}
-    #         - PORT=${NUXT_PORT:-3000}
+    nuxt3:
+        container_name: nuxt3
+        image: node:16.17.0
+        command: bash -c "yarn install --check-files && yarn dev"
+        ports:
+            - 3000:3000
+            - 24679:24679
+        volumes:
+            - ./nuxt3:/nuxt3
+            - /nuxt3/node_modules
+            - ./laravel/public:/nuxt3/.laravel-public
+        working_dir: /nuxt3
+        env_file: .env
+        environment:
+            - NODE_ENV=development
+            - CHOKIDAR_USEPOLLING=true
+            - HOST=${NUXT_HOST:-0.0.0.0}
+            - PORT=${NUXT_PORT:-3000}
     
     laravel:
         container_name: laravel
         image: sail-8.1/app
-        # entrypoint: bash -c "composer install && php artisan app:install && start-container"
-        entrypoint: bash -c "start-container"
+        entrypoint: bash -c "composer install && php artisan app:install && start-container"
         build:
             context: ./laravel/.docker
             dockerfile: Dockerfile
