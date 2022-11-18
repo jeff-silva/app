@@ -20,11 +20,17 @@ class Settings extends Model
         'updated_at' => 'DATETIME DEFAULT NULL',
     ];
     protected $tableFks = [];
+    protected $fillable = [
+        'name',
+        'value',
+    ];
 
-    public function updateCronTime()
+    public function onSchedule($schedule)
     {
-        $set = self::firstOrNew(['name' => 'cron-update']);
-        $set->value = \Carbon\Carbon::now();
-        $set->save();
+        $schedule->call(function () {
+            $set = static::firstOrNew(['name' => 'cron-update']);
+            $set->value = date('Y-m-d H:i:s');
+            $set->save();
+        })->everyMinute();
     }
 }

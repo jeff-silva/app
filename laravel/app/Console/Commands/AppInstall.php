@@ -63,7 +63,7 @@ class AppInstall extends Command
             $schemaFields = $model->getTableFields();
             $schemaFks = $model->getTableFks();
             if (empty($schemaFields)) continue;
-            
+
             $this->infoTitle("Table: {$model->getTable()}");
 
             if (\Schema::hasTable($model->getTable())) {

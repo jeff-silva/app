@@ -31,4 +31,34 @@ class Utils
     }
   }
 
+
+  static function getFiles($folder)
+  {
+    return \File::allFiles(base_path(trim($folder, '/')));
+  }
+
+
+  static function getModels($params = [])
+  {
+    $params = (object) array_merge([
+      'instances' => false,
+    ], $params);
+
+    $models = [];
+    foreach(self::getFiles('/app/Models') as $file) {
+      try {
+        $model = '\App\Models\\' . $file->getFilenameWithoutExtension();
+        if ($params->instances) {
+          $model = app($model);
+        }
+        $models[] = $model;
+      }
+      catch(\Exception $e) {
+        // 
+      }
+    }
+
+    return collect($models);
+  }
+
 }

@@ -13,5 +13,11 @@ chmod -R ugo+rw /.composer
 if [ $# -gt 0 ]; then
     exec gosu $WWWUSER "$@"
 else
-    exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+    exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf &
+    
+    while [ true ]
+    do
+        php /var/www/html/artisan schedule:run &
+        sleep 60
+    done
 fi

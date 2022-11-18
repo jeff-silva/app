@@ -153,6 +153,11 @@ trait Model
     // 
   }
 
+  public function onSchedule($schedule)
+  {
+    // 
+  }
+
 
   // Upload
   public function upload($file, $folder='')

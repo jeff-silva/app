@@ -17,14 +17,14 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        $schedule->call(function () {
-            (new \App\Models\LotoMegasena)->lotoImport();
-            (new \App\Models\LotoLotofacil)->lotoImport();
-        })->daily();
-        
-        $schedule->call(function () {
-            (new \App\Models\Settings)->updateCronTime();
-        })->everyMinute();
+        foreach(\App\Utils::getModels(['instances' => true]) as $model) {
+            try {
+                $model->onSchedule($schedule);
+            }
+            catch(\Exception $e) {
+                // 
+            }
+        }
     }
 
     /**
