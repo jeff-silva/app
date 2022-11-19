@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="12" md="6">
+    <v-col cols="12">
       <div style="display:flex; gap:15px; padding:10px; overflow:auto;">
         <v-card min-width="250px">
           <v-card-title>hex</v-card-title>
