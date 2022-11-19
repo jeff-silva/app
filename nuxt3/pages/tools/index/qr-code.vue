@@ -59,7 +59,7 @@
                   </template>
                   
                   <template v-if="t.id=='geo'">
-                    <l-map :zoom="2" :center="[t.lat, t.lng]" style="height:400px;">
+                    <l-map :zoom="2" :center="[0, 0]" style="height:400px;">
                       <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap" :max-zoom="10" />
                       <!-- <l-tile-layer url="https://s3.amazonaws.com/te512.safecast.org/{z}/{x}/{y}.png" attribution="attribution" :min-zoom="5" :max-zoom="7" /> -->
                       <l-marker :lat-lng="[t.lat, t.lng]" draggable @move="t.onMapMove($event, t)"> </l-marker>
