@@ -58,7 +58,7 @@
         <v-app-bar class="px-md-3" v-bind="{height:50, color:'grey-lighten-4', elevation:0, location:'top'}">
           <v-btn icon="mdi-menu" size="small" @click="drawer=true" v-if="!breakpoints.xs"></v-btn>
         </v-app-bar>
-        <v-container>
+        <v-container :fluid="containerFluid">
           <slot />
         </v-container>
       </v-main>
@@ -72,6 +72,12 @@ import { breakpointsVuetify, useBreakpoints } from '@vueuse/core';
 const breakpoints = useBreakpoints(breakpointsVuetify);
 
 export default {
+  props: {
+    containerFluid: {
+      default: true,
+    },
+  },
+
   data() {
     return {
       drawer: breakpoints.xs,
