@@ -1,49 +1,78 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="12" md="6">
-        <v-tabs v-model="tab">
-          <v-tab value="text">Texto</v-tab>
-          <v-tab value="wifi">Wifi</v-tab>
-          <v-tab value="vcard">VCard</v-tab>
-          <v-tab value="event">Evento</v-tab>
-        </v-tabs>
-        <v-card-text>
-          <v-window v-model="tab">
+      <v-col cols="12" md="7">
+        <div class="d-flex" style="gap: 15px;">
+          <div style="min-width: 200px; max-width: 200px;">
+            <v-tabs v-model="tab" direction="vertical">
+              <template v-for="t in tabs">
+                <v-tab :value="t.id">{{ t.name }}</v-tab>
+              </template>
+            </v-tabs>
+          </div>
+          <div class="flex-grow-1" style="overflow:auto;">
+            <v-window v-model="tab">
+              <template v-for="t in tabs">
+                <v-window-item :value="t.id">
 
-            <!-- text -->
-            <v-window-item value="text">
-              <v-text-field label="Texto" v-model="params.text" @input="generate()" />
-            </v-window-item>
+                  <template v-if="t.id=='text'">
+                    <v-text-field label="Texto" v-model="t.text" @input="generate()" />
+                  </template>
+                  
+                  <template v-if="t.id=='url'">
+                    <v-text-field label="Texto" v-model="t.url" @input="generate()" />
+                  </template>
+                  
+                  <template v-if="t.id=='wifi'">
+                    <v-text-field label="Rede" v-model="t.ssid" @input="generate()" />
+                    <v-select v-model="t.type" :items="['WPA', 'WEP']" @input="generate()" />
+                    <v-text-field label="Senha" type="password" v-model="t.pass" @input="generate()" />
+                  </template>
+                  
+                  <template v-if="t.id=='vcard'">
+                    <v-text-field label="Nome" v-model="t.firstName" @input="generate()" />
+                    <v-text-field label="Sobrenome" v-model="t.lastName" @input="generate()" />
+                    <v-text-field label="Empresa" v-model="t.companyName" @input="generate()" />
+                    <v-text-field label="Cargo" v-model="t.jobTitle" @input="generate()" />
+                    <v-text-field label="Endereço" v-model="t.address" @input="generate()" />
+                    <v-text-field label="CEP" v-model="t.zipcode" @input="generate()" />
+                    <v-text-field label="Cidade" v-model="t.city" @input="generate()" />
+                    <v-text-field label="Estado" v-model="t.state" @input="generate()" />
+                    <v-text-field label="País" v-model="t.country" @input="generate()" />
+                    <v-text-field label="Telefone" v-model="t.phone" @input="generate()" />
+                    <v-text-field label="Celular" v-model="t.mobile" @input="generate()" />
+                    <v-text-field label="E-mail" v-model="t.email" @input="generate()" />
+                    <v-text-field label="Site" v-model="t.website" @input="generate()" />
+                  </template>
+                  
+                  <template v-if="t.id=='event'">
+                    <v-text-field label="Texto" v-model="t.summary" @input="generate()" />
+                  </template>
 
-            <!-- wifi -->
-            <v-window-item value="wifi">
-              <v-text-field label="Rede" v-model="params.wifi.ssid" @input="generate()" />
-              <v-select v-model="params.wifi.type" :items="['WPA', 'WEP']" @input="generate()" />
-              <v-text-field label="Senha" type="password" v-model="params.wifi.pass" @input="generate()" />
-            </v-window-item>
+                  <template v-if="t.id=='sms'">
+                    <v-text-field label="Telefone" v-model="t.mobile" @input="generate()" />
+                    <v-textarea label="Mensagem" v-model="t.message" @input="generate()" />
+                  </template>
 
-            <!-- vcard -->
-            <v-window-item value="vcard">
-              <v-text-field label="Nome" v-model="params.vcard.firstName" @input="generate()" />
-              <v-text-field label="Sobrenome" v-model="params.vcard.lastName" @input="generate()" />
-            </v-window-item>
+                  <template v-if="t.id=='phone'">
+                    <v-text-field label="Telefone" v-model="t.phone" @input="generate()" />
+                  </template>
+                  
+                  <template v-if="t.id=='geo'">
+                    <!-- <v-text-field label="Telefone" v-model="t.phone" @input="generate()" /> -->
+                    <v-btn @click="t.getGeolocation(t)">Meu posicionamento atual</v-btn>
+                  </template>
 
-            <!-- event -->
-            <v-window-item value="event">
-              <v-text-field label="Descrição" v-model="params.event.summary" @input="generate()" />
-              <v-text-field label="Início" v-model="params.event.start" @input="generate()" />
-              <v-text-field label="Fim" v-model="params.event.final" @input="generate()" />
-            </v-window-item>
-          </v-window>
-        </v-card-text>
+                  <app-dd>t: {{ t }}</app-dd>
+                  <app-dd>{{ t._value || 'empty' }}</app-dd>
+                </v-window-item>
+              </template>
+            </v-window>
+          </div>
+        </div>
       </v-col>
-      <v-col cols="12" md="6">
-        <v-card>
-          <v-card-text style="text-align: center;">
-            <img :src="base64Url" alt="" v-if="base64Url">
-          </v-card-text>
-        </v-card>
+      <v-col cols="12" md="5">
+        <img :src="base64Url" alt="" v-if="base64Url" style="width: 100%;">
       </v-col>
     </v-row>
   </div>
@@ -56,18 +85,125 @@
         loaded: false,
         base64Url: false,
         tab: 'text',
-        params: {
-          text: "Hello",
-          wifi: {
+        tabs: [
+          {
+            id: 'text',
+            name: 'Texto',
+            text: 'Hello World :)',
+            handle: (self) => {
+              return self.text;
+            },
+          },
+          {
+            id: 'url',
+            name: 'URL',
+            url: '',
+            handle: (self) => {
+              return self.text;
+            },
+          },
+          {
+            id: 'wifi',
+            name: 'WIFI',
             ssid: '',
             type: 'WPA',
             pass: '',
+            handle: (self) => {
+              return `WIFI:S:${self.ssid};T:${self.type};P:${self.pass};;`;
+            },
           },
-          vcard: {
+          {
+            id: 'vcard',
+            name: 'Cartão de contato',
             firstName: '',
+            lastName: '',
+            companyName: '',
+            jobTitle: '',
+            address: '',
+            city: '',
+            state: '',
+            zipcode: '',
+            country: '',
+            phone: '',
+            mobile: '',
+            email: '',
+            website: '',
+            handle: (self) => {
+              return [
+                `BEGIN:VCARD`,
+                `VERSION:3.0`,
+                `N:${self.lastName};${self.firstName}`,
+                `FN:${self.firstName} ${self.lastName}`,
+                `ORG:${self.companyName}`,
+                `TITLE:${self.jobTitle}`,
+                `ADR:;;${self.address};${self.city};${self.state};${self.zipcode};${self.country}`,
+                `TEL;WORK;VOICE:${self.phone}`,
+                `TEL;CELL:${self.mobile}`,
+                `TEL;FAX:`,
+                `EMAIL;WORK;INTERNET:${self.email}`,
+                `URL:${self.website}`,
+                `END:VCARD`,
+              ].join("\n");
+            },
           },
-          event: {},
-        },
+          {
+            id: 'event',
+            name: 'Evento',
+            summary: '',
+            dateStart: '',
+            dateFinal: '',
+            handle: (self) => {
+              return [
+                `BEGIN:VEVENT`,
+                `SUMMARY:Independence Day Parades`,
+                `DTSTART:20150323T090000`,
+                `DTEND:20150323T110000`,
+                `END:VEVENT`,
+              ].join("\n");
+            },
+          },
+          {
+            id: 'sms',
+            name: 'SMS',
+            mobile: '',
+            message: '',
+            handle: (self) => {
+              return `SMSTO:+${self.mobile.replace(/[^0-9]/g, '')}:${self.message}`;
+            },
+          },
+          {
+            id: 'phone',
+            name: 'Ligação',
+            phone: '',
+            handle: (self) => {
+              return `tel:${self.phone.replace(/[^0-9]/g, '')}`;
+            },
+          },
+          {
+            id: 'geo',
+            name: 'Geo posicionamento',
+            lat: '',
+            lng: '',
+            handle: (self) => {
+              return `geo:${self.lat},${self.lng}`;
+            },
+            getGeolocation: async (self) => {
+              navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                  self.lat = pos.coords.latitude;
+                  self.lng = pos.coords.longitude;
+                  this.generate();
+                },
+                () => {},
+                {
+                  enableHighAccuracy: true,
+                  timeout: 5000,
+                  maximumAge: 0
+                }
+              );
+            },
+          },
+        ],
       };
     },
 
@@ -80,54 +216,25 @@
       },
 
       generate() {
-        let q = new QRCode(document.createElement('div'), this.compParams);
-        this.base64Url = q._el.children[0].toDataURL();
-      },
-    },
-
-    computed: {
-      compParams() {
-        let text = this.params.text;
-
-        if (this.tab=='wifi') {
-          text = `WIFI:S:${this.params.wifi.ssid};T:${this.params.wifi.type};P:${this.params.wifi.pass};;`;
-        } else if (this.tab=='vcard') {
-          text = [
-            `BEGIN:VCARD`,
-            `VERSION:3.0`,
-            `N:${this.params.wifi.lastName};${this.params.wifi.firstName}`,
-            `FN:${this.params.wifi.firstName} ${this.params.wifi.lastName}`,
-            `ORG:CompanyName`,
-            `TITLE:JobTitle`,
-            `ADR:;;123 Sesame St;SomeCity;CA;12345;USA`,
-            `TEL;WORK;VOICE:1234567890`,
-            `TEL;CELL:Mobile`,
-            `TEL;FAX:`,
-            `EMAIL;WORK;INTERNET:foo@email.com`,
-            `URL:http://website.com`,
-            `END:VCARD`,
-          ].join("\n");
-        } else if (this.tab=='event') {
-          text = [
-            `BEGIN:VEVENT`,
-            `SUMMARY:Independence Day Parades`,
-            `DTSTART:20150323T090000`,
-            `DTEND:20150323T110000`,
-            `END:VEVENT`,
-          ].join("\n");
-        }
-
-        return {
-          type: "text",
-          text,
-          wifiSSID: "",
-          wifiCrypt: "WPA",
-          wifiPassword: "",
-          width: 402,
-          height: 402,
-          colorDark : "#000000",
-          colorLight : "#ffffff",
-        };
+        this.$debounce('qr', 1000, () => {
+          let tab = this.tabs.filter(tab => tab.id==this.tab)[0];
+          tab._value = tab.handle(tab);
+          try {
+            let q = new QRCode(document.createElement('div'), {
+              type: "text",
+              text: tab._value,
+              wifiSSID: "",
+              wifiCrypt: "WPA",
+              wifiPassword: "",
+              width: 402,
+              height: 402,
+              colorDark : "#000000",
+              colorLight : "#ffffff",
+            });
+            this.base64Url = q._el.children[0].toDataURL();
+          }
+          catch(e) {}
+        });
       },
     },
 
