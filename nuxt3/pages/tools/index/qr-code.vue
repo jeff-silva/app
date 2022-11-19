@@ -59,12 +59,13 @@
                   </template>
                   
                   <template v-if="t.id=='geo'">
-                    <!-- <v-text-field label="Telefone" v-model="t.phone" @input="generate()" /> -->
-                    <v-btn @click="t.getGeolocation(t)">Meu posicionamento atual</v-btn>
+                    <l-map :zoom="2" :center="[t.lat, t.lng]" style="height:400px;">
+                      <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap" :max-zoom="10" />
+                      <!-- <l-tile-layer url="https://s3.amazonaws.com/te512.safecast.org/{z}/{x}/{y}.png" attribution="attribution" :min-zoom="5" :max-zoom="7" /> -->
+                      <l-marker :lat-lng="[t.lat, t.lng]" draggable @move="t.onMapMove($event, t)"> </l-marker>
+                    </l-map>
+                    <v-btn @click="t.getGeolocation(t)" block color="primary" rounded="0">Meu posicionamento atual</v-btn>
                   </template>
-
-                  <app-dd>t: {{ t }}</app-dd>
-                  <app-dd>{{ t._value || 'empty' }}</app-dd>
                 </v-window-item>
               </template>
             </v-window>
@@ -79,7 +80,12 @@
 </template>
 
 <script>
+  import "leaflet/dist/leaflet.css";
+  import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+
   export default {
+    components: { LMap, LTileLayer, LMarker },
+
     data() {
       return {
         loaded: false,
@@ -182,8 +188,8 @@
           {
             id: 'geo',
             name: 'Geo posicionamento',
-            lat: '',
-            lng: '',
+            lat: 0,
+            lng: 0,
             handle: (self) => {
               return `geo:${self.lat},${self.lng}`;
             },
@@ -201,6 +207,11 @@
                   maximumAge: 0
                 }
               );
+            },
+            onMapMove: (ev, self) => {
+              self.lat = ev.latlng.lat;
+              self.lng = ev.latlng.lng;
+              this.generate();
             },
           },
         ],

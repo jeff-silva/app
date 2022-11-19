@@ -16,6 +16,7 @@ export default defineNuxtConfig({
   css: [
     'vuetify/lib/styles/main.css',
     '@mdi/font/css/materialdesignicons.css',
+    'leaflet/dist/leaflet.css',
   ],
 
   modules: [
