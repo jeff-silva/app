@@ -2,8 +2,8 @@
   <div>
     <Head>
       <Style></Style>
-      <Script src="https://unpkg.com/swagger-ui-dist@3.23.1/swagger-ui-bundle.js"></Script>
-      <Style type="text/css" children="@import url('https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.17.0/swagger-ui.css');" @load="scriptLoad()"></Style>
+      <Script src="https://unpkg.com/swagger-ui-dist@3.23.1/swagger-ui-bundle.js" @load="scriptLoad()"></Script>
+      <Style type="text/css" children="@import url('https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.17.0/swagger-ui.css');"></Style>
     </Head>
     <div id="ui-wrapper"></div>
   </div>

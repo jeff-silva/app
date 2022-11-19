@@ -84,4 +84,11 @@ class LotoMegasena extends Model
         }
         return $return;
     }
+
+    public function onSchedule($schedule)
+    {
+        $schedule->call(function () {
+            (new static)->lotoImport();
+        })->daily();
+    }
 }
