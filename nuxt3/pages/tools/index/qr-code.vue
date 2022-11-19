@@ -84,7 +84,7 @@
         <img :src="base64Url" alt="" v-if="base64Url" style="width:100%; max-width:450px;">
       </v-col>
     </v-row>
-    <!-- <app-dd>{{ [ (validURL==tabs[8]._value), validURL, tabs[8]._value ] }}</app-dd> -->
+    <app-dd>{{ [ (validURL==tabs[8]._value), validURL, tabs[8]._value ] }}</app-dd>
   </div>
 </template>
 
@@ -228,7 +228,7 @@
             name: 'PIX',
             version: '01',
             key: 'jeferson.i.silva@gmail.com',
-            city: 'Belo Horizonte',
+            city: 'Belo Horizont',
             fullName: 'JEFERSON I S DA S E SIL',
             value: '0.10',
             message: 'Teste PIX',
@@ -236,9 +236,13 @@
             currency: '986',
             countryCode: 'BR',
             handle: (self) => {
+              // https://github.com/bacen/pix-api
+              // https://github.com/NascentSecureTech/pix-qrcode-utils
               const genEMV = (id, parameter) => {
                 const len = parameter.length.toString().padStart(2, '0');
-                return `${id}${len}${parameter}`;
+                console.log([id, len, parameter]);
+                return [id, len, parameter].join('');
+                // return `${id}${len}${parameter}`;
               };
 
               const generateKey = (key, message) => {
@@ -287,8 +291,8 @@
               }
 
               payload.push(genEMV('58', self.countryCode.toUpperCase()));
-              payload.push(genEMV('59', self.fullName.substring(0, 23).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')));
-              payload.push(genEMV('60', self.city.substring(0, 13).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')));
+              payload.push(genEMV('59', self.fullName.substring(0, 25).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')));
+              payload.push(genEMV('60', self.city.substring(0, 15).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')));
 
               if (self.cep) payload.push(genEMV('61', self.cep));
               payload.push(genEMV('62', genEMV('05', self.transactionId)));
