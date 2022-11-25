@@ -31,9 +31,21 @@ class AppController extends Controller
                     'url' => \URL::to('/'),
                 ],
             ],
+            'components' => [
+                'securitySchemes' => [
+                    'bearer_token' => [
+                        'type' => 'http',
+                        'description' => 'Login with email and password to get the authentication token',
+                        'name' => 'Token based Based',
+                        'in' => 'header',
+                        'bearerFormat' => 'JWT',
+                        'scheme' => 'bearer',
+                    ],
+                ],
+            ],
             'tags' => [
                 [
-                    'name' => 'app',
+                    'name' => 'App',
                 ],
             ],
             'paths' => [],
@@ -56,12 +68,25 @@ class AppController extends Controller
             if (! isset($route->action['controller'])) continue;
             $method = strtolower(collect($route->methods)->first());
 
-            $model = '\App\Models\\'. preg_replace('/.+\\\(.+?)Controller.+/', '$1', $route->action['controller']);
+            list($controller_name, $controller_method) = explode('@', $route->action['controller']);
+            $model_name = str_replace('Controller', '', \Arr::first(explode('@', \Arr::last(explode('\\', $route->action['controller'])))));
+
+            $model = "\App\Models\\{$model_name}";
             $model = class_exists($model)? app($model): false;
-            $tags = $model? [ $model->getPlural() ]: ['App'];
+            // if ($model) {
+            //     $_parse_annotations = function($doc) {
+            //         preg_match_all('/@([a-z]+?)\s+(.*?)\n/i', $doc, $annotations);
+            //         if(!isset($annotations[1]) OR count($annotations[1]) == 0) return [];
+            //         return array_combine(array_map("trim",$annotations[1]), array_map("trim",$annotations[2]));
+            //     };
+
+            //     $comment = (new \ReflectionClass($controller_name))->getMethod($controller_method)->getDocComment();
+            //     // $comment = preg_replace('/\/\*\*|\n\s+\*\/|\n\s+\*/', '', $comment);
+            //     dd($comment, $_parse_annotations($comment), $model, $route);
+            // }
 
             $item = [
-                'tags' => $tags,
+                'tags' => [ $model_name ],
                 'operationId' => $route->action['as'],
             ];
 
@@ -72,6 +97,8 @@ class AppController extends Controller
                     'content' => (object) [],
                 ];
             }
+
+            $item['security'] = [[ 'bearer_token' => [] ]];
 
             $paramsNames = $route->parameterNames();
             if (!empty($paramsNames) OR $model) {

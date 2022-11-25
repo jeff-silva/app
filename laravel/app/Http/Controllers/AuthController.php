@@ -15,6 +15,9 @@ class AuthController extends Controller
         $this->routeMatch(['post'], 'auth/me', 'me')->name('auth.me');
     }
 
+    /**
+     * @param {}
+     */
     public function login()
     {
         $credentials = request(['email', 'password']);

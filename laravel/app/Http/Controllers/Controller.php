@@ -70,16 +70,16 @@ class Controller extends BaseController
                 'path' => "{$path}/{id}",
                 'function' => 'destroy',
             ],
-            'import' => (object) [
-                'method' => 'post',
-                'path' => "{$path}/import",
-                'function' => 'import',
-            ],
-            'export' => (object) [
-                'method' => 'get',
-                'path' => "{$path}/export",
-                'function' => 'export',
-            ],
+            // 'import' => (object) [
+            //     'method' => 'post',
+            //     'path' => "{$path}/import",
+            //     'function' => 'import',
+            // ],
+            // 'export' => (object) [
+            //     'method' => 'get',
+            //     'path' => "{$path}/export",
+            //     'function' => 'export',
+            // ],
         ];
 
         foreach($routes as $name => $data) {
@@ -93,6 +93,11 @@ class Controller extends BaseController
         return \App\Utils::error($status, $message, $fields);
     }
 
+    /**
+     * Busca
+     * @param name = 123;
+     * @param aaa = 123;
+     */
     public function index()
     {
         return $this->model->search(request()->all());
