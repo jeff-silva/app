@@ -8,8 +8,8 @@ class LotoMegasenaController extends Controller
 {
     public function onInit()
     {
-        $this->apiResource([
-            'except' => ['save', 'delete'],
+        $this->apiResource('loto-megasena', [
+            'only' => ['index', 'show'],
         ]);
 
         $this->routeMatch(['post'], 'loto_megasena/import', 'import')->name('loto_megasena.import');

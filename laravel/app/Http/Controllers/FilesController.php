@@ -8,6 +8,6 @@ class FilesController extends Controller
 {
     public function onInit()
     {
-        $this->apiResource();
+        $this->apiResource('files');
     }
 }

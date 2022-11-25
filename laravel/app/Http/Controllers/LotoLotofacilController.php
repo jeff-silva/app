@@ -8,8 +8,8 @@ class LotoLotofacilController extends Controller
 {
     public function onInit()
     {
-        $this->apiResource([
-            'except' => ['save', 'delete'],
+        $this->apiResource('loto-lotofacil', [
+            'only' => ['index', 'show'],
         ]);
 
         $this->routeMatch(['post'], 'loto_lotofacil/import', 'import')->name('loto_lotofacil.import');

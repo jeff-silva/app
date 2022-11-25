@@ -30,7 +30,7 @@ class Controller extends BaseController
     public function onInit()
     {
         // 
-    }
+    }    
 
     public function routeMatch($methods, $path, $callback)
     {
@@ -38,43 +38,53 @@ class Controller extends BaseController
         return Route::match($methods, $path, [get_called_class(), $callback]);
     }
 
-    public function apiResource($params=[])
+    public function apiResource($path, $params = [])
     {
-        $params = (object) array_merge([
+        $params = array_merge([
             'except' => [],
         ], $params);
 
         $routes = [
-            (object) [
-                'id' => 'search',
-                'methods' => ['get'],
-                'path' => "/{$this->namespace}/search",
-                'callback' => 'search',
+            'index' => (object) [
+                'method' => 'get',
+                'path' => "{$path}",
+                'function' => 'index',
             ],
-            (object) [
-                'id' => 'find',
-                'methods' => ['get'],
-                'path' => "/{$this->namespace}/find/{id}",
-                'callback' => 'find',
+            'store' => (object) [
+                'method' => 'post',
+                'path' => "{$path}",
+                'function' => 'store',
             ],
-            (object) [
-                'id' => 'save',
-                'methods' => ['post'],
-                'path' => "/{$this->namespace}/save",
-                'callback' => 'save',
+            'show' => (object) [
+                'method' => 'get',
+                'path' => "{$path}/{id}",
+                'function' => 'show',
             ],
-            (object) [
-                'id' => 'delete',
-                'methods' => ['delete'],
-                'path' => "/{$this->namespace}/delete",
-                'callback' => 'delete',
+            'update' => (object) [
+                'method' => 'put',
+                'path' => "{$path}/{id}",
+                'function' => 'update',
+            ],
+            'destroy' => (object) [
+                'method' => 'delete',
+                'path' => "{$path}/{id}",
+                'function' => 'destroy',
+            ],
+            'import' => (object) [
+                'method' => 'post',
+                'path' => "{$path}/import",
+                'function' => 'import',
+            ],
+            'export' => (object) [
+                'method' => 'get',
+                'path' => "{$path}/export",
+                'function' => 'export',
             ],
         ];
 
-        foreach($routes as $route) {
-            if (in_array($route->id, $params->except)) return;
-            $this->routeMatch($route->methods, $route->path, $route->callback)
-                ->name("{$this->namespace}.{$route->id}");
+        foreach($routes as $name => $data) {
+            if (in_array($name, $params['except'])) continue;
+            $this->routeMatch($data->method, $data->path, $data->function)->name($name);
         }
     }
 
@@ -83,28 +93,53 @@ class Controller extends BaseController
         return \App\Utils::error($status, $message, $fields);
     }
 
-    public function search()
+    public function index()
     {
         return $this->model->search(request()->all());
     }
 
-    public function find($id)
+    public function store()
+    {
+        // 
+    }
+
+    public function show($id)
     {
         return $this->model->find($id);
     }
 
-    public function save()
+    public function update()
     {
-        $model = $this->model->firstOrNew([
-            'id' => request()->input('id', null),
-        ], request()->all());
+        // 
+    }
+
+    public function destroy()
+    {
+        // 
+    }
+
+    public function import()
+    {
+        // 
+    }
+
+    public function export()
+    {
+        // 
+    }
+
+    // public function save()
+    // {
+    //     $model = $this->model->firstOrNew([
+    //         'id' => request()->input('id', null),
+    //     ], request()->all());
         
-        $model->save();
-        return $model;
-    }
+    //     $model->save();
+    //     return $model;
+    // }
     
-    public function delete()
-    {
-        return request()->all();
-    }
+    // public function delete()
+    // {
+    //     return request()->all();
+    // }
 }
