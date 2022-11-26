@@ -74,6 +74,7 @@ class AppController extends Controller
             $model = "\App\Models\\{$model_name}";
             $model = class_exists($model)? app($model): false;
             // if ($model) {
+            //     dd($route->action['as']);
             //     $_parse_annotations = function($doc) {
             //         preg_match_all('/@([a-z]+?)\s+(.*?)\n/i', $doc, $annotations);
             //         if(!isset($annotations[1]) OR count($annotations[1]) == 0) return [];
@@ -89,14 +90,6 @@ class AppController extends Controller
                 'tags' => [ $model_name ],
                 'operationId' => $route->action['as'],
             ];
-
-            if (in_array($method, ['post', 'put'])) {
-                $item['requestBody'] = [
-                    'description' => '$description',
-                    'required' => true,
-                    'content' => (object) [],
-                ];
-            }
 
             $item['security'] = [[ 'bearer_token' => [] ]];
 
@@ -125,6 +118,45 @@ class AppController extends Controller
                             ],
                         ];
                     }
+                }
+            }
+
+            // Index
+            if ($model AND \Str::endsWith($route->action['as'], '.index')) {
+                foreach($model->searchParamsDefault()->all() as $name => $value) {
+                    $item['parameters'][] = [
+                        'name' => $name,
+                        'in' => 'query',
+                        'schema' => [
+                            'type' => 'string',
+                            'default' => $value,
+                        ],
+                    ];
+                }
+            }
+            
+            // Store or update
+            else if ($model AND \Str::endsWith($route->action['as'], ['.store', '.update'])) {
+                $item['requestBody'] = [
+                    'description' => '',
+                    'required' => true,
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'required' => [],
+                                'properties' => [],
+                            ],
+                        ],
+                    ],
+                ];
+                
+                foreach($model->getFillable() as $name) {
+                    if ($name == 'id') continue;
+                    $item['requestBody']['content']['application/json']['schema']['properties'][ $name ] = [
+                        'type' => 'string',
+                        'format' => 'string',
+                        'example' => '',
+                    ];
                 }
             }
 

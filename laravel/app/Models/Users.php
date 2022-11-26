@@ -112,4 +112,12 @@ class Users extends Authenticatable implements JWTSubject
             }
         }
     }
+
+    public function validationRules()
+    {
+        return [
+            'name' => ['required'],
+            'email' => ['required', 'email:rfc,dns'],
+        ];
+    }
 }

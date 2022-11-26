@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Illuminate\Http\Request;
+
 trait Model
 {
 
@@ -106,11 +108,17 @@ trait Model
   public function searchParamsDefault($merge=[])
   {
     $default = [
-      'q' => null,
+      'search' => null,
       'page' => 1,
       'per_page' => 10,
+      'order' => 'id:desc',
     ];
-    return (object) array_merge($default, $this->searchParams(), $merge);
+
+    if ($merge instanceof Request) {
+      $merge = $merge->all();
+    }
+
+    return new Request(array_merge($default, $this->searchParams(), $merge));
   }
   
   public function searchParams()
@@ -123,16 +131,17 @@ trait Model
     return $query;
   }
 
-  public function search($params=[])
+  public function scopeSearch($query, $params=[])
   {
     $params = $this->searchParamsDefault($params);
-    $query = $this->searchQuery(self::query(), $params);
+    $query = $this->searchQuery($query, $params);
     $return = (object) $query->paginate($params->per_page)->toArray();
     return [
       'current_page' => $return->current_page,
       'from' => $return->from,
       'last_page' => $return->last_page,
       'data' => $return->data,
+      'params' => $params->all(),
       'options' => $this->searchOptions($return, $params),
     ];
   }

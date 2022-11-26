@@ -7,6 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 class Controller extends BaseController
 {
@@ -84,7 +85,7 @@ class Controller extends BaseController
 
         foreach($routes as $name => $data) {
             if (in_array($name, $params['except'])) continue;
-            $this->routeMatch($data->method, $data->path, $data->function)->name($name);
+            $this->routeMatch($data->method, $data->path, $data->function)->name("{$path}.{$name}");
         }
     }
 
@@ -95,17 +96,20 @@ class Controller extends BaseController
 
     /**
      * Busca
-     * @param name = 123;
-     * @param aaa = 123;
+     * @query search = '';
+     * @query page = '';
+     * @query per_page = 10;
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->model->search(request()->all());
+        return $this->model->search($request);
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        // 
+        $model = $this->model->firstOrNew(['id' => $request->id ], $request->all());
+        $model->save();
+        return $model;
     }
 
     public function show($id)
