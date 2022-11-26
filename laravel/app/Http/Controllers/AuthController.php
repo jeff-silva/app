@@ -16,7 +16,8 @@ class AuthController extends Controller
     }
 
     /**
-     * @param {}
+     * @body email = user@mail.com
+     * @body password = password
      */
     public function login()
     {

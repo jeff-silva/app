@@ -2,6 +2,8 @@
 
 namespace App;
 
+use phpDocumentor\Reflection\DocBlockFactory;
+
 class Utils
 {
 
@@ -59,6 +61,14 @@ class Utils
     }
 
     return collect($models);
+  }
+
+  // https://github.com/phpDocumentor/ReflectionDocBlock/blob/master/examples/02-interpreting-tags.php
+  static function reflectorMethodComment($class, $method)
+  {
+    $comment = (new \ReflectionClass($class))->getMethod($method)->getDocComment();
+    if (! $comment) return false;
+    return DocBlockFactory::createInstance()->create($comment);
   }
 
 }

@@ -94,12 +94,6 @@ class Controller extends BaseController
         return \App\Utils::error($status, $message, $fields);
     }
 
-    /**
-     * Busca
-     * @query search = '';
-     * @query page = '';
-     * @query per_page = 10;
-     */
     public function index(Request $request)
     {
         return $this->model->search($request);

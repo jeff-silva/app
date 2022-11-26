@@ -67,24 +67,48 @@ class AppController extends Controller
             if (! \Str::startsWith($route->uri, 'api')) continue;
             if (! isset($route->action['controller'])) continue;
             $method = strtolower(collect($route->methods)->first());
+            $requestBody = [];
 
             list($controller_name, $controller_method) = explode('@', $route->action['controller']);
             $model_name = str_replace('Controller', '', \Arr::first(explode('@', \Arr::last(explode('\\', $route->action['controller'])))));
 
             $model = "\App\Models\\{$model_name}";
             $model = class_exists($model)? app($model): false;
-            // if ($model) {
-            //     dd($route->action['as']);
-            //     $_parse_annotations = function($doc) {
-            //         preg_match_all('/@([a-z]+?)\s+(.*?)\n/i', $doc, $annotations);
-            //         if(!isset($annotations[1]) OR count($annotations[1]) == 0) return [];
-            //         return array_combine(array_map("trim",$annotations[1]), array_map("trim",$annotations[2]));
-            //     };
+            
+            if ($doc = \App\Utils::reflectorMethodComment($controller_name, $controller_method)) {
+                foreach($doc->getTagsByName('body') as $docParam) {
+                    list($field, $value) = array_map('trim', explode('=', (string) $docParam->getDescription()));
+                    $requestBody[ $field ] = [
+                        'type' => 'string',
+                        'format' => 'string',
+                        'example' => $value,
+                    ];
+                }
 
-            //     $comment = (new \ReflectionClass($controller_name))->getMethod($controller_method)->getDocComment();
-            //     // $comment = preg_replace('/\/\*\*|\n\s+\*\/|\n\s+\*/', '', $comment);
-            //     dd($comment, $_parse_annotations($comment), $model, $route);
-            // }
+                foreach($doc->getTagsByName('query') as $docParam) {
+                    list($field, $value) = array_map('trim', explode('=', (string) $docParam->getDescription()));
+                    $item['parameters'][] = [
+                        'name' => $field,
+                        'in' => 'query',
+                        'schema' => [
+                            'type' => 'string',
+                            'default' => $value,
+                        ],
+                    ];
+                }
+
+                foreach($doc->getTagsByName('path') as $docParam) {
+                    list($field, $value) = array_map('trim', explode('=', (string) $docParam->getDescription()));
+                    $item['parameters'][] = [
+                        'name' => $field,
+                        'in' => 'path',
+                        'schema' => [
+                            'type' => 'string',
+                            'default' => $value,
+                        ],
+                    ];
+                }
+            }
 
             $item = [
                 'tags' => [ $model_name ],
@@ -152,11 +176,30 @@ class AppController extends Controller
                 
                 foreach($model->getFillable() as $name) {
                     if ($name == 'id') continue;
-                    $item['requestBody']['content']['application/json']['schema']['properties'][ $name ] = [
+                    $requestBody[ $name ] = [
                         'type' => 'string',
                         'format' => 'string',
                         'example' => '',
                     ];
+                }
+            }
+
+            if (! empty($requestBody)) {
+                $item['requestBody'] = [
+                    'description' => '',
+                    'required' => true,
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'required' => [],
+                                'properties' => [],
+                            ],
+                        ],
+                    ],
+                ];
+
+                foreach($requestBody as $name => $value) {
+                    $item['requestBody']['content']['application/json']['schema']['properties'][ $name ] = $value;
                 }
             }
 
@@ -172,27 +215,6 @@ class AppController extends Controller
                     'description' => 'internal error',
                 ],
             ];
-
-            // $item['security'] = [
-            //     [
-            //         'auth' => [
-            //             'write',
-            //             'read',
-            //         ]
-            //     ],
-            // ];
-
-            // foreach($response_types as $type) {
-            //     $schema = [
-            //         '$ref' => '#/components/schemas/Pet',
-            //     ];
-            //     $item['requestBody']['content'][ $type['type'] ] = [
-            //         'schema' => $schema,
-            //     ];
-            //     $item['responses']['200']['content'][ $type['type'] ] = [
-            //         'schema' => $schema,
-            //     ];
-            // }
 
             $json['paths']["/{$route->uri}"][ $method ] = $item;
         }
