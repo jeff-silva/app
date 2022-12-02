@@ -17,6 +17,7 @@
     "@mdi/font": "^7.0.96",
     "@pinia/nuxt": "^0.4.2",
     "@vue-leaflet/vue-leaflet": "^0.6.1",
+    "@vueuse/components": "^9.6.0",
     "axios": "^0.27.2",
     "leaflet": "^1.9.3",
     "sass": "^1.55.0",

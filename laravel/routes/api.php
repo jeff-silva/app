@@ -23,6 +23,7 @@ new \App\Http\Controllers\AuthController;
 new \App\Http\Controllers\FilesController;
 new \App\Http\Controllers\LotoLotofacilController;
 new \App\Http\Controllers\LotoMegasenaController;
+new \App\Http\Controllers\Ow3dPlacesController;
 new \App\Http\Controllers\PlacesController;
 new \App\Http\Controllers\SettingsController;
 new \App\Http\Controllers\UsersController;
