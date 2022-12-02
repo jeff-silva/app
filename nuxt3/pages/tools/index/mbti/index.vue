@@ -2,12 +2,14 @@
 
 <template>
   <div>
-    <h1>MBTI</h1>
+    <h1 class="mb-5">MEMEBTI</h1>
     <template v-for="q in questions">
-      <v-select :label="q.question" v-model="q.answer" :items="[{title:'None', value:false}, ...q.options]" />
+      <v-select :label="q.question" v-model="q.answers" :items="q.options" multiple />
     </template>
-    <app-dd>result: {{ result }}</app-dd>
-    <app-dd>$data: {{ $data }}</app-dd>
+    <div class="d-flex">
+      <v-spacer />
+      <v-btn @click="clear()">Limpar tudo</v-btn>
+    </div>
   </div>
 </template>
 
@@ -16,46 +18,107 @@
     data: () => ({
       questions: [
         {
-          question: 'At a party do you:',
-          answer: false,
+          question: 'Qual desses números mais combina com você?',
+          multiple: false,
+          answers: [],
           options: [
             {
-              title: 'Interact with many, including strangers',
-              value: 'e',
+              title: '69',
+              value: ['esfj', 'intj', 'isfj', 'isfp', 'istp', 'esfp'],
             },
             {
-              title: 'Interact with a few, known to you',
-              value: 'i',
+              title: '420',
+              value: ['entj', 'istj', 'enfp', 'infp', 'enfj', 'estp'],
+            },
+            {
+              title: '666',
+              value: ['isfp', 'istp', 'estj', 'entp', 'infj', 'intp', 'entj'],
             },
           ],
         },
-        
         {
-          question: 'Are you more:',
-          answer: false,
+          question: 'Você se considera mais:',
+          answers: [],
           options: [
             {
-              title: 'Realistic than speculative',
-              value: 's',
+              title: 'Visionário / Arrogante',
+              value: ['intj'],
             },
             {
-              title: 'Speculative than realistic',
-              value: 'n',
+              title: 'Calculista / Sem emoções',
+              value: ['intp'],
+            },
+            {
+              title: 'Excêntrico / Narcisista',
+              value: ['entp'],
+            },
+            {
+              title: 'Líder / Teimoso',
+              value: ['entj'],
+            },
+            {
+              title: 'Único / Amoroso',
+              value: ['enfp'],
+            },
+            {
+              title: 'Altruísta / Intrusivo',
+              value: ['enfj'],
+            },
+            {
+              title: 'Sonhador / Emotivo',
+              value: ['infp'],
+            },
+            {
+              title: 'Confidente / Arrogante',
+              value: ['infj'],
             },
           ],
         },
-
         {
-          question: 'Is it worse to:',
-          answer: false,
+          question: 'Se você tromba com alguém chorando...',
+          answers: [],
           options: [
             {
-              title: 'Have your “head in the clouds”',
-              value: 's',
+              title: 'Pergunta se está tudo bem',
+              value: ['enfj', 'infj', 'estp', 'isfp'],
             },
             {
-              title: 'Be “in a rut”',
-              value: 'n',
+              title: 'Dá um lenço',
+              value: ['estj', 'esfj'],
+            },
+            {
+              title: 'Passa correndo',
+              value: ['intp', 'infp', 'entj'],
+            },
+            {
+              title: 'Dá uma olhada sem jeito e vai embora',
+              value: ['istp', 'intj', 'entp'],
+            },
+            {
+              title: 'Abraça',
+              value: ['enfp', 'esfp'],
+            },
+            {
+              title: 'Olha em volta cheio de pânico',
+              value: ['isfj', 'istj'],
+            },
+          ],
+        },
+        {
+          question: 'Você se considera mais:',
+          answers: [],
+          options: [
+            {
+              title: 'Físico',
+              value: ['enfp', 'istj', 'isfj', 'esfp', 'estp', 'istp', 'estj'],
+            },
+            {
+              title: 'Mental',
+              value: ['enfp', 'istj', 'enfj', 'entj', 'intp', 'intj', 'entp'],
+            },
+            {
+              title: 'Emocional',
+              value: ['enfp', 'enfj', 'isfj', 'infp', 'isfp', 'infj', 'esfj'],
             },
           ],
         },
@@ -65,22 +128,41 @@
     computed: {
       result() {
         let letters = ['e', 'i', 's', 'n', 't', 'f', 'j', 'p'];
+
+        const flatten = (arr, depth = 1) => arr.reduce((a, v) => a.concat(depth > 1 && Array.isArray(v) ? flatten(v, depth - 1) : v), []);
+        
+        let answers = [];
+        this.questions.forEach((quest) => {
+          flatten(quest.answers).forEach(answer => {
+            answers.push(answer);
+          });
+        });
         
         let total = {};
         letters.forEach((l) => {
-          let quant = this.questions.filter(q => q.answer==l).length;
-          let percent = Math.floor(quant / (['e', 'i'].includes(l)? 10: 20) * 100);
-          total[l] = { quant, percent };
+          total[l] = { quant: 0, percent: 0 };
         });
 
-        let type = [
-          (total.e >= total.i ? 'E' : 'I'),
-          (total.s >= total.n ? 'S' : 'N'),
-          (total.t >= total.f ? 'T' : 'F'),
-          (total.j >= total.p ? 'J' : 'P'),
-        ].join('');
+        answers.forEach(answer => {
+          answer.split('').forEach(l => {
+            total[l].quant++;
+          });
+        });
 
-        return { type, total };
+        let type = [['e', 'i'], ['s', 'n'], ['t', 'f'], ['p', 'j']].map(([l1, l2]) => {
+          if (total[l1].quant==0 && total[l2].quant==0) return 'X';
+          return total[l1].quant >= total[l2].quant ? l1.toUpperCase() : l2.toUpperCase();
+        }).join('');
+
+        return { type, total, answers };
+      },
+    },
+
+    methods: {
+      clear() {
+        this.questions.forEach(quest => {
+          quest.answers = [];
+        });
       },
     },
   };
