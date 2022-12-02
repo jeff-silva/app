@@ -4,7 +4,7 @@
       <v-navigation-drawer
         v-model="drawer"
         v-bind="{
-          width: 250,
+          width: navWidth,
         }"
       >
         <div class="d-flex flex-column" style="height:100vh;">
@@ -74,7 +74,12 @@ const breakpoints = useBreakpoints(breakpointsVuetify);
 export default {
   props: {
     containerFluid: {
+      type: Boolean,
       default: true,
+    },
+    navWidth: {
+      type: Number,
+      default: 250,
     },
   },
 
