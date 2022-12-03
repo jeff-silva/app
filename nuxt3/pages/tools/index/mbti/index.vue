@@ -3,54 +3,97 @@
 <template>
   <div>
     <h1 class="mb-5">MEMEBTI</h1>
-    <v-row>
-      <v-col cols="12" md="7">
-        <template v-for="q in questions">
-          <v-select :label="q.question" v-model="q.answers" :items="q.options" multiple />
-        </template>
-        <div class="d-flex">
-          <v-spacer />
-          <v-btn @click="clear()">Limpar tudo</v-btn>
-        </div>
-      </v-col>
-      <v-col cols="12" md="5">
-        <div class="d-flex mb-3">
-          <v-spacer />
-          <div>{{ result.questions.answered.total }} / {{ result.questions.total }}</div>
-          <v-spacer />
-        </div>
-        <v-progress-linear :model-value="result.questions.answered.percent" />
-        <div class="d-flex flex-column mt-3" style="gap:16px;" v-if="result.questions.finished">
-          <v-card :color="`${m.color}55`" elevation="0" v-for="m in result.mbtis" :key="m.name">
-            <div class="d-flex align-center flex-no-wrap justify-space-between">
-              <v-avatar class="ma-3" size="125" rounded="0">
+
+    <v-window v-model="questionCurrent">
+      <v-window-item v-for="(q, i) in questions" :key="index" :value="i" class="pa-1">
+        <v-card>
+          <v-card-subtitle class="mt-3">{{ i+1 }} / {{ questions.length }}</v-card-subtitle>
+          <v-card-title>{{ q.question }}</v-card-title>
+          <v-progress-linear :model-value="result.questions.answered.percent" />
+          <v-card-text>
+            <v-checkbox
+              v-for="(o, ii) in q.options"
+              :key="ii"
+              :label="o.title"
+              v-model="q.answers"
+              multiple
+              :true-value="o.value"
+              :hide-details="true"
+            ></v-checkbox>
+            <!-- <app-dd>{{ q }}</app-dd> -->
+          </v-card-text>
+          <v-divider />
+          <v-card-actions>
+            <v-btn @click="questionCurrent--" v-if="questionCurrent>0">Voltar</v-btn>
+            <v-btn @click="clear()" color="error">Limpar tudo</v-btn>
+            <v-spacer />
+            <v-btn
+              @click="questionCurrent++"
+              :disabled="q.answers.length==0"
+              color="success"
+            >
+              {{ questionCurrent==questions.length-1 ? 'Resultado' : 'Próximo' }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-window-item>
+      <v-window-item :value="questions.length" class="pa-1">
+        <v-card title="Resultado">
+          <v-divider />
+          <v-card-text>
+            <v-alert type="warning" v-if="result.mbtis.length > 1">
+              Houveram algumas colisões de características, por isso, estamos retornando
+              todas as possibilidades dentro do que foi respondido.
+            </v-alert>
+
+            <div class="d-flex flex-column mt-5" style="gap:16px;">
+              <v-card :color="`${m.color}55`" elevation="0" v-for="m in result.mbtis" :key="m.name">
+                <div class="d-flex align-center flex-no-wrap justify-space-between">
+                  <v-avatar class="ma-3" size="125" rounded="0">
+                    <v-img :src="m.icon"></v-img>
+                  </v-avatar>
+      
+                  <div class="flex-grow-1">
+                    <v-card-subtitle>{{ m.name }}</v-card-subtitle>
+      
+                    <v-card-actions>
+                      <v-btn class="ml-2" variant="outlined" size="small" :href="m.link" target="_blank">
+                        Detalhes
+                      </v-btn>
+                    </v-card-actions>
+                  </div>
+                </div>
+              </v-card>
+            </div>
+          </v-card-text>
+          <v-divider />
+          <v-card-actions>
+            <v-btn @click="questionCurrent--" v-if="questionCurrent>0">Voltar</v-btn>
+            <v-spacer />
+            <v-btn @click="clear()">Limpar tudo</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-window-item>
+    </v-window>
+
+    <div class="py-5">
+      <v-divider class="my-5 mx-1" />
+    </div>
+
+    <v-card title="Todos os tipos">
+      <v-card-text>
+        <v-row>
+          <v-col cols="3" v-for="m in Object.values(mbti)">
+            <div :style="`background: ${m.color}`" class="text-center py-4">
+              <v-avatar size="100" rounded="0">
                 <v-img :src="m.icon"></v-img>
               </v-avatar>
-  
-              <div class="flex-grow-1">
-                <v-card-subtitle>{{ m.name }}</v-card-subtitle>
-  
-                <v-card-actions>
-                  <v-btn class="ml-2" variant="outlined" size="small" :href="m.link" target="_blank">
-                    Detalhes
-                  </v-btn>
-                </v-card-actions>
-              </div>
+              <h4 class="mt-2">{{ m.name.toUpperCase() }}</h4>
             </div>
-          </v-card>
-        </div>
-      </v-col>
-    </v-row>
-    <!-- <v-row>
-      <v-col cols="3" v-for="m in Object.values(mbti)">
-        <div :style="`background: ${m.color}`" class="text-center py-4">
-          <v-avatar size="100" rounded="0">
-            <v-img :src="m.icon"></v-img>
-          </v-avatar>
-          <h4 class="mt-2">{{ m.name.toUpperCase() }}</h4>
-        </div>
-      </v-col>
-    </v-row> -->
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -95,6 +138,7 @@
         enfj: { name: 'enfj', icon: enfj, color: '#99c26d' },
         enfp: { name: 'enfp', icon: enfp, color: '#99c26d' },
       },
+      questionCurrent: 0,
       questions: [
         {
           question: 'Qual desses números mais combina com você?',
@@ -292,6 +336,7 @@
 
     methods: {
       clear() {
+        this.questionCurrent = 0;
         this.questions.forEach(quest => {
           quest.answers = [];
         });
