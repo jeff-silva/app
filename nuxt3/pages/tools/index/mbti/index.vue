@@ -1,4 +1,7 @@
-<!-- https://codepen.io/pulpexploder/pen/pNpdeq?editors=1010 -->
+<!--
+  https://codepen.io/pulpexploder/pen/pNpdeq?editors=1010
+  https://www.infomoney.com.br/carreira/saiba-como-escolher-sua-carreira-atraves-da-sua-personalidade/
+-->
 
 <template>
   <div>
@@ -88,7 +91,12 @@
               <v-avatar size="100" rounded="0">
                 <v-img :src="m.icon"></v-img>
               </v-avatar>
-              <h4 class="mt-2">{{ m.name.toUpperCase() }}</h4>
+              <div class="d-flex align-center justify-center px-3 mt-2" style="height:120px;">
+                <div>
+                  <h4>{{ m.name.toUpperCase() }} - {{ m.type }}</h4>
+                  <p>{{ m.description }}</p>
+                </div>
+              </div>
             </div>
           </v-col>
         </v-row>
@@ -118,25 +126,30 @@
   export default {
     data: () => ({
       mbti: {
-        isfj: { name: 'isfj', icon: isfj, color: '#369496' },
-        istj: { name: 'istj', icon: istj, color: '#369496' },
-        esfj: { name: 'esfj', icon: esfj, color: '#369496' },
-        estj: { name: 'estj', icon: estj, color: '#369496' },
 
-        isfp: { name: 'isfp', icon: isfp, color: '#e5c828' },
-        istp: { name: 'istp', icon: istp, color: '#e5c828' },
-        esfp: { name: 'esfp', icon: esfp, color: '#e5c828' },
-        estp: { name: 'estp', icon: estp, color: '#e5c828' },
+        // Analists
+        intj: { name: "intj", icon: intj, color: "#96637c", type: "Analista", description: "Pensadores criativos e estratégicos, sempre com um plano para tudo." },
+        intp: { name: "intp", icon: intp, color: "#96637c", type: "Analista", description: "Inventores inovadores com grande necessidade de conhecimento." },
+        entj: { name: "entj", icon: entj, color: "#96637c", type: "Analista", description: "Líderes fortes e criativos, sempre encontrando um caminho - ou criando o seu próprio." },
+        entp: { name: "entp", icon: entp, color: "#96637c", type: "Analista", description: "Pensadores inteligentes e curiosos que não resistem à um desafio intelectual." },
 
-        intj: { name: 'intj', icon: intj, color: '#96637c' },
-        intp: { name: 'intp', icon: intp, color: '#96637c' },
-        entj: { name: 'entj', icon: entj, color: '#96637c' },
-        entp: { name: 'entp', icon: entp, color: '#96637c' },
+        // Diplomats
+        infj: { name: "infj", icon: infj, color: "#99c26d", type: "Diplomata", description: "Quietos e místicos, são inspiradores e idealistsa incansáveis." },
+        infp: { name: "infp", icon: infp, color: "#99c26d", type: "Diplomata", description: "Péticos, tipos de pessoas autruístas, estão sempre dispostos à ajudar uma boa causa." },
+        enfj: { name: "enfj", icon: enfj, color: "#99c26d", type: "Diplomata", description: "Carismáticos e líderes inspiradores, consemguem hipnotizar seus ouvintes." },
+        enfp: { name: "enfp", icon: enfp, color: "#99c26d", type: "Diplomata", description: "Entusiastsa, criativos e sociáveis de espírito livre, que sempre encontram uma razão para sorrir." },
 
-        infj: { name: 'infj', icon: infj, color: '#99c26d' },
-        infp: { name: 'infp', icon: infp, color: '#99c26d' },
-        enfj: { name: 'enfj', icon: enfj, color: '#99c26d' },
-        enfp: { name: 'enfp', icon: enfp, color: '#99c26d' },
+        // Sentinels
+        isfj: { name: "isfj", icon: isfj, color: "#369496", type: "Sentinela", description: "Grandes protetores e muito dedicados, sempre prontos para defender quem ama." },
+        istj: { name: "istj", icon: istj, color: "#369496", type: "Sentinela", description: "Práticos e com a mentalidade focada em fatos, cuja confiabilidade não pode ser duvidada." },
+        esfj: { name: "esfj", icon: esfj, color: "#369496", type: "Sentinela", description: "Pessoas sociáveis e populares, com um carinho extraordinário, sempre prontos para ajudar." },
+        estj: { name: "estj", icon: estj, color: "#369496", type: "Sentinela", description: "Excelente administradores, insuperáveis em gerenciar coisas - ou pessoas." },
+        
+        // Explorers
+        isfp: { name: "isfp", icon: isfp, color: "#e5c828", type: "Explorador", description: "ARtistas flexíveis e charmosos, sempre prontos para explorar e experienciar algo novo." },
+        istp: { name: "istp", icon: istp, color: "#e5c828", type: "Explorador", description: "Experimentadores práticos e ousados, dominam todos os tipos de ferramentas." },
+        esfp: { name: "esfp", icon: esfp, color: "#e5c828", type: "Explorador", description: "Pessoas espontâneas e ótimas em entreter, a vida nunca é chata perto delas." },
+        estp: { name: "estp", icon: estp, color: "#e5c828", type: "Explorador", description: "Inteligentes e cheios de enrgia, que realmente gostam de viver no limite." },
       },
       questionCurrent: 0,
       questions: [
