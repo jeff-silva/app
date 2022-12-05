@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class AppController extends Controller
 {
     public function onInit()
     {
-        $this->routeMatch(['get'], '/app/openapi', 'openapi')->name('app.openapi');
+        Route::get('/app/openapi', '\App\Http\Controllers\AppController@openapi')->name('app.openapi');
     }
 
     // https://editor.swagger.io/

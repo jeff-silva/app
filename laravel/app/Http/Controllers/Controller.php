@@ -15,6 +15,7 @@ class Controller extends BaseController
 
     public $model = false;
     public $namespace = false;
+    public $route = false;
 
     public function __construct()
     {
@@ -26,17 +27,12 @@ class Controller extends BaseController
             }
         } catch(\Exception $e) {}
         $this->onInit();
+        $this->route = app('\Illuminate\Support\Facades\Route');
     }
 
     public function onInit()
     {
         // 
-    }    
-
-    public function routeMatch($methods, $path, $callback)
-    {
-        $methods = is_array($methods)? $methods: [ $methods ];
-        return Route::match($methods, $path, [get_called_class(), $callback]);
     }
 
     public function apiResource($path, $params = [])
@@ -71,6 +67,11 @@ class Controller extends BaseController
                 'path' => "{$path}/{id}",
                 'function' => 'destroy',
             ],
+            // 'valid' => (object) [
+            //     'method' => 'post',
+            //     'path' => "{$path}/valid",
+            //     'function' => 'valid',
+            // ],
             // 'import' => (object) [
             //     'method' => 'post',
             //     'path' => "{$path}/import",
@@ -85,7 +86,8 @@ class Controller extends BaseController
 
         foreach($routes as $name => $data) {
             if (in_array($name, $params['except'])) continue;
-            $this->routeMatch($data->method, $data->path, $data->function)->name("{$path}.{$name}");
+            Route::match([$data->method], $data->path, [get_called_class(), $data->function])
+                ->name("{$data->path}.{$name}");
         }
     }
 

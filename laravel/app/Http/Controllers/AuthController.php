@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class AuthController extends Controller
 {
     public function onInit()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
-        $this->routeMatch(['post'], 'auth/login', 'login')->name('auth.login');
-        $this->routeMatch(['post'], 'auth/logout', 'logout')->name('auth.logout');
-        $this->routeMatch(['post'], 'auth/refresh', 'refresh')->name('auth.refresh');
-        $this->routeMatch(['post'], 'auth/me', 'me')->name('auth.me');
+        Route::post('auth/login', '\App\Http\Controllers\AuthController@login')->name('auth.login');
+        Route::post('auth/logout', '\App\Http\Controllers\AuthController@logout')->name('auth.logout');
+        Route::post('auth/refresh', '\App\Http\Controllers\AuthController@refresh')->name('auth.refresh');
+        Route::post('auth/me', '\App\Http\Controllers\AuthController@me')->name('auth.me');
+        $this->middleware('auth:api', [
+            'except' => ['login'],
+        ]);
     }
 
     /**

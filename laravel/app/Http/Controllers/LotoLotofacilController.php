@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class LotoLotofacilController extends Controller
 {
     public function onInit()
     {
+        Route::post('loto_lotofacil/import', '\App\Http\Controllers\LotoLotofacilController@import')->name('loto_lotofacil.import');
         $this->apiResource('loto-lotofacil', [
             'only' => ['index', 'show'],
         ]);
-
-        $this->routeMatch(['post'], 'loto_lotofacil/import', 'import')->name('loto_lotofacil.import');
+        $this->middleware('auth:api', [
+            'except' => ['index', 'show'],
+        ]);
     }
 
     public function import()
