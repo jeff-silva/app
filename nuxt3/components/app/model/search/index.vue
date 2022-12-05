@@ -51,6 +51,12 @@
         default: () => ([]),
       },
     },
+
+    methods: {
+      submit() {
+        this.$refs.table.submit();
+      },
+    },
   };
 </script>
 

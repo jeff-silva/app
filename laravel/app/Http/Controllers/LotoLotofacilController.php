@@ -9,7 +9,7 @@ class LotoLotofacilController extends Controller
 {
     public function onInit()
     {
-        Route::post('loto_lotofacil/import', '\App\Http\Controllers\LotoLotofacilController@import')->name('loto_lotofacil.import');
+        Route::post('loto-lotofacil/import', '\App\Http\Controllers\LotoLotofacilController@import')->name('loto_lotofacil.import');
         $this->apiResource('loto-lotofacil', [
             'only' => ['index', 'show'],
         ]);

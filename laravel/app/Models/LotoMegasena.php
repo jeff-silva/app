@@ -85,6 +85,11 @@ class LotoMegasena extends Model
         return $return;
     }
 
+    public function getNumbersAttribute($value)
+    {
+        return explode(' ', $value);
+    }
+
     public function onSchedule($schedule)
     {
         $schedule->call(function () {

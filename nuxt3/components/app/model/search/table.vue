@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-model-search-table">
     <v-table v-bind="{fixedHeader:true, density:'compact'}">
       <colgroup>
         <col width="50px">
@@ -8,13 +8,13 @@
       </colgroup>
       <thead>
         <tr>
-          <th>
+          <th class="app-model-search-table-row-select pa-0">
             <v-checkbox :hide-details="true" />
           </th>
           <slot name="table-header">
             <th>&lt;template #table-header&gt;&lt;/template&gt;</th>
           </slot>
-          <th></th>
+          <th class="app-model-search-table-row-actions pa-0"></th>
         </tr>
       </thead>
       <tbody>
@@ -25,25 +25,27 @@
             </slot>
           </td>
         </tr>
-        <tr v-for="(item, index) in items">
-          <td width="50px">
-            <v-checkbox :hide-details="true" />
-          </td>
-          <slot name="table-row" v-bind="slotBind(item)">
-            <td>&lt;template #table-row="row"&gt;&lt;/template&gt;</td>
-          </slot>
-          <td width="30px">
-            <app-over type="side" :overBind="{location:'start'}">
-              <template #activator="{ props }">
-                <v-btn icon="mdi-menu" flat v-bind="props"></v-btn>
-              </template>
-              
-              <v-btn icon="mdi-pencil" color="primary" :to="`/admin/${model}/${item.item.id}`"></v-btn>
-              <v-btn icon="mdi-delete" color="error"></v-btn>
-              <slot name="table-actions" v-bind="slotBind(item)"></slot>
-            </app-over>
-          </td>
-        </tr>
+        <template v-for="(item, index) in items">
+          <tr>
+            <td width="50px" class="app-model-search-table-row-select pa-0">
+              <v-checkbox :hide-details="true" />
+            </td>
+            <slot name="table-row" v-bind="slotBind(item)">
+              <td>&lt;template #table-row="row"&gt;&lt;/template&gt;</td>
+            </slot>
+            <td width="30px" class="app-model-search-table-row-actions pa-0">
+              <app-over type="side" :overBind="{location:'start'}">
+                <template #activator="{ props }">
+                  <v-btn icon="mdi-menu" flat v-bind="props"></v-btn>
+                </template>
+                
+                <v-btn icon="mdi-pencil" color="primary" :to="`/admin/${model}/${item.item.id}`"></v-btn>
+                <v-btn icon="mdi-delete" color="error"></v-btn>
+                <slot name="table-actions" v-bind="slotBind(item)"></slot>
+              </app-over>
+            </td>
+          </tr>
+        </template>
       </tbody>
     </v-table>
     <v-divider class="mb-4" />
@@ -121,3 +123,23 @@ export default {
   },
 };
 </script>
+
+<style>
+.app-model-search-table table td {
+  border-bottom: none !important;
+}
+.app-model-search-table-row-select,
+.app-model-search-table-row-actions {
+  position: sticky !important;
+  z-index: 2 !important;
+  min-width: 50px !important;
+  max-width: 50px !important;
+  background: #fff;
+}
+.app-model-search-table-row-select {
+  left: 0;
+}
+.app-model-search-table-row-actions {
+  right: 0;
+}
+</style>

@@ -9,7 +9,7 @@ class LotoMegasenaController extends Controller
 {
     public function onInit()
     {
-        Route::post('loto_megasena/import', '\App\Http\Controllers\LotoMegasenaController@import')->name('loto_megasena.import');
+        Route::post('loto-megasena/import', '\App\Http\Controllers\LotoMegasenaController@import')->name('loto_megasena.import');
         $this->apiResource('loto-megasena', [
             'only' => ['index', 'show'],
         ]);
