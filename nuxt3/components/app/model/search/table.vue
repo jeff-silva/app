@@ -109,7 +109,7 @@ export default {
     return {
       search: useAxios({
         method: 'get',
-        url: `/api/${this.model}/search`,
+        url: `/api/${this.model}`,
         params: this.paramsMerge(),
         autoSubmit: true,
         resp: {
