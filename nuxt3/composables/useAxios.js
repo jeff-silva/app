@@ -69,7 +69,6 @@ export default function(compParams={}) {
                 resolve(resp);
             })
             .catch(err => {
-                console.log(err);
                 req.value.loading = false;
                 compParams.onError(err);
                 compParams.onResponse(err.response);
@@ -87,7 +86,6 @@ export default function(compParams={}) {
     };
 
     req.value.reset = () => {
-        console.log(compParams);
         req.value.params = JSON.parse(JSON.stringify(compParams.params));
         req.value.data = JSON.parse(JSON.stringify(compParams.data));
     };

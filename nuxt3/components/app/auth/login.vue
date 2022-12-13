@@ -14,6 +14,13 @@
 import { useEventBus } from '@vueuse/core';
 
 export default {
+  props: {
+    redirect: {
+      type: [Boolean, String],
+      default: false,
+    },
+  },
+
   data() {
     return {
       app: useApp(),
@@ -34,6 +41,10 @@ export default {
     useEventBus('useApp:onLogin').on((data, err) => {
       this.credentials = this.credentialsDefault();
       this.$emit('success', data);
+
+      if (this.redirect) {
+        this.$router.push(this.redirect);
+      }
     });
   },
 };

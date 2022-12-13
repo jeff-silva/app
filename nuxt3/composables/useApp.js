@@ -123,6 +123,5 @@ export default function() {
     })();
 
     app.load();
-
     return app;
 };

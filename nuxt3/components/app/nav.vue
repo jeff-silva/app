@@ -14,7 +14,7 @@
                 :prepend-icon="iconShow? (item.icon||iconDefault): null"
                 :title="item.name"
                 :to="item.to"
-                @click.native="onClick(item)"
+                @click.native="onClick($event, item)"
             ></v-list-item>
 
             <!-- Children -->
@@ -24,7 +24,7 @@
                         v-bind="props"
                         :prepend-icon="iconShow? (item.icon||iconDefault): null"
                         :title="item.name"
-                        @click.native="onClick(item)"
+                        @click.native="onClick($event, item)"
                     ></v-list-item>
                 </template>
 
@@ -36,14 +36,14 @@
                         v-if="noChildren(iitem)"
                         :title="iitem.name"
                         :to="iitem.to"
-                        @click.native="onClick(iitem)"
+                        @click.native="onClick($event, iitem)"
                     ></v-list-item>
 
                     <!-- Children -->
                     <div v-else>
                         <v-list-item
                           :title="iitem.name"
-                          @click.native="onClick(item)"
+                          @click.native="onClick($event, item)"
                         ></v-list-item>
                         <v-menu anchor="end" activator="parent">
                             <app-nav
@@ -74,8 +74,9 @@ export default {
         noChildren(item) {
             return !(Array.isArray(item.children) && item.children.length);
         },
-        onClick(item) {
-          return typeof item.onClick=='function'? item.onClick: null;
+        onClick(ev, item) {
+            if (typeof item.onClick != 'function') return;
+            item.onClick(ev, item);
         },
     },
 }

@@ -27,9 +27,8 @@
     }
   };
 
-  watchDebounced(player.value, () => {
-    console.log('Aaaa');
-  }, { debounce: 1000, maxWait: 1000 });
+  // watchDebounced(player.value, () => {
+  // }, { debounce: 1000, maxWait: 1000 });
   
   const { up, down, left, right, w, a, s, d } = useMagicKeys();
   watch([w, up],    (v) => v? playerSetPosition({ lat: -playerSpeed }): null);

@@ -107,20 +107,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 	nuxtApp.provide('key', function(value) {
 	  return typeof value=='object'? JSON.stringify(value): value;
   });
-	
-	// this.$events.on('any-name', (message) => console.log(message));
-	// this.$events.run('any-name', 'Hello World');
-	nuxtApp.provide('events', {
-		list: [],
-		on: function(name, call) {
-			this.list.push({ name, call });
-		},
-		run: function(name, param=null) {
-			this.list.filter(item => item.name==name).forEach(item => {
-				item.call.apply(null, [ param ]);
-			});
-		},
-	});
 
 	useApp().load();
 });

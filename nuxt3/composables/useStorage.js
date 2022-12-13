@@ -3,12 +3,15 @@ import { ref, watch, reactive } from 'vue';
 
 
 export default function(name, def={}) {
+    let data;
 
-    let data = window.localStorage.getItem(name) || def;
     try {
+        data = window.localStorage.getItem(name) || def;
         data = JSON.parse(data);
     }
-    catch(err) {}
+    catch(err) {
+        data = def;
+    }
 
     let refData = reactive(data);
 

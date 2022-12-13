@@ -74,7 +74,6 @@
 
       tableSetParams() {
         this.$refs.table.search.params = this.$refs.table.paramsMerge(this.$route.query);
-        console.log(this.$refs.table.search.params);
       },
     },
 
