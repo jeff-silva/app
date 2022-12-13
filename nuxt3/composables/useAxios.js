@@ -26,8 +26,8 @@ export default function(compParams={}) {
         status: false,
         method: compParams.method,
         url: compParams.url,
-        params: JSON.parse(JSON.stringify(compParams.params)),
-        data: JSON.parse(JSON.stringify(compParams.data)),
+        params: compParams.params,
+        data: compParams.data,
         resp: compParams.resp,
         err: compParams.err,
     });
@@ -69,6 +69,7 @@ export default function(compParams={}) {
                 resolve(resp);
             })
             .catch(err => {
+                console.log(err);
                 req.value.loading = false;
                 compParams.onError(err);
                 compParams.onResponse(err.response);

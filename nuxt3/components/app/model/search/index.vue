@@ -1,7 +1,12 @@
 <template>
   <div class="app-model-search">
     <v-container>
-      <app-model-search-table ref="table" :model="model" v-bind="{ tableSizes }">
+      <app-model-search-table
+        ref="table"
+        :model="model"
+        v-bind="{ tableSizes }"
+        @on-response="tableOnResponse($event)"
+      >
         <template #table-header>
           <slot name="table-header"></slot>
         </template>
@@ -17,7 +22,7 @@
     </v-container>
 
     <v-navigation-drawer location="end">
-      <form @submit.prevent>
+      <form @submit.prevent="submit()">
         <div class="pa-3">
           <v-text-field label="Busca" />
           <v-select label="Ordem" :items="[
@@ -50,12 +55,37 @@
         type: Array,
         default: () => ([]),
       },
+      changeUrl: {
+        type: Boolean,
+        default: true,
+      },
     },
 
     methods: {
       submit() {
         this.$refs.table.submit();
       },
+
+      tableOnResponse(resp) {
+        // this.$router.push({
+        //   query: resp.data.params
+        // });
+      },
+
+      tableSetParams() {
+        this.$refs.table.search.params = this.$refs.table.paramsMerge(this.$route.query);
+        console.log(this.$refs.table.search.params);
+      },
+    },
+
+    watch: {
+      $route(to, from) {
+        this.tableSetParams();
+      },
+    },
+
+    mounted() {
+      this.tableSetParams();
     },
   };
 </script>

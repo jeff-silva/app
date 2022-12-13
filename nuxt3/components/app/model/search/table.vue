@@ -57,7 +57,7 @@
       @update:modelValue="$debounce('app-model-search-table-page', 1000, search.submit)"
     ></v-pagination>
     <!-- <pre>items: {{ items }}</pre> -->
-    <!-- <pre>search: {{ search }}</pre> -->
+    <pre>search: {{ search }}</pre>
   </div>
 </template>
 
@@ -84,7 +84,7 @@ export default {
     },
 
     submit() {
-      alert('submit');
+      return this.search.submit();
     },
 
     paramsMerge(merge={}) {
@@ -113,10 +113,19 @@ export default {
         method: 'get',
         url: `/api/${this.model}`,
         params: this.paramsMerge(),
-        autoSubmit: true,
+        autoSubmit: false,
         resp: {
           last_page: 1,
           data: [],
+        },
+        onSuccess: (resp) => {
+          this.$emit('onSuccess', resp);
+        },
+        onError: (resp) => {
+          this.$emit('onError', resp);
+        },
+        onResponse: (resp) => {
+          this.$emit('onResponse', resp);
         },
       }),
     };
