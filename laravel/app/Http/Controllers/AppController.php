@@ -5,17 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// #[\App\Attributes\Route\Resource]
 class AppController extends Controller
 {
     public function onInit()
     {
-        Route::get('/app/openapi', '\App\Http\Controllers\AppController@openapi')->name('app.openapi');
+        // 
     }
 
     // https://editor.swagger.io/
     // https://editor-next.swagger.io/
+    #[\route('get', 'app/openapi')]
     public function openapi()
     {
+        return \App\Helpers\Openapi::get();
         $json = [
             'openapi' => '3.0.0',
             'info' => [

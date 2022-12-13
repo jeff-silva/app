@@ -9,18 +9,23 @@ class SettingsController extends Controller
 {
     public function onInit()
     {
-        Route::get('/settings', '\App\Http\Controllers\SettingsController@list')->name('settings.get');
-        Route::post('/settings', '\App\Http\Controllers\SettingsController@save')->name('settings.save');
         $this->middleware('auth:api', [
             'except' => [],
         ]);
     }
 
+    #[\route('get', 'settings')]
     public function list()
     {
         return [];
     }
     
+    #[\route('post', 'settings', [
+        'body' => [
+            'setting1' => 'value1',
+            'setting2' => 'value2',
+        ],
+    ])]
     public function save()
     {
         return [];

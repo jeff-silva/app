@@ -1,8 +1,6 @@
 <template>
   <app-form method="post" :action="`/api/${model}/save`" v-model="post">
-    <v-container>
-      <slot name="edit-fields" v-bind="slotBind({ post })" />
-    </v-container>
+    <slot name="edit-fields" v-bind="slotBind({ post })"></slot>
     
     <v-navigation-drawer location="end">
       <div class="d-flex flex-column pa-3" style="gap:10px;">

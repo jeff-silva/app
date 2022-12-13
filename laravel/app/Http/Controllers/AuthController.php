@@ -9,10 +9,6 @@ class AuthController extends Controller
 {
     public function onInit()
     {
-        Route::post('auth/login', '\App\Http\Controllers\AuthController@login')->name('auth.login');
-        Route::post('auth/logout', '\App\Http\Controllers\AuthController@logout')->name('auth.logout');
-        Route::post('auth/refresh', '\App\Http\Controllers\AuthController@refresh')->name('auth.refresh');
-        Route::post('auth/me', '\App\Http\Controllers\AuthController@me')->name('auth.me');
         $this->middleware('auth:api', [
             'except' => ['login'],
         ]);
@@ -22,6 +18,13 @@ class AuthController extends Controller
      * @body email = user@mail.com
      * @body password = password
      */
+    #[\route('post', 'auth/login', [
+        'description' => 'Login',
+        'body' => [
+            'email' => 'example@mail.com',
+            'password' => '123456',
+        ],
+    ])]
     public function login()
     {
         $credentials = request(['email', 'password']);
@@ -37,12 +40,18 @@ class AuthController extends Controller
         ];
     }
 
+    #[\route('post', 'auth/logout', [
+        'description' => 'Logout',
+    ])]
     public function logout()
     {
         auth()->logout();
         return response()->json(['message' => 'Successfully logged out']);
     }
 
+    #[\route('post', 'auth/refresh', [
+        'description' => 'Refresh authentication',
+    ])]
     public function refresh()
     {
         return [
@@ -52,6 +61,9 @@ class AuthController extends Controller
         ];
     }
 
+    #[\route('post', 'auth/me', [
+        'description' => 'Authenticated user info',
+    ])]
     public function me()
     {
         $user = auth()->user();

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\Finder\Finder;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,16 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+collect((new Finder)->files()->name('*.php')->in(app_path('Http/Controllers')))->each(function(SplFileInfo $file) {
+  if ('Controller.php' == $file->getFilename()) return;
+  app('\\App\Http\Controllers\\' . str_replace('.php', '', $file->getFilename()));
+});
 
-new \App\Http\Controllers\AppController;
-new \App\Http\Controllers\AuthController;
-new \App\Http\Controllers\FilesController;
-new \App\Http\Controllers\LotoLotofacilController;
-new \App\Http\Controllers\LotoMegasenaController;
-new \App\Http\Controllers\Ow3dPlacesController;
-new \App\Http\Controllers\PlacesController;
-new \App\Http\Controllers\SettingsController;
-new \App\Http\Controllers\UsersController;
+// dd( \App\Helpers\Openapi::get() );

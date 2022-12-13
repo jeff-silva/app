@@ -1,25 +1,23 @@
 <template>
   <div class="app-model-search">
-    <v-container>
-      <app-model-search-table
-        ref="table"
-        :model="model"
-        v-bind="{ tableSizes }"
-        @on-response="tableOnResponse($event)"
-      >
-        <template #table-header>
-          <slot name="table-header"></slot>
-        </template>
+    <app-model-search-table
+      ref="table"
+      :model="model"
+      v-bind="{ tableSizes }"
+      @on-response="tableOnResponse($event)"
+    >
+      <template #table-header>
+        <slot name="table-header"></slot>
+      </template>
 
-        <template #table-row="row">
-          <slot name="table-row" v-bind="row"></slot>
-        </template>
+      <template #table-row="row">
+        <slot name="table-row" v-bind="row"></slot>
+      </template>
 
-        <template #table-actions="row">
-          <slot name="table-actions" v-bind="row"></slot>
-        </template>
-      </app-model-search-table>
-    </v-container>
+      <template #table-actions="row">
+        <slot name="table-actions" v-bind="row"></slot>
+      </template>
+    </app-model-search-table>
 
     <v-navigation-drawer location="end">
       <form @submit.prevent="submit()">
