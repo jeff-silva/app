@@ -29,6 +29,8 @@
                   {to:'/admin', name:'Users', icon:'mdi-account', children: [
                     {to:'/admin/users', name:'Search'},
                     {to:'/admin/users/new', name:'Create'},
+                    {to:'/admin/users-groups', name:'Groups'},
+                    {to:'/admin/users-groups/new', name:'New group'},
                   ]},
                   {to:'/admin', name:'Arquivos', icon:'mdi-account', children: [
                     {to:'/admin/files', name:'Search'},
