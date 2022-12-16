@@ -21,7 +21,9 @@ class Controller extends BaseController
     public function __construct()
     {
         $this->model = $this->model? app($this->model): false;
-        // $this->namespace = \Str::kebab(preg_replace('/Controller$/', '', \Arr::last(explode('\\', get_called_class()))));
+        if ($this->model AND !$this->namespace) {
+            $this->namespace = $this->model->getTable();
+        }
         $this->metadataRoutes();
     }
 

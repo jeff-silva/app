@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ow3dPlaces extends Model
+class Ow3dPlace extends Model
 {
     use HasFactory, \App\Traits\Model;
 
     protected $singular = 'OW3D Place';
     protected $plural = 'OW3D Places';
-    protected $table = 'ow3d_places';
+    protected $table = 'ow3d_place';
     protected $tableFields = [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'name' => 'VARCHAR(255) DEFAULT NULL',

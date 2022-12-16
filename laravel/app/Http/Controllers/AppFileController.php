@@ -6,15 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 #[\apiResource()]
-class PlacesController extends Controller
+class AppFileController extends Controller
 {
-    public $namespace = 'places';
-    public $model = \App\Models\Places::class;
+    public $model = \App\Models\AppFile::class;
 
     public function onInit()
     {
         $this->middleware('auth:api', [
-            'except' => [],
+            'except' => ['show'],
         ]);
     }
 }

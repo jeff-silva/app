@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Route;
 ])]
 class LotoMegasenaController extends Controller
 {
-    public $namespace = 'loto-megasena';
     public $model = \App\Models\LotoMegasena::class;
 
     public function onInit()
@@ -20,7 +19,7 @@ class LotoMegasenaController extends Controller
         ]);
     }
 
-    #[\route('post', 'loto-megasena/import')]
+    #[\route('post', 'loto_megasena/import')]
     public function import()
     {
         return (new \App\Models\LotoMegasena)->lotoImport();

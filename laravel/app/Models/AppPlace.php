@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Places extends Model
+class AppPlace extends Model
 {
     use HasFactory, \App\Traits\Model;
 
     protected $singular = 'Local';
     protected $plural = 'Locais';
-    protected $table = 'places';
+    protected $table = 'app_place';
     protected $tableFields = [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'name' => 'VARCHAR(255) DEFAULT NULL',

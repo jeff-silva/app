@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Files extends Model
+class AppFile extends Model
 {
     use HasFactory, \App\Traits\Model;
 
     protected $singular = 'Arquivo';
     protected $plural = 'Arquivos';
-    protected $table = 'files';
+    protected $table = 'app_file';
     protected $tableFields = [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'slug' => 'VARCHAR(255) DEFAULT NULL',

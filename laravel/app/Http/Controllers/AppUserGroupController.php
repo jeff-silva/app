@@ -6,15 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 #[\apiResource()]
-class Ow3dPlacesController extends Controller
+class AppUserGroupController extends Controller
 {
-    public $namespace = 'owed-places';
-    public $model = \App\Models\Ow3dPlaces::class;
+    public $model = \App\Models\AppUserGroup::class;
 
     public function onInit()
     {
         $this->middleware('auth:api', [
-            'except' => ['index', 'show'],
+            'except' => [],
         ]);
     }
 }

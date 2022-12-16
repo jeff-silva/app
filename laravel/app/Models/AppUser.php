@@ -9,13 +9,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Users extends Authenticatable implements JWTSubject
+class AppUser extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, \App\Traits\Model;
 
     protected $singular = 'Usuário';
     protected $plural = 'Usuários';
-    protected $table = 'users';
+    protected $table = 'app_user';
     protected $tableFields = [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'name' => 'VARCHAR(255) DEFAULT NULL',

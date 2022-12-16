@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Route;
 ])]
 class LotoLotofacilController extends Controller
 {
-    public $namespace = 'loto-lotofacil';
     public $model = \App\Models\LotoLotofacil::class;
 
     public function onInit()
@@ -20,7 +19,7 @@ class LotoLotofacilController extends Controller
         ]);
     }
 
-    #[\route('post', 'loto-lotofacil/import')]
+    #[\route('post', 'loto_lotofacil/import')]
     public function import()
     {
         return (new \App\Models\LotoLotofacil)->lotoImport();

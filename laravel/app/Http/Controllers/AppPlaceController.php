@@ -6,10 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 #[\apiResource()]
-class UsersGroupsController extends Controller
+class AppPlaceController extends Controller
 {
-    public $namespace = 'users-groups';
-    public $model = \App\Models\UsersGroups::class;
+    public $model = \App\Models\AppPlace::class;
 
     public function onInit()
     {

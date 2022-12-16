@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Settings extends Model
+class AppSetting extends Model
 {
     use HasFactory, \App\Traits\Model;
 
     protected $singular = 'Configuração';
     protected $plural = 'Configurações';
-    protected $table = 'settings';
+    protected $table = 'app_setting';
     protected $tableFields = [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'name' => 'VARCHAR(255) DEFAULT NULL',

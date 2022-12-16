@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UsersGroups extends Model
+class AppUserGroup extends Model
 {
     use HasFactory, \App\Traits\Model;
 
     protected $singular = 'Grupo de usuário';
     protected $plural = 'Grupos de usuários';
-    protected $table = 'users_groups';
+    protected $table = 'app_user_group';
     protected $tableFields = [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'name' => 'VARCHAR(255) DEFAULT NULL',
