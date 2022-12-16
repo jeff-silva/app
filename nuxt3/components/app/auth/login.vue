@@ -1,5 +1,7 @@
 <template>
   <form @submit.prevent="app.login(credentials)">
+    <v-alert type="error" v-model="app.error" closable>{{ app.error.message }}</v-alert>
+    <v-spacer class="my-3" />
     <v-text-field label="E-mail" v-model="credentials.email" />
     <v-text-field label="Senha" v-model="credentials.password" type="password" />
 

@@ -30,14 +30,14 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
 
         if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return $this->error(401, 'Invalid credentials');
         }
 
-        return [
+        return $this->success([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
-        ];
+        ]);
     }
 
     #[\route('post', 'auth/logout', [
@@ -46,7 +46,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return response()->json(['message' => 'Successfully logged out']);
+        return $this->success(['message' => 'Successfully logged out']);
     }
 
     #[\route('post', 'auth/refresh', [
@@ -54,11 +54,11 @@ class AuthController extends Controller
     ])]
     public function refresh()
     {
-        return [
+        return $this->success([
             'access_token' => auth()->refresh(),
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
-        ];
+        ]);
     }
 
     #[\route('post', 'auth/me', [
@@ -73,9 +73,9 @@ class AuthController extends Controller
             $settings[ $key ] = config($key);
         }
 
-        return [
+        return $this->success([
             'user' => $user,
             'settings' => $settings,
-        ];
+        ]);
     }
 }

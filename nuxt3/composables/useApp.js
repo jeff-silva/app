@@ -19,6 +19,7 @@ export default function() {
             init: false,
             loading: false,
             user: false,
+            error: false,
             localStorage: useStorage('app', {
                 access_token: '',
                 accounts: [],
@@ -58,6 +59,7 @@ export default function() {
         
             async login(credentials={email:'', password:''}) {
                 this.loading = 'login';
+                this.error = false;
                 
                 try {
                     const { data: loginData } = await axios.post('/api/auth/login', credentials);
@@ -67,6 +69,7 @@ export default function() {
                 }
                 catch(err) {
                     onLogin.emit(false, err);
+                    this.error = err.response.data;
                 }
 
                 this.loading = false;
