@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <v-select
-      :items="data.resp.data"
-      item-title="name"
-      item-value="id"
-      v-model="value"
-    ></v-select>
-    <pre>{{ value }}</pre>
-  </div>
+  <v-select
+    :items="data.resp.data"
+    item-title="name"
+    item-value="id"
+    v-model="value"
+    :loading="data.loading"
+  ></v-select>
 </template>
 
 <script>
