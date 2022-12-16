@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 #[\apiResource()]
 class FilesController extends Controller
 {
+    public $model = \App\Models\Files::class;
+
     public function onInit()
     {
         $this->middleware('auth:api', [

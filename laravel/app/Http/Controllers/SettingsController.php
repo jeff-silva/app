@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 
 class SettingsController extends Controller
 {
+    public $model = \App\Models\Settings::class;
+
     public function onInit()
     {
         $this->middleware('auth:api', [

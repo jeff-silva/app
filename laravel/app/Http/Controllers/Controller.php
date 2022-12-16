@@ -56,7 +56,8 @@ class Controller extends BaseController
 
     public function index(Request $request)
     {
-        return $this->model->search($request);
+        if (!$this->model) return $this->error(400, 'No model');
+        return app($this->model)->search($request);
     }
 
     public function store(Request $request)

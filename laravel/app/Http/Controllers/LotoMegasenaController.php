@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 ])]
 class LotoMegasenaController extends Controller
 {
+    public $model = \App\Models\LotoMegasena::class;
+
     public function onInit()
     {
         $this->middleware('auth:api', [

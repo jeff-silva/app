@@ -113,7 +113,7 @@ export default {
         method: 'get',
         url: `/api/${this.model}`,
         params: this.paramsMerge(),
-        autoSubmit: false,
+        autoSubmit: true,
         resp: {
           last_page: 1,
           data: [],
