@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 #[\apiResource()]
 class Ow3dPlacesController extends Controller
 {
+    public $namespace = 'owed-places';
     public $model = \App\Models\Ow3dPlaces::class;
 
     public function onInit()

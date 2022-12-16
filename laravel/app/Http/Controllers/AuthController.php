@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 
 class AuthController extends Controller
 {
+    public $namespace = 'auth';
+
     public function onInit()
     {
         $this->middleware('auth:api', [

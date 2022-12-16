@@ -196,16 +196,16 @@ trait Model
 
 
   // Find
-  static function find($id)
+  public function find($id, $columns = ['*'])
   {
-    if (in_array('slug', (new self)->fillable)) {
-      return self::where(function($q) use($id) {
-        $q->where('id', $id);
-        $q->orWhere('slug', $id);
+    if (in_array('slug', $this->getFillable())) {
+      return $this->where(function($query) use($id) {
+        $query->where('id', $id);
+        $query->orWhere('slug', $id);
       })->first();
     }
-    
-    return parent::find($id);
+
+    return parent::find($id, $columns);
   }
 
 

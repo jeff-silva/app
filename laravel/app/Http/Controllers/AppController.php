@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 
 class AppController extends Controller
 {
+    public $namespace = 'app';
+
     public function onInit()
     {
         // 

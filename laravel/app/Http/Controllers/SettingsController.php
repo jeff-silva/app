@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 class SettingsController extends Controller
 {
+    public $namespace = 'settings';
     public $model = \App\Models\Settings::class;
 
     public function onInit()

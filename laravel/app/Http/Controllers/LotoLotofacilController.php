@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 ])]
 class LotoLotofacilController extends Controller
 {
+    public $namespace = 'loto-lotofacil';
     public $model = \App\Models\LotoLotofacil::class;
 
     public function onInit()

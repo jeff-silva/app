@@ -31,4 +31,21 @@ class Places extends Model
         'updated_at' => 'DATETIME DEFAULT NULL',
     ];
     protected $tableFks = [];
+
+    protected $fillable = [
+        'id',
+        'name',
+        'route',
+        'number',
+        'zipcode',
+        'complement',
+        'district',
+        'city',
+        'state',
+        'state_short',
+        'country',
+        'country_short',
+        'lat',
+        'lng',
+    ];
 }

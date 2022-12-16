@@ -20,18 +20,9 @@ class Controller extends BaseController
 
     public function __construct()
     {
-        $this->namespace = \Str::kebab(preg_replace('/Controller$/', '', \Arr::last(explode('\\', get_called_class()))));
+        $this->model = $this->model? app($this->model): false;
+        // $this->namespace = \Str::kebab(preg_replace('/Controller$/', '', \Arr::last(explode('\\', get_called_class()))));
         $this->metadataRoutes();
-
-        // $model = '\App\Models\\'. str_replace('Controller', '', \Arr::last(explode('\\', get_called_class())));
-        // try {
-        //     $this->model = app($model);
-        //     if ($this->model) {
-        //         $this->namespace = $this->model->getTable();
-        //     }
-        // } catch(\Exception $e) {}
-        // $this->onInit();
-        // $this->route = app('\Illuminate\Support\Facades\Route');
     }
 
     public function onInit()
@@ -57,7 +48,7 @@ class Controller extends BaseController
     public function index(Request $request)
     {
         if (!$this->model) return $this->error(400, 'No model');
-        return app($this->model)->search($request);
+        return $this->model->search($request);
     }
 
     public function store(Request $request)
@@ -69,6 +60,7 @@ class Controller extends BaseController
 
     public function show($id)
     {
+        if (!$this->model) return $this->error(400, 'No model');
         return $this->model->find($id);
     }
 

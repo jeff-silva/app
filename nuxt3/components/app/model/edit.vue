@@ -1,5 +1,5 @@
 <template>
-  <app-form method="post" :action="`/api/${model}/save`" v-model="post">
+  <app-form method="post" :action="`/api/${model}`" v-model="post">
     <slot name="edit-fields" v-bind="slotBind({ post })"></slot>
     
     <v-navigation-drawer location="end">
@@ -36,7 +36,7 @@
 
       async load() {
         if (! +this.$route.params.id) return;
-        const { data } = await this.$axios.get(`/api/${this.model}/find/${this.$route.params.id}`);
+        const { data } = await this.$axios.get(`/api/${this.model}/${this.$route.params.id}`);
         this.post = data;
       },
     },
