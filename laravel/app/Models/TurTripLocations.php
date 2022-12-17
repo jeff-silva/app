@@ -10,6 +10,10 @@ class TurTripLocations extends Model
 	use HasFactory;
 	use \App\Traits\Model;
 
+	protected $singular = 'tur_trip_locations';
+	protected $plural = 'tur_trip_locations';
+	protected $table = 'tur_trip_locations';
+
 	public $fillable = [
 		'id',
 		'name',

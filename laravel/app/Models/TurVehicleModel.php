@@ -10,5 +10,8 @@ class TurVehicleModel extends Model
 	use HasFactory;
 	use \App\Traits\Model;
 
+	protected $singular = 'tur_vehicle_model';
+	protected $plural = 'tur_vehicle_models';
+	protected $table = 'tur_vehicle_model';
 	public $fillable = ['id', 'name'];
 }
