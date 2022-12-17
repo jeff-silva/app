@@ -2,9 +2,7 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-
-class AppInstall extends Command
+class AppInstall extends App
 {
     /**
      * The name and signature of the console command.
@@ -31,7 +29,7 @@ class AppInstall extends Command
 
         $this->infoTitle("Installing {$app_name}");
         $this->clearCache();
-        $this->migrate();
+        // $this->migrate();
         $this->seed();
         $this->databaseUML();
     }
@@ -164,40 +162,5 @@ class AppInstall extends Command
         return array_filter(array_map(function($model) {
             return (in_array(\App\Traits\Model::class, class_uses_recursive(get_class($model))))? $model: false;
         }, $this->getClasses('/app/Models')));
-    }
-
-    public $databaseFks = false;
-    public function databaseFks()
-    {
-        if (!$this->databaseFks) {
-            $this->databaseFks = collect(\DB::select("SELECT * from INFORMATION_SCHEMA.TABLE_CONSTRAINTS where CONSTRAINT_TYPE = 'FOREIGN KEY'"));
-        }
-
-        return $this->databaseFks;
-    }
-    
-    public $databaseTables = null;
-    public function databaseTables()
-    {
-        if ($this->databaseTables === null) {
-            $this->databaseTables = collect(\DB::select('SHOW TABLES'));
-        }
-
-        return $this->databaseTables;
-    }
-
-    public function databaseUML()
-    {
-        // dd($this->databaseTables());
-        // $schema = [];
-        // foreach($this->getModels() as $model) {
-        //     $tableData = [];
-        //     foreach($model->getFillable() as $name) {
-        //         $tableData[ $name ] = '';
-        //     }
-        //     $schema[ $model->getTable() ] = $tableData;
-        // }
-        // dd($schema);
-        // https://docs.kroki.io/kroki/setup/encode-diagram/#php
     }
 }
