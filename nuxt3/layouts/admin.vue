@@ -52,9 +52,9 @@
                     {to:'/admin/tur/trip', name:'Trips'},
                     {to:'/admin/tur/vehicle', name:'Vehicles'},
                     {to:'/admin/tur/driver', name:'Drivers'},
-                    {to:'/admin/tur/vehicle_type', name:'Type'},
-                    {to:'/admin/tur/vehicle_brand', name:'Brand'},
-                    {to:'/admin/tur/vehicle_model', name:'Model'},
+                    {to:'/admin/tur/vehicle_type', name:'Vehicle Types'},
+                    {to:'/admin/tur/vehicle_brand', name:'Vehicle Brands'},
+                    {to:'/admin/tur/vehicle_model', name:'Vehicle Models'},
                   ]},
                   {to:'/', name:'Settings', icon:'mdi-cog', children: [
                     {to:'/admin/settings', name:'Configurações'},

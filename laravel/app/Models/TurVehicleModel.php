@@ -13,5 +13,5 @@ class TurVehicleModel extends Model
 	protected $singular = 'tur_vehicle_model';
 	protected $plural = 'tur_vehicle_models';
 	protected $table = 'tur_vehicle_model';
-	public $fillable = ['id', 'name'];
+	public $fillable = ['id', 'name', 'brand_id'];
 }

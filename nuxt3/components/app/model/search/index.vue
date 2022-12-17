@@ -35,6 +35,9 @@
           <v-btn type="submit" color="primary" block>
             <v-icon icon="mdi-magnify" /> Buscar
           </v-btn>
+          <v-btn block :to="`${$route.path}/new`">
+            <v-icon icon="mdi-plus" /> Create
+          </v-btn>
           <slot name="form-actions" />
         </div>
       </form>
