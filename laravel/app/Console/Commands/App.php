@@ -69,6 +69,10 @@ class App extends Command
                     'path' => 'app/Http/Controllers',
                     'suffix' => 'Controller',
                 ]);
+                $table->Fields = collect(\DB::select("SHOW COLUMNS FROM `{$table->Name}`"));
+                $table->SqlCreate = collect(\DB::select("SHOW CREATE table `{$table->Name}`"))->map(function($item) {
+                    return ((array) $item)['Create Table'];
+                })->first();
                 return $table;
             });
     }
@@ -79,6 +83,12 @@ class App extends Command
     {
         return $this->databaseFks = $this->databaseFks? $this->databaseFks:
             collect(\DB::select("SELECT * from INFORMATION_SCHEMA.TABLE_CONSTRAINTS where CONSTRAINT_TYPE = 'FOREIGN KEY'"));
+    }
+
+
+    public function fileEdit($path)
+    {
+        // 
     }
 
 
