@@ -48,6 +48,14 @@
                     {to:'/admin/loto/loto_megasena', name:'Megasena'},
                     {to:'/admin/loto/loto_lotofacil', name:'Lotofácil'},
                   ]},
+                  {to:'/admin', name:'Tur', icon:'mdi-bus-marker', children: [
+                    {to:'/admin/tur/trip', name:'Trips'},
+                    {to:'/admin/tur/vehicle', name:'Vehicles'},
+                    {to:'/admin/tur/driver', name:'Drivers'},
+                    {to:'/admin/tur/vehicle_type', name:'Type'},
+                    {to:'/admin/tur/vehicle_brand', name:'Brand'},
+                    {to:'/admin/tur/vehicle_model', name:'Model'},
+                  ]},
                   {to:'/', name:'Settings', icon:'mdi-cog', children: [
                     {to:'/admin/settings', name:'Configurações'},
                     {to:'/dev', name:'Dev'},

@@ -46,6 +46,9 @@ class AppDb extends App
                 $file = \Nette\PhpGenerator\PhpFile::fromCode(file_get_contents(base_path($table->Model->File)), true);
                 foreach($file->getClasses() as $fileClass) {
                     $fileClass->addTrait('\App\Traits\Model');
+                    $fileClass->addProperty('singular', $table->Name)->setProtected();
+                    $fileClass->addProperty('plural', \Str::plural($table->Name))->setProtected();
+                    $fileClass->addProperty('table', $table->Name)->setProtected();
 
                     $fillable = $table->Fields
                         ->filter(function($field) {
@@ -56,7 +59,7 @@ class AppDb extends App
                         })
                         ->toArray();
                     
-                    $fileClass->addProperty('fillable', $fillable);   
+                    $fileClass->addProperty('fillable', $fillable);
                     file_put_contents(base_path($table->Model->File), $file->__toString());
                 }
 
