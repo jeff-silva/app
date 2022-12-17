@@ -1,6 +1,6 @@
 <template>
   <nuxt-layout name="admin">
-    <app-model-edit model="files">
+    <app-model-edit model="app_file">
       <template #edit-fields="form">
         <v-row>
           <v-col cols="12">

@@ -27,26 +27,26 @@
                 <app-nav variant="plain" :items="[
                   {to:'/admin', name:'Dashboard'},
                   {to:'/admin', name:'Users', icon:'mdi-account', children: [
-                    {to:'/admin/users', name:'Search'},
-                    {to:'/admin/users/new', name:'Create'},
-                    {to:'/admin/users-groups', name:'Groups'},
-                    {to:'/admin/users-groups/new', name:'New group'},
+                    {to:'/admin/app_user', name:'Search'},
+                    {to:'/admin/app_user/new', name:'Create'},
+                    {to:'/admin/app_user_group', name:'Groups'},
+                    {to:'/admin/app_user_group/new', name:'New group'},
                   ]},
                   {to:'/admin', name:'Arquivos', icon:'mdi-account', children: [
-                    {to:'/admin/files', name:'Search'},
-                    {to:'/admin/files/new', name:'Create'},
+                    {to:'/admin/app_file', name:'Search'},
+                    {to:'/admin/app_file/new', name:'Create'},
                   ]},
                   {to:'/admin', name:'Endereços', icon:'mdi-account', children: [
-                    {to:'/admin/places', name:'Search'},
-                    {to:'/admin/places/new', name:'Create'},
+                    {to:'/admin/app_place', name:'Search'},
+                    {to:'/admin/app_place/new', name:'Create'},
                   ]},
                   {to:'/admin', name:'Products', icon:'mdi-tshirt-crew', children: [
                     {to:'/admin?page=products/search', name:'Search'},
                     {to:'/admin?page=products/new', name:'Create'},
                   ]},
                   {to:'/admin', name:'Loto', icon:'mdi-slot-machine', children: [
-                    {to:'/admin/loto/loto-megasena', name:'Megasena'},
-                    {to:'/admin/loto/loto-lotofacil', name:'Lotofácil'},
+                    {to:'/admin/loto/loto_megasena', name:'Megasena'},
+                    {to:'/admin/loto/loto_lotofacil', name:'Lotofácil'},
                   ]},
                   {to:'/', name:'Settings', icon:'mdi-cog', children: [
                     {to:'/admin/settings', name:'Configurações'},

@@ -1,6 +1,6 @@
 <template>
   <nuxt-layout name="admin">
-    <app-model-edit model="places">
+    <app-model-edit model="app_user_group">
       <template #edit-fields="form">
         <v-row>
           <v-col cols="12">

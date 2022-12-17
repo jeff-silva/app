@@ -1,18 +1,16 @@
 <template>
   <nuxt-layout name="admin">
-    <app-model-search model="users">
+    <app-model-search model="app_place">
       <template #table-header>
         <th>Nome</th>
-        <th>Email</th>
       </template>
 
       <template #table-row="row">
         <td>{{ row.item.name }}</td>
-        <td>{{ row.item.email }}</td>
       </template>
 
       <template #table-actions="row">
-        <!-- <v-btn icon="mdi-alpha-a-circle" @click="click()"></v-btn> -->
+        <v-btn icon="mdi-pencil" :to="`/admin/app_place/${row.item.id}`"></v-btn>
       </template>
     </app-model-search>
   </nuxt-layout>

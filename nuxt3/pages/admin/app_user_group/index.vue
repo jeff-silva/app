@@ -1,6 +1,6 @@
 <template>
   <nuxt-layout name="admin">
-    <app-model-search model="users-groups">
+    <app-model-search model="app_user_group">
       <template #table-header>
         <th>Nome</th>
         <th>Email</th>
