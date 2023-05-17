@@ -3,7 +3,7 @@ services:
 
     nuxt3:
         container_name: nuxt3
-        image: node:16.17.0
+        image: node:18.16.0
         command: bash -c "yarn install --check-files && yarn dev"
         ports:
             - 3000:3000
@@ -11,7 +11,7 @@ services:
         volumes:
             - ./nuxt3:/nuxt3
             - /nuxt3/node_modules
-            - ./laravel/public:/nuxt3/.laravel-public
+            - ./laravel10/public:/nuxt3/.laravel10-public
         working_dir: /nuxt3
         env_file: .env
         environment:

@@ -1,4 +1,5 @@
 {
+  "name": "nuxt-app",
   "private": true,
   "scripts": {
     "build": "nuxt build",
@@ -8,19 +9,13 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@vueuse/core": "^9.3.0",
-    "@vueuse/nuxt": "^9.3.0",
-    "fs-extra": "^10.1.0",
-    "nuxt": "3.0.0-rc.14"
-  },
-  "dependencies": {
-    "@mdi/font": "^7.0.96",
-    "@pinia/nuxt": "^0.4.2",
-    "@vue-leaflet/vue-leaflet": "^0.6.1",
-    "@vueuse/components": "^9.6.0",
-    "axios": "^0.27.2",
-    "leaflet": "^1.9.3",
-    "sass": "^1.55.0",
-    "vuetify": "3.0.5"
+    "@mdi/font": "^7.2.96",
+    "@types/node": "^18",
+    "@vite-pwa/nuxt": "^0.0.8",
+    "@vueuse/nuxt": "^10.1.2",
+    "axios": "^1.4.0",
+    "lodash": "^4.17.21",
+    "nuxt": "^3.5.0",
+    "vuetify": "^3.2.5"
   }
 }
