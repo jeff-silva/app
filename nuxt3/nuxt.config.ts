@@ -13,5 +13,9 @@ export default defineNuxtConfig({
 
     // https://vueuse.org/guide/
     ['@vueuse/nuxt', {}],
+    
+    // https://nuxt.com/modules/nuxt-auth
+    // https://sidebase.io/nuxt-auth/getting-started/quick-start
+    ['@sidebase/nuxt-auth', {}],
   ],
 })
