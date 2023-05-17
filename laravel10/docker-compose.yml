@@ -1,47 +1,25 @@
 version: '3'
 services:
-
-    nuxt3:
-        container_name: nuxt3
-        image: node:16.17.0
-        command: bash -c "yarn install --check-files && yarn dev"
-        ports:
-            - 3000:3000
-            - 24679:24679
-        volumes:
-            - ./nuxt3:/nuxt3
-            - /nuxt3/node_modules
-            - ./laravel/public:/nuxt3/.laravel-public
-        working_dir: /nuxt3
-        env_file: .env
-        environment:
-            - NODE_ENV=development
-            - CHOKIDAR_USEPOLLING=true
-            - HOST=${NUXT_HOST:-0.0.0.0}
-            - PORT=${NUXT_PORT:-3000}
-    
     laravel.test:
         build:
-            context: ./.docker/sail/runtimes/8.2
+            context: ./vendor/laravel/sail/runtimes/8.2
             dockerfile: Dockerfile
             args:
-                WWWGROUP: '${WWWGROUP:-1000}'
+                WWWGROUP: '${WWWGROUP}'
         image: sail-8.2/app
-        entrypoint: bash -c "composer install && php artisan app:install && start-container"
-        user: "0:0"
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
             - '${APP_PORT:-80}:80'
             - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
         environment:
-            WWWUSER: '${WWWUSER:-1000}'
+            WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
         volumes:
-            - './laravel10:/var/www/html'
+            - '.:/var/www/html'
         networks:
             - sail
         depends_on:
@@ -63,7 +41,7 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
             - 'sail-mysql:/var/lib/mysql'
-            - './.docker/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
         networks:
             - sail
         healthcheck:
