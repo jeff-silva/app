@@ -4,6 +4,11 @@
 docker-compose up
 ```
 
+or with force recreation and rebuild
+```bash
+docker-compose up --build --force-recreate
+```
+
 ## Start prod server
 ```bash
 docker-compose -f docker-compose-prod.yml up

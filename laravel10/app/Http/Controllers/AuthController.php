@@ -16,6 +16,10 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login']]);
+        $this->route(['post'], '/auth/login', 'login');
+        $this->route(['post'], '/auth/logout', 'logout');
+        $this->route(['post'], '/auth/refresh', 'refresh');
+        $this->route(['post'], '/auth/me', 'me');
     }
 
     /**
@@ -25,13 +29,14 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $credentials = request(['email', 'password']);
+        return $this->success(['123']);
+        // $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        // if (! $token = auth()->attempt($credentials)) {
+        //     return response()->json(['error' => 'Unauthorized'], 401);
+        // }
 
-        return $this->respondWithToken($token);
+        // return $this->respondWithToken($token);
     }
 
     /**
@@ -41,7 +46,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return $this->success(auth()->user());
     }
 
     /**
@@ -52,8 +57,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
+        return $this->success(['message' => 'Successfully logged out']);
     }
 
     /**
@@ -75,7 +79,7 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
-        return response()->json([
+        return $this->success([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
