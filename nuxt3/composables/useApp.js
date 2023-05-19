@@ -1,32 +1,83 @@
 import { ref } from 'vue';
 import axios from 'axios';
+import { useStorage, useEventBus } from '@vueuse/core';
 
-export default () => {
+export default (params={}) => {
+
+  params = {
+    onLogin: () => {},
+    onLogout: () => {},
+    onRegister: () => {},
+    ...params
+  };
+
   const r = ref({
+    init: false,
     loading: false,
-    access_token: '',
+    access_token: useStorage('access_token', ''),
     user: false,
+    async load() {
+      try {
+        const { data } = await axios.post('api://auth/me');
+        this.user = data;
+      } catch(err) {}
+    },
     async login(credentials) {
       this.loading = true;
       
       try {
         const { data } = await axios.post('api://auth/login', credentials);
-        // const { data } = await axios.get('api://test');
-        console.log(data);
-      } catch(err) {
-        console.log(err);
-      }
+        const state = useStorage('access_token', '');
+        state.value = data.access_token;
+        await this.load();
+        await this.account.add(credentials.email, data.access_token);
+        params.onLogin({ data });
+      } catch(err) {}
 
       this.loading = false;
     },
-    logout() {},
+    async logout() {
+      const state = useStorage('access_token', '');
+      state.value = '';
+      this.account.remove(this.user.email);
+      this.user = false;
+      params.onLogout({
+        access_token: this.access_token,
+        email: this.user.email,
+      });
+      try {
+        await axios.post('api://auth/logout');
+      } catch(err) {}
+    },
+    async register(data={}) {
+      try {
+        await axios.post('api://auth/register', data);
+        params.onRegister(data);
+      } catch(err) {}
+    },
+    async password() {},
     account: {
-      list: [],
-      remove(email) {},
-      switch(email) {},
+      list: useStorage('accounts', []),
+      async add(email, access_token) {
+        if (this.list.filter(acc => acc.email==email).at(0) || false) return;
+        const state = useStorage('accounts', []);
+        state.value.push({ email, access_token });
+        this.list.value = state.value;
+      },
+      async remove(email) {
+        const state = useStorage('accounts', []);
+        for(let i in this.list) {
+          if (this.list[i].email != email) continue;
+          this.list.splice(i, 1);
+        }
+      },
+      async switch(email) {
+        console.log(`switch to ${email}`);
+      },
     },
   });
 
+  r.value.load();
   return r;
 };
 

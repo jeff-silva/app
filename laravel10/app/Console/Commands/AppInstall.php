@@ -25,6 +25,10 @@ class AppInstall extends Command
      */
     public function handle(): void
     {
-        $this->comment('app:install');
+        $this->call('config:clear');
+        $this->call('route:clear');
+        $this->call('migrate');
+        $this->call('db:seed');
+        $this->comment('app:install finish');
     }
 }

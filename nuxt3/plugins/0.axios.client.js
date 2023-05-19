@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useStorage } from '@vueuse/core';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
 
@@ -11,9 +12,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 			config.baseUrl = `${protocol}//${hostname}:${conf.public.APP_PORT}`;
 			config.url = config.url.replace('api://', 'api/');
 
-			// if (storage.access_token) {
-			// 	config.headers['Authorization'] = `Bearer ${storage.access_token}`;
-			// }
+			const state = useStorage('access_token', '');
+
+			if (state.value) {
+				config.headers['Authorization'] = `Bearer ${state.value}`;
+			}
 		}
 
 		return config;

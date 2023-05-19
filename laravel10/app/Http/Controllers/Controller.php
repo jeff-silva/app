@@ -11,21 +11,18 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
     
-    public function route($methods = [], $path, $method)
+    public function route($methods, $path, $method)
     {
         return Route::match($methods, $path, [ get_called_class(), $method ]);
     }
 
-    public function success($data)
+    public function success()
     {
-        return response()->json($data, 200);
+        return call_user_func_array(['App\Utils', 'success'], func_get_args());
     }
 
-    public function error($code, $message, $fields=[])
+    public function error()
     {
-        return response()->json([
-            'message' => $message,
-            'fields' => $fields,
-        ], $code);
+        return call_user_func_array(['App\Utils', 'error'], func_get_args());
     }
 }

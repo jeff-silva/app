@@ -20,6 +20,7 @@ class AuthController extends Controller
         $this->route(['post'], '/auth/logout', 'logout');
         $this->route(['post'], '/auth/refresh', 'refresh');
         $this->route(['post'], '/auth/me', 'me');
+        $this->route(['post'], '/auth/register', 'register');
     }
 
     /**
@@ -29,14 +30,15 @@ class AuthController extends Controller
      */
     public function login()
     {
-        return $this->success(['123']);
-        // $credentials = request(['email', 'password']);
+        // return $this->success(['123']);
+        $credentials = request(['email', 'password']);
 
-        // if (! $token = auth()->attempt($credentials)) {
-        //     return response()->json(['error' => 'Unauthorized'], 401);
-        // }
+        if (! $token = auth()->attempt($credentials)) {
+            // return response()->json(['error' => 'Unauthorized'], 401);
+            return $this->error(401, 'Unauthorized');
+        }
 
-        // return $this->respondWithToken($token);
+        return $this->respondWithToken($token);
     }
 
     /**
@@ -84,5 +86,17 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
+    }
+
+    public function register()
+    {
+        // dump(123);
+        // return $this->success(request()->all());
+        // return $this->success(\App\Models\AppUser::create(request()->all()));
+        try {
+            return $this->success(\App\Models\AppUser::create(request()->all()));
+        } catch(\Exception $e) {
+            return [ $e->getMessage() ];
+        }
     }
 }
