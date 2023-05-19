@@ -17,40 +17,50 @@ trait Model
     //     $model->mutatorRetrieve();
     // });
 
-    // static::saving(function($model) {
-    //   $model->mutatorSave();
+    static::saving(function($model) {
+      $model->mutatorSave();
 
-    //   $validate = $model->validate();
-    //   if ($validate->fails()) {
-    //     \App\Utils::throwError(400, 'Validation errors', $validate->errors());
-    //   }
+      $validate = $model->validate();
+      if ($validate->fails()) {
+        // \App\Utils::throwError(500, 'Validation errors', $validate->errors());
 
-    //   if (in_array('slug', $model->getFillable()) AND $model->name AND !$model->slug) {
-    //     $model->slug = \Str::slug($model->name);
-    //   }
+        // throw new \Exception(json_encode([
+        //   'status' => 500,
+        //   'message' => 'Validation errors',
+        //   'fields' => $validate->errors(),
+        // ]), 500);
 
-    //   // foreach($model->attributes as $name => $value) {
-    //   //   if ($file = request()->file($name)) {
-    //   //     $value = $model->upload($file);
-    //   //   }
+        return throw new \Exception('aaa', 500);
 
-    //   //   // else if (in_array($value, ['null', 'false', 'undefined', ''])) {
-    //   //   //   $value = null;
-    //   //   // }
+        throw new \App\Exceptions\ErrorException([ 500, 'Validation errors', $validate->errors() ]);
+      }
+
+      // if (in_array('slug', $model->getFillable()) AND $model->name AND !$model->slug) {
+      //   $model->slug = \Str::slug($model->name);
+      // }
+
+      // foreach($model->attributes as $name => $value) {
+      //   if ($file = request()->file($name)) {
+      //     $value = $model->upload($file);
+      //   }
+
+      //   // else if (in_array($value, ['null', 'false', 'undefined', ''])) {
+      //   //   $value = null;
+      //   // }
         
-    //   //   // else if (in_array($value, ['true'])) {
-    //   //   //   $value = true;
-    //   //   // }
+      //   // else if (in_array($value, ['true'])) {
+      //   //   $value = true;
+      //   // }
 
-    //   //   // else if (is_array($value)) {
-    //   //   //   $value = json_encode($value);
-    //   //   // }
+      //   // else if (is_array($value)) {
+      //   //   $value = json_encode($value);
+      //   // }
 
-    //   //   $model->attributes[ $name ] = $value;
-    //   // }
+      //   $model->attributes[ $name ] = $value;
+      // }
       
-    //   return $model;
-    // });
+      return $model;
+    });
   }
 
 

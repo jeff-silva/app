@@ -22,11 +22,14 @@ class Utils
 
   static function throwError($status, $message, $fields=[])
   {
-    throw new \Exception(json_encode([
-      'status' => $status,
-      'message' => $message,
-      'fields' => $fields,
-    ]));
+    // throw new \Exception(json_encode([
+    //   'status' => $status,
+    //   'message' => $message,
+    //   'fields' => $fields,
+    // ]));
+    // abort($status, $message);
+    // throw new \App\Exceptions\Handler(400, 'aaaa');
+    throw new \App\Exceptions\ErrorException('aaa', 123, 456);
   }
 
   static function dd()

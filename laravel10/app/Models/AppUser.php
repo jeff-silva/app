@@ -12,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 class AppUser extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
-    // use \App\Traits\Model;
+    use \App\Traits\Model;
 
     protected $table = 'app_user';
 
