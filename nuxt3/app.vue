@@ -24,7 +24,7 @@
       </v-row>
     </v-container>
 
-    <!-- <pre>{{ { $pwa, credentials, register, app } }}</pre> -->
+    <pre>{{ app }}</pre>
   </v-defaults-provider>
 </template>
 
@@ -32,9 +32,5 @@
   import useApp from '@/composables/useApp';
   import { ref } from 'vue';
 
-  const app = useApp({
-    onLogin() {
-      credentials.value = {};
-    },
-  });
+  const app = useApp();
 </script>

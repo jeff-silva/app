@@ -11,6 +11,9 @@ export default (params={}) => {
     onLogin: () => {},
     onLogout: () => {},
     onRegister: () => {},
+    login: {
+      validation: {},
+    },
     register: {
       validation: {},
     },
@@ -37,19 +40,32 @@ export default (params={}) => {
       }
     },
 
-    async login(credentials) {
-      this.loading = true;
-      
-      try {
-        const { data } = await axios.post('api://auth/login', credentials);
-        const state = useStorage('access_token', '');
-        state.value = data.access_token;
-        await this.load(true);
-        await this.account.add(credentials.email, data.access_token);
-        params.onLogin({ data });
-      } catch(err) {}
-
-      this.loading = false;
+    login: {
+      loading: false,
+      params: { email: '', password: '' },
+      resp: {},
+      error: {},
+      async submit() {
+        this.loading = true;
+        this.error.clear();
+        
+        try {
+          const { data } = await axios.post('api://auth/login', this.params);
+          this.resp = data;
+          const state = useStorage('access_token', '');
+          state.value = data.access_token;
+          await r.value.load(true);
+          await r.value.account.add(this.params.email, data.access_token);
+          params.onLogin({ data });
+          this.params = {};
+        } catch(err) {
+          console.log(err);
+          // this.error.setMessage(err.response.data.message);
+          // this.error.setFields(err.response.data.fields);
+        }
+  
+        this.loading = false;
+      },
     },
 
     async logout() {
@@ -138,6 +154,7 @@ export default (params={}) => {
     },
   });
 
+  r.value.login.error = useValidate(r.value.login.params, params.login.validation);
   r.value.register.error = useValidate(r.value.register.params, params.register.validation);
   r.value.password.error = useValidate(r.value.password.params, params.password.validation);
 

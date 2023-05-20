@@ -82,6 +82,11 @@ class AppUser extends Authenticatable implements JWTSubject
         return $rules;
     }
 
+    public function mutatorSave()
+    {
+        $this->name = ucwords($this->name);
+    }
+
     public function passwordRecover($email=null, $code=null, $password=null)
     {
         $user = false;
