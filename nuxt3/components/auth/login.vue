@@ -19,7 +19,7 @@
         Logged successfully
       </v-alert>
 
-      <v-alert rounded="0" class="mb-2">Welcome {{ app.user.name }}</v-alert>
+      <v-alert rounded="0" class="mb-2">Welcome {{ app.auth.user.name }}</v-alert>
 
       <v-card-text>
         <v-text-field label="E-mail" v-model="app.login.params.email" />
@@ -29,7 +29,7 @@
       <v-divider />
 
       <v-card-actions>
-        <v-btn type="button" @click="app.logout()" v-if="app.access_token">Logout</v-btn>
+        <v-btn type="button" @click="app.logout()" v-if="app.auth.token">Logout</v-btn>
         <v-spacer />
         <v-btn type="submit" :loading="app.login.loading">Login</v-btn>
       </v-card-actions>
@@ -39,7 +39,7 @@
         <v-list>
           <v-list-item
             v-for="acc in app.account.list"
-            :active="app.user && app.user.email==acc.email"
+            :active="app.auth.user && app.auth.user.email==acc.email"
           >
             <div>{{ acc.email }}</div>
             <template #append>

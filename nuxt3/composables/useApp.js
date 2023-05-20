@@ -1,4 +1,5 @@
 import { ref } from 'vue';
+import { defineStore } from 'pinia';
 import axios from 'axios';
 import _ from 'lodash';
 
@@ -25,13 +26,32 @@ export default (params={}) => {
   const r = ref({
     init: false,
     loading: false,
-    access_token: useStorage('access_token', ''),
+    // access_token: useStorage('access_token', ''),
     user: false,
+
+    auth: defineStore('appAuth', {
+      state: () => ({
+        token: '',
+        user: false,
+      }),
+      actions: {
+        setUser(data) {
+          this.user = data;
+        },
+        setToken(access_token) {
+          const state = useStorage('access_token', '');
+          state.value = access_token;
+          this.token = access_token;
+        },
+      },
+    })(),
+
     async load(forced=false) {
-      if (!forced && this.user) return;
+      this.auth.setToken(useStorage('access_token', '').value);
+      if (!forced && this.auth.user) return;
       try {
         const { data } = await axios.post('api://auth/me');
-        this.user = data;
+        this.auth.setUser(data);
       } catch(err) {
         this.account.list.forEach((acc, accIndex) => {
           if (this.access_token!=acc.access_token) return;
@@ -52,16 +72,16 @@ export default (params={}) => {
         try {
           const { data } = await axios.post('api://auth/login', this.params);
           this.resp = data;
-          const state = useStorage('access_token', '');
-          state.value = data.access_token;
-          await r.value.load(true);
+          r.value.auth.setToken(data.access_token);
           await r.value.account.add(this.params.email, data.access_token);
-          params.onLogin({ data });
+          setTimeout(async () => {
+            await r.value.load(true);
+            params.onLogin({ data });
+          }, 100);
           this.params = {};
         } catch(err) {
-          console.log(err);
-          // this.error.setMessage(err.response.data.message);
-          // this.error.setFields(err.response.data.fields);
+          this.error.setMessage(err.response.data.message);
+          this.error.setFields(err.response.data.fields);
         }
   
         this.loading = false;
@@ -69,14 +89,13 @@ export default (params={}) => {
     },
 
     async logout() {
-      const state = useStorage('access_token', '');
-      state.value = '';
-      this.account.remove(this.user.email);
-      this.user = false;
+      this.account.remove(this.auth.user.email);
       params.onLogout({
-        access_token: this.access_token,
-        email: this.user.email,
+        access_token: this.auth.token,
+        email: this.auth.user.email,
       });
+      r.value.auth.setUser(false);
+      r.value.auth.setToken(false);
       try {
         await axios.post('api://auth/logout');
       } catch(err) {}
@@ -145,7 +164,7 @@ export default (params={}) => {
       async switch(email) {
         this.list.forEach((acc) => {
           if (acc.email!=email) return;
-          r.value.access_token = acc.access_token;
+          r.value.auth.setToken(acc.access_token);
           setTimeout(() => {
             r.value.load(true);
           }, 100);
@@ -159,6 +178,7 @@ export default (params={}) => {
   r.value.password.error = useValidate(r.value.password.params, params.password.validation);
 
   r.value.load();
+  console.log(r.value.test);
   return r;
 };
 
