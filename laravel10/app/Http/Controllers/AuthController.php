@@ -19,8 +19,13 @@ class AuthController extends Controller
         $this->route(['post'], '/auth/refresh', 'refresh');
         $this->route(['post'], '/auth/me', 'me');
         $this->route(['post'], '/auth/register', 'register');
+        $this->route(['post'], '/auth/password', 'password');
         $this->middleware('auth:api', [
-            'except' => ['login', 'register'],
+            'except' => [
+                'login',
+                'register',
+                'password',
+            ],
         ]);
     }
 
@@ -92,5 +97,13 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         return $this->success(\App\Models\AppUser::create($request->all()));
+    }
+
+    public function password(Request $request)
+    {
+        $email = $request->input('email');
+        $code = $request->input('code');
+        $password = $request->input('password');
+        return (new \App\Models\AppUser)->passwordRecover($email, $code, $password);
     }
 }

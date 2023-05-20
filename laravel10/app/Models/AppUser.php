@@ -72,7 +72,7 @@ class AppUser extends Authenticatable implements JWTSubject
     {
         $rules = [
             'name' => ['required'],
-            'email' => ['required', 'email:rfc,dns', 'unique:app_user,email'],
+            'email' => ['required', 'email:rfc,dns', 'unique:app_user,id'],
         ];
 
         if (!$this->id) {
@@ -80,5 +80,43 @@ class AppUser extends Authenticatable implements JWTSubject
         }
 
         return $rules;
+    }
+
+    public function passwordRecover($email=null, $code=null, $password=null)
+    {
+        $user = false;
+        $user_found = false;
+        $password_changed = false;
+
+        if ($email) {
+            if ($user = $this->where('email', $email)->first()) {
+                $user_found = true;
+                if (!$user->remember_token) {
+                    $user->remember_token = uniqid();
+                    $user->save();
+                }
+            }
+        }
+
+        if (!$user_found) {
+            \App\Utils::throwError(400, 'User not found');
+        }
+
+        if ($code AND $password) {
+            if ($user->remember_token==$code) {
+                $user->password = \Hash::make($password);
+                $user->remember_token = null;
+                if ($user->save()) {
+                    $password_changed = true;
+                }
+            } else {
+                \App\Utils::throwError(400, 'Wrong token');
+            }
+        }
+
+        return [
+            'user_found' => $user_found,
+            'password_changed' => $password_changed,
+        ];
     }
 }

@@ -36,6 +36,7 @@ const validationRules = {
 
 export default (data, rules) => {
   const r = ref({
+    message: '',
     errors: {},
     constraints: {},
     mergeErrors(errors={}) {
@@ -44,11 +45,15 @@ export default (data, rules) => {
     get(field) {
       return this.errors[field] || false;
     },
-    set(errors) {
+    setMessage(message) {
+      this.message = message;
+    },
+    setFields(errors) {
       this.errors = errors;
     },
     clear() {
-      // 
+      this.message = '';
+      this.errors = {};
     },
   });
 

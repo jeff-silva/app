@@ -14,36 +14,10 @@ export default (params={}) => {
     register: {
       validation: {},
     },
+    password: {
+      validation: {},
+    },
   }, params);
-
-  const error = (params) => {
-    return {
-      status: false,
-      message: false,
-      fields: {},
-      validation: params.validation || {},
-      set(data={}) {
-        this.status = data.status || false;
-        this.message = data.message || false;
-        this.fields = data.fields || {};
-      },
-      get(field) {
-        let errors = this.fields[field] || [];
-        let validations = this.validation[field] || [];
-        let value = r.value[params.parent]['params'][field] || '';
-        validations.forEach(validation => {
-          const message = validation(value);
-          if (typeof message=='string') {
-            errors.push(message);
-          }
-        });
-        return errors;
-      },
-      clear() {
-        this.set({});
-      },
-    };
-  };
 
   const r = ref({
     init: false,
@@ -104,13 +78,38 @@ export default (params={}) => {
           this.params = {};
           params.onRegister(data);
         } catch(err) {
-          this.error.set(err.response.data.fields);
+          this.error.setMessage(err.response.data.message);
+          this.error.setFields(err.response.data.fields);
         }
         this.loading = false;
       },
     },
 
-    async password() {},
+    password: {
+      loading: false,
+      params: {
+        email: '',
+        code: '',
+        password: '',
+      },
+      resp: false,
+      error: {},
+      async submit() {
+        this.loading = true;
+        this.error.clear();
+        try {
+          const { data } = await axios.post('api://auth/password', this.params);
+          this.resp = data;
+          if (data.password_changed) {
+            this.params = {};
+          }
+        } catch(err) {
+          this.error.setMessage(err.response.data.message);
+          this.error.setFields(err.response.data.fields);
+        }
+        this.loading = false;
+      },
+    },
 
     account: {
       list: useStorage('accounts', []),
@@ -140,6 +139,7 @@ export default (params={}) => {
   });
 
   r.value.register.error = useValidate(r.value.register.params, params.register.validation);
+  r.value.password.error = useValidate(r.value.password.params, params.password.validation);
 
   r.value.load();
   return r;
