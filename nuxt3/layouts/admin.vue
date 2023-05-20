@@ -1,93 +1,99 @@
 <template>
-  <v-app>
+  <v-defaults-provider
+    :defaults="{
+      VTextField: { variant: 'outlined' },
+    }"
+  >
+    <v-app>
+      <!-- Auth -->
+      <template v-if="!app.auth.user">
+        <div class="h-100 d-flex align-center justify-center bg-grey-lighten-3">
+          <app-auth-login style="width:400px; max-width:90vw;" />
+        </div>
+      </template>
 
-    <!-- Auth -->
-    <template v-if="!app.auth.user">
-      auth
-      <!-- <nuxt-layout name="auth">
-        <app-auth-login :redirect="$route.path" />
-      </nuxt-layout> -->
-    </template>
-
-    <!-- Screen -->
-    <template v-if="app.auth.user">
-      <v-layout>
-        <v-navigation-drawer
-          v-model="drawer.main"
-          v-bind="{
-            width: 250,
-            border: 0,
-            class: 'border-e',
-          }"
-        >
-          <div class="d-flex flex-column" style="height:100vh;">
-            <div class="pa-3 text-subtitle-2 text-uppercase" v-if="app.auth.user">
-              {{ app.auth.user.name }}
+      <!-- Screen -->
+      <template v-if="app.auth.user">
+        <v-layout>
+          <v-navigation-drawer
+            v-model="drawer.main"
+            v-bind="{
+              width: 250,
+              border: 0,
+              class: 'border-e',
+            }"
+          >
+            <div class="d-flex flex-column" style="height:100vh;">
+              <div class="pa-3 text-subtitle-2 text-uppercase" v-if="app.auth.user">
+                {{ app.auth.user.name }}
+              </div>
+              <div class="flex-grow-1" style="overflow:auto;">
+                <slot name="sidebar">
+                  <app-nav variant="plain" :items="[
+                    {to:'/admin', name:'Dashboard'},
+                    {to:'/admin', name:'Users', icon:'mdi-account', children: [
+                      {to:'/admin/app_user', name:'Users list'},
+                      {to:'/admin/app_user_group', name:'Groups list'},
+                    ]},
+                    {to:'/admin', name:'Arquivos', icon:'mdi-account', children: [
+                      {to:'/admin/app_file', name:'Search'},
+                      {to:'/admin/app_file/new', name:'Create'},
+                    ]},
+                    {to:'/admin', name:'Endereços', icon:'mdi-account', children: [
+                      {to:'/admin/app_place', name:'Search'},
+                      {to:'/admin/app_place/new', name:'Create'},
+                    ]},
+                    {to:'/admin', name:'Products', icon:'mdi-tshirt-crew', children: [
+                      {to:'/admin?page=products/search', name:'Search'},
+                      {to:'/admin?page=products/new', name:'Create'},
+                    ]},
+                    {to:'/admin', name:'Loto', icon:'mdi-slot-machine', children: [
+                      {to:'/admin/loto/loto_megasena', name:'Megasena'},
+                      {to:'/admin/loto/loto_lotofacil', name:'Lotofácil'},
+                    ]},
+                    {to:'/admin', name:'Tur', icon:'mdi-bus-marker', children: [
+                      {to:'/admin/tur/trip', name:'Trips'},
+                      {to:'/admin/tur/vehicle', name:'Vehicles'},
+                      {to:'/admin/tur/driver', name:'Drivers'},
+                      {to:'/admin/tur/vehicle_type', name:'Vehicle Types'},
+                      {to:'/admin/tur/vehicle_brand', name:'Vehicle Brands'},
+                      {to:'/admin/tur/vehicle_model', name:'Vehicle Models'},
+                    ]},
+                    {to:'/', name:'Settings', icon:'mdi-cog', children: [
+                      {to:'/admin/settings', name:'Configurações'},
+                      {to:'/dev', name:'Dev'},
+                    ]},
+                  ]" />
+                </slot>
+              </div>
+              <app-nav
+                variant="plain"
+                density="compact"
+                :items="[
+                  {name:'Switch account', onClick() { drawer.account = true; }},
+                  {name:'Sair', onClick() { app.logout(); }},
+                ]"
+              />
             </div>
-            <div class="flex-grow-1" style="overflow:auto;">
-              <slot name="sidebar">
-                <app-nav variant="plain" :items="[
-                  {to:'/admin', name:'Dashboard'},
-                  {to:'/admin', name:'Users', icon:'mdi-account', children: [
-                    {to:'/admin/app_user', name:'Search'},
-                    {to:'/admin/app_user/new', name:'Create'},
-                    {to:'/admin/app_user_group', name:'Groups'},
-                    {to:'/admin/app_user_group/new', name:'New group'},
-                  ]},
-                  {to:'/admin', name:'Arquivos', icon:'mdi-account', children: [
-                    {to:'/admin/app_file', name:'Search'},
-                    {to:'/admin/app_file/new', name:'Create'},
-                  ]},
-                  {to:'/admin', name:'Endereços', icon:'mdi-account', children: [
-                    {to:'/admin/app_place', name:'Search'},
-                    {to:'/admin/app_place/new', name:'Create'},
-                  ]},
-                  {to:'/admin', name:'Products', icon:'mdi-tshirt-crew', children: [
-                    {to:'/admin?page=products/search', name:'Search'},
-                    {to:'/admin?page=products/new', name:'Create'},
-                  ]},
-                  {to:'/admin', name:'Loto', icon:'mdi-slot-machine', children: [
-                    {to:'/admin/loto/loto_megasena', name:'Megasena'},
-                    {to:'/admin/loto/loto_lotofacil', name:'Lotofácil'},
-                  ]},
-                  {to:'/admin', name:'Tur', icon:'mdi-bus-marker', children: [
-                    {to:'/admin/tur/trip', name:'Trips'},
-                    {to:'/admin/tur/vehicle', name:'Vehicles'},
-                    {to:'/admin/tur/driver', name:'Drivers'},
-                    {to:'/admin/tur/vehicle_type', name:'Vehicle Types'},
-                    {to:'/admin/tur/vehicle_brand', name:'Vehicle Brands'},
-                    {to:'/admin/tur/vehicle_model', name:'Vehicle Models'},
-                  ]},
-                  {to:'/', name:'Settings', icon:'mdi-cog', children: [
-                    {to:'/admin/settings', name:'Configurações'},
-                    {to:'/dev', name:'Dev'},
-                  ]},
-                ]" />
-              </slot>
-            </div>
-            <app-nav
-              variant="plain"
-              density="compact"
-              :items="[
-                {to:'/auth?redirect=back', name:'Trocar conta'},
-                {name:'Sair', onClick() { app.logout(); }},
-              ]"
-            />
-          </div>
-        </v-navigation-drawer>
-        <v-main style="height:100vh; overflow-y:scroll; overflow-x:hidden; overflow-y:auto;">
-          <v-app-bar class="px-md-3" v-bind="{height:50, color:'grey-lighten-4', elevation:0, location:'top'}">
-            <v-container class="pa-0" :fluid="props.containerFluid">
-              <v-btn icon="mdi-menu" size="small" @click="drawer.main=true" class="d-lg-none"></v-btn>
+          </v-navigation-drawer>
+          <v-main style="height:100vh; overflow-y:scroll; overflow-x:hidden; overflow-y:auto;">
+            <v-app-bar class="px-md-3" v-bind="{height:50, color:'grey-lighten-4', elevation:0, location:'top'}">
+              <v-container class="pa-0" :fluid="props.containerFluid">
+                <v-btn icon="mdi-menu" size="small" @click="drawer.main=true" class="d-lg-none"></v-btn>
+              </v-container>
+            </v-app-bar>
+            <v-container class="pa-0 pa-md-3" :fluid="props.containerFluid">
+              <slot />
             </v-container>
-          </v-app-bar>
-          <v-container class="pa-0 pa-md-3" :fluid="props.containerFluid">
-            <slot />
-          </v-container>
-        </v-main>
-      </v-layout>
-    </template>
-  </v-app>
+          </v-main>
+        </v-layout>
+      </template>
+
+      <v-dialog v-model="drawer.account">
+        <app-auth-login style="width:400px; max-width:90vw; margin:0 auto;" />
+      </v-dialog>
+    </v-app>
+  </v-defaults-provider>
 </template>
 
 
@@ -108,6 +114,7 @@
 
   const drawer = ref({
     main: breakpoints.xs,
+    account: false,
   });
 </script>
 
