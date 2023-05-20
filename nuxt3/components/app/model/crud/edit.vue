@@ -11,7 +11,7 @@
       <span>Cancel</span>
     </v-btn>
 
-    <v-btn>
+    <v-btn :to="`/admin/${props.name}`">
       <v-icon>mdi-content-save-outline</v-icon>
       <span>Save</span>
     </v-btn>

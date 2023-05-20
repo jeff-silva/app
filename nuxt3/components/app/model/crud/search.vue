@@ -16,6 +16,7 @@
       <col width="*">
       <col width="*">
       <col width="*">
+      <col width="60">
     </colgroup>
     <thead>
       <tr class="bg-grey-lighten-4">
@@ -23,27 +24,17 @@
         <th>Aaa</th>
         <th>Aaa</th>
         <th>Aaa</th>
+        <th></th>
       </tr>
     </thead>
 
     <tbody>
-      <tr>
+      <tr v-for="n in 10">
         <td><v-checkbox v-bind="{ hideDetails: true }" /></td>
         <td>Aaa</td>
         <td>Aaa</td>
         <td>Aaa</td>
-      </tr>
-      <tr>
-        <td><v-checkbox v-bind="{ hideDetails: true }" /></td>
-        <td>Aaa</td>
-        <td>Aaa</td>
-        <td>Aaa</td>
-      </tr>
-      <tr>
-        <td><v-checkbox v-bind="{ hideDetails: true }" /></td>
-        <td>Aaa</td>
-        <td>Aaa</td>
-        <td>Aaa</td>
+        <td><v-btn icon="mdi-dots-vertical" size="small" flat></v-btn></td>
       </tr>
     </tbody>
   </v-table>
