@@ -9,74 +9,49 @@ trait Model
 
   public static function bootModel()
   {
-    // static::retrieved(function($model) {
-    //   $model->mutatorRetrieve();
-    // });
+    static::retrieved(function($model) {
+      $model->mutatorRetrieve();
+    });
 
-    // static::saved(function($model) {
-    //     $model->mutatorRetrieve();
-    // });
+    static::saved(function($model) {
+        $model->mutatorRetrieve();
+    });
 
     static::saving(function($model) {
+      // print_r($model);
       $model->mutatorSave();
 
       $validate = $model->validate();
       if ($validate->fails()) {
-        // \App\Utils::throwError(500, 'Validation errors', $validate->errors());
-
-        // throw new \Exception(json_encode([
-        //   'status' => 500,
-        //   'message' => 'Validation errors',
-        //   'fields' => $validate->errors(),
-        // ]), 500);
-
-        return throw new \Exception('aaa', 500);
-
-        throw new \App\Exceptions\ErrorException([ 500, 'Validation errors', $validate->errors() ]);
+        \App\Utils::throwError(400, 'Validation errors', $validate->errors());
       }
 
-      // if (in_array('slug', $model->getFillable()) AND $model->name AND !$model->slug) {
-      //   $model->slug = \Str::slug($model->name);
-      // }
+      if (in_array('slug', $model->getFillable()) AND $model->name AND !$model->slug) {
+        $model->slug = \Str::slug($model->name);
+      }
 
-      // foreach($model->attributes as $name => $value) {
-      //   if ($file = request()->file($name)) {
-      //     $value = $model->upload($file);
-      //   }
+      foreach($model->attributes as $name => $value) {
+        if (is_array($value)) {
+          $value = json_encode($value);
+        }
 
-      //   // else if (in_array($value, ['null', 'false', 'undefined', ''])) {
-      //   //   $value = null;
-      //   // }
+        else if (in_array($value, ['null', 'false', 'undefined', ''])) {
+          $value = null;
+        }
         
-      //   // else if (in_array($value, ['true'])) {
-      //   //   $value = true;
-      //   // }
+        else if (in_array($value, ['true'])) {
+          $value = true;
+        }
 
-      //   // else if (is_array($value)) {
-      //   //   $value = json_encode($value);
-      //   // }
+        // else if ($file = request()->file($name)) {
+        //   $value = $model->upload($file);
+        // }
 
-      //   $model->attributes[ $name ] = $value;
-      // }
+        $model->attributes[ $name ] = $value;
+      }
       
       return $model;
     });
-  }
-
-
-  public function store($data=null)
-  {
-    $instance = $this;
-
-    if ('array' == gettype($data)) {
-      if (isset($data['id']) AND !empty($data['id'])) {
-        $instance = $this->firstOrNew(['id' => $data['id']]);
-      }
-      $instance->fill($data);
-    }
-
-    $instance->save();
-    return $instance;
   }
 
 

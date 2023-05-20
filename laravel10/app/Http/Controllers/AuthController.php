@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-// use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
@@ -15,12 +14,14 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
         $this->route(['post'], '/auth/login', 'login');
         $this->route(['post'], '/auth/logout', 'logout');
         $this->route(['post'], '/auth/refresh', 'refresh');
         $this->route(['post'], '/auth/me', 'me');
         $this->route(['post'], '/auth/register', 'register');
+        $this->middleware('auth:api', [
+            'except' => ['login', 'register'],
+        ]);
     }
 
     /**
@@ -88,15 +89,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function register()
+    public function register(Request $request)
     {
-        // dump(123);
-        // return $this->success(request()->all());
-        // return $this->success(\App\Models\AppUser::create(request()->all()));
-        try {
-            return $this->success(\App\Models\AppUser::create(request()->all()));
-        } catch(\Exception $e) {
-            return [ $e->getMessage() ];
-        }
+        return $this->success(\App\Models\AppUser::create($request->all()));
     }
 }

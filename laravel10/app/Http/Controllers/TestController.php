@@ -12,7 +12,7 @@ class TestController extends Controller
      */
     public function __construct()
     {
-        $this->route(['get'], '/test', 'test');
+        $this->route('get', '/test', 'test')->name('test.test');
     }
 
     public function test()

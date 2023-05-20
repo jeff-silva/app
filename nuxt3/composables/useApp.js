@@ -8,7 +8,37 @@ export default (params={}) => {
     onLogin: () => {},
     onLogout: () => {},
     onRegister: () => {},
+    registerValidation: () => ({}),
     ...params
+  };
+
+  const error = (params) => {
+    return {
+      status: false,
+      message: false,
+      fields: {},
+      validation: params.validation || {},
+      set(data={}) {
+        this.status = data.status || false;
+        this.message = data.message || false;
+        this.fields = data.fields || {};
+      },
+      get(field) {
+        let errors = this.fields[field] || [];
+        let validations = this.validation[field] || [];
+        let value = r.value[params.parent]['params'][field] || '';
+        validations.forEach(validation => {
+          const message = validation(value);
+          if (typeof message=='string') {
+            errors.push(message);
+          }
+        });
+        return errors;
+      },
+      clear() {
+        this.set({});
+      },
+    };
   };
 
   const r = ref({
@@ -49,12 +79,27 @@ export default (params={}) => {
         await axios.post('api://auth/logout');
       } catch(err) {}
     },
-    async register(data={}) {
-      try {
-        await axios.post('api://auth/register', data);
-        params.onRegister(data);
-      } catch(err) {}
+
+    register: {
+      loading: false,
+      error: error({
+        parent: 'register',
+        validation: params.registerValidation()
+      }),
+      params: { name: '', email: '', password: '', password_confirmation: '' },
+      async submit() {
+        this.loading = true;
+        this.error.clear();
+        try {
+          await axios.post('api://auth/register', this.params);
+          params.onRegister(data);
+        } catch(err) {
+          this.error.set(err.response.data);
+        }
+        this.loading = false;
+      },
     },
+
     async password() {},
     account: {
       list: useStorage('accounts', []),

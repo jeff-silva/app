@@ -70,8 +70,15 @@ class AppUser extends Authenticatable implements JWTSubject
 
     public function validationRules()
     {
-        return [
+        $rules = [
             'name' => ['required'],
+            'email' => ['required', 'email:rfc,dns', 'unique:app_user,email'],
         ];
+
+        if (!$this->id) {
+            $rules['password'] = ['required'];
+        }
+
+        return $rules;
     }
 }

@@ -12,38 +12,30 @@ class Handler extends ExceptionHandler
      *
      * @var array<int, string>
      */
-    protected $dontFlash = [
-        'current_password',
-        'password',
-        'password_confirmation',
-    ];
-
-    // public function report(Exception $exception)
-    // {
-    //     parent::report($exception);
-    // }
+    // protected $dontFlash = [
+    //     'current_password',
+    //     'password',
+    //     'password_confirmation',
+    // ];
 
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            return response()->json([ 12345 ], 400);
-        });
+        // $this->reportable(function (Throwable $e) {
+        //     // return response()->json([ 12345 ], 400);
+        // });
 
-        $this->renderable(function (\Exception $e, Request $request) {
-            // return response()->json([ 12345 ], 400);
-            return [ 12345 ];
+        $this->renderable(function (\Exception $e, $request) {
+            $response = [
+                'status' => 400,
+                'message' => $e->getMessage(),
+                'fields' => [],
+            ];
+
+            if (is_array($data = json_decode($e->getMessage(), true))) {
+                $response = array_merge($response, $data);
+            }
+
+            return response()->json($response, $response['status']);
         });
     }
-
-    // protected function context(): array
-    // {
-    //     return array_merge(parent::context(), [
-    //         'foo' => 'bar',
-    //     ]);
-    // }
-
-    // public function render($request, Exception $e)
-    // {
-    //     return parent::render($request, $e);
-    // }
 }
