@@ -39,6 +39,7 @@ export default (params={}) => {
           this.user = data;
         },
         setToken(access_token) {
+          console.log({ access_token });
           const state = useStorage('access_token', '');
           state.value = access_token;
           this.token = access_token;
@@ -54,8 +55,9 @@ export default (params={}) => {
         this.auth.setUser(data);
       } catch(err) {
         this.account.list.forEach((acc, accIndex) => {
-          if (this.access_token!=acc.access_token) return;
-          this.account.list.splice(accIndex, 1);
+          if (this.auth.token!=acc.access_token) return;
+          acc.valid = false;
+          // this.account.list.splice(accIndex, 1);
         });
       }
     },
@@ -149,9 +151,16 @@ export default (params={}) => {
     account: {
       list: useStorage('accounts', []),
       async add(email, access_token) {
-        if (this.list.filter(acc => acc.email==email).at(0) || false) return;
         const state = useStorage('accounts', []);
-        state.value.push({ email, access_token });
+        let acc = this.list.filter(acc => acc.email==email).at(0) || false;
+
+        if (acc) {
+          acc.valid = true;
+        } else {
+          acc = { email, access_token, valid: true };
+          state.value.push(acc);
+        }
+
         this.list.value = state.value;
       },
       async remove(email) {
@@ -165,9 +174,7 @@ export default (params={}) => {
         this.list.forEach((acc) => {
           if (acc.email!=email) return;
           r.value.auth.setToken(acc.access_token);
-          setTimeout(() => {
-            r.value.load(true);
-          }, 100);
+          setTimeout(() => { r.value.load(true); }, 100);
         });
       },
     },

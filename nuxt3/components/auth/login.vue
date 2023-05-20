@@ -41,9 +41,12 @@
             v-for="acc in app.account.list"
             :active="app.auth.user && app.auth.user.email==acc.email"
           >
-            <div>{{ acc.email }}</div>
+            <div :class="{ 'text-disabled': !acc.valid }">{{ acc.email }}</div>
             <template #append>
-              <v-btn icon="mdi-login" flat size="x-small" @click="app.account.switch(acc.email)"></v-btn>
+              <div class="d-flex" style="gap:5px;">
+                <v-btn icon="mdi-close" flat size="x-small" @click="app.account.remove(acc.email)" v-if="!acc.valid"></v-btn>
+                <v-btn icon="mdi-login" flat size="x-small" @click="app.account.switch(acc.email)" v-if="acc.valid"></v-btn>
+              </div>
             </template>
           </v-list-item>
         </v-list>
