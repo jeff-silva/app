@@ -1,7 +1,7 @@
 <template>
   <nuxt-layout name="admin">
     <template #default>
-      app_user
+      <app-model-crud name="app_user"></app-model-crud>
     </template>
   </nuxt-layout>
 </template>

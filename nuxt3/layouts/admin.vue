@@ -108,7 +108,7 @@
   const props = defineProps({
     containerFluid: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   });
 
