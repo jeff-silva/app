@@ -1,16 +1,20 @@
 import { ref } from 'vue';
 import axios from 'axios';
+import _ from 'lodash';
+
 import { useStorage, useEventBus } from '@vueuse/core';
+import useValidate from '@/composables/useValidate';
 
 export default (params={}) => {
 
-  params = {
+  params = _.merge({
     onLogin: () => {},
     onLogout: () => {},
     onRegister: () => {},
-    registerValidation: () => ({}),
-    ...params
-  };
+    register: {
+      validation: {},
+    },
+  }, params);
 
   const error = (params) => {
     return {
@@ -46,12 +50,19 @@ export default (params={}) => {
     loading: false,
     access_token: useStorage('access_token', ''),
     user: false,
-    async load() {
+    async load(forced=false) {
+      if (!forced && this.user) return;
       try {
         const { data } = await axios.post('api://auth/me');
         this.user = data;
-      } catch(err) {}
+      } catch(err) {
+        this.account.list.forEach((acc, accIndex) => {
+          if (this.access_token!=acc.access_token) return;
+          this.account.list.splice(accIndex, 1);
+        });
+      }
     },
+
     async login(credentials) {
       this.loading = true;
       
@@ -59,13 +70,14 @@ export default (params={}) => {
         const { data } = await axios.post('api://auth/login', credentials);
         const state = useStorage('access_token', '');
         state.value = data.access_token;
-        await this.load();
+        await this.load(true);
         await this.account.add(credentials.email, data.access_token);
         params.onLogin({ data });
       } catch(err) {}
 
       this.loading = false;
     },
+
     async logout() {
       const state = useStorage('access_token', '');
       state.value = '';
@@ -82,25 +94,24 @@ export default (params={}) => {
 
     register: {
       loading: false,
-      error: error({
-        parent: 'register',
-        validation: params.registerValidation()
-      }),
+      error: {},
       params: { name: '', email: '', password: '', password_confirmation: '' },
       async submit() {
         this.loading = true;
         this.error.clear();
         try {
-          await axios.post('api://auth/register', this.params);
+          const { data } = await axios.post('api://auth/register', this.params);
+          this.params = {};
           params.onRegister(data);
         } catch(err) {
-          this.error.set(err.response.data);
+          this.error.set(err.response.data.fields);
         }
         this.loading = false;
       },
     },
 
     async password() {},
+
     account: {
       list: useStorage('accounts', []),
       async add(email, access_token) {
@@ -117,10 +128,18 @@ export default (params={}) => {
         }
       },
       async switch(email) {
-        console.log(`switch to ${email}`);
+        this.list.forEach((acc) => {
+          if (acc.email!=email) return;
+          r.value.access_token = acc.access_token;
+          setTimeout(() => {
+            r.value.load(true);
+          }, 100);
+        });
       },
     },
   });
+
+  r.value.register.error = useValidate(r.value.register.params, params.register.validation);
 
   r.value.load();
   return r;

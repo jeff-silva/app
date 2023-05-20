@@ -24,7 +24,6 @@
           type="password"
           v-model="app.register.params.password_confirmation"
           :error-messages="app.register.error.get('password_confirmation')"
-          :rules="rules.password_confirmation"
         />
       </v-card-text>
       <v-divider />
@@ -34,21 +33,16 @@
       </v-card-actions>
     </v-card>
   </form>
-
-  <pre>app.register: {{ app.register }}</pre>
 </template>
 
 <script setup>
   import useApp from '@/composables/useApp';
+
   const app = useApp({
-    registerValidation() {
-      return {
-        password_confirmation: [
-          (value) => {
-            return value == app.value.register.params.password || 'Password and confirmation does not match';
-          },
-        ],
-      };
+    register: {
+      validation: {
+        password_confirmation: ['required', 'same:password'],
+      },
     },
   });
 

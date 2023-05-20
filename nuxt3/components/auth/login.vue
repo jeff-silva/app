@@ -2,32 +2,35 @@
   <form @submit.prevent="app.login(credentials)">
     <v-card title="Login">
       <v-divider />
+      <v-alert rounded="0" class="mb-2">Welcome {{ app.user.name }}</v-alert>
       <v-card-text>
         <v-text-field label="E-mail" v-model="credentials.email" />
         <v-text-field label="Password" type="password" v-model="credentials.password" />
       </v-card-text>
+
+      <v-divider />
+
+      <v-card-actions>
+        <v-btn type="button" @click="app.logout()" v-if="app.access_token">Logout</v-btn>
+        <v-spacer />
+        <v-btn type="submit" :loading="app.loading">Login</v-btn>
+      </v-card-actions>
 
       <template v-if="app.account.list.length>0">
         <v-divider />
         <v-list>
           <v-list-item
             v-for="acc in app.account.list"
+            :active="app.user && app.user.email==acc.email"
           >
             <div>{{ acc.email }}</div>
             <template #append>
-              <v-btn v-if="app.user && app.user.email!=acc.email" icon="mdi-login" flat size="x-small" @click="app.account.switch(acc.email)"></v-btn>
-              <v-btn v-if="app.user && app.user.email==acc.email" icon="mdi-logout" flat size="x-small" @click="app.account.remove(acc.email)"></v-btn>
+              <v-btn icon="mdi-login" flat size="x-small" @click="app.account.switch(acc.email)"></v-btn>
+              <!-- <v-btn v-if="app.user && app.user.email==acc.email" icon="mdi-logout" flat size="x-small" @click="app.account.remove(acc.email)"></v-btn> -->
             </template>
           </v-list-item>
         </v-list>
       </template>
-
-      <v-divider />
-      <v-card-actions>
-        <v-btn type="submit" @click="app.logout()" v-if="app.access_token">Logout</v-btn>
-        <v-spacer />
-        <v-btn type="submit" :loading="app.loading">Login</v-btn>
-      </v-card-actions>
     </v-card>
   </form>
 </template>
