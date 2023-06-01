@@ -108,18 +108,22 @@ trait ModelTrait
 
   public function searchParamsDefault($merge=[])
   {
-    $default = [
-      'search' => null,
-      'page' => 1,
-      'per_page' => 10,
-      'order' => 'id:desc',
-    ];
-
     if ($merge instanceof Request) {
       $merge = $merge->all();
     }
 
-    return new Request(array_merge($default, $this->searchParams(), $merge));
+    $merge = array_merge(
+      [
+        'q' => null,
+        'page' => 1,
+        'per_page' => 10,
+        'order' => 'id:desc',
+      ],
+      $this->searchParams(),
+      $merge
+    );
+
+    return new Request($merge);
   }
   
   public function searchParams()
@@ -127,7 +131,7 @@ trait ModelTrait
     return [];
   }
   
-  public function searchQuery($query, $params=[])
+  public function searchQuery($query, $params)
   {
     return $query;
   }
@@ -135,7 +139,28 @@ trait ModelTrait
   public function scopeSearch($query, $params=[])
   {
     $params = $this->searchParamsDefault($params);
+
+    $query = $this->query();
+
+    // ?q=the+terms
+    if ($params->q) {
+      $query->where(function($q) use($params) {
+        $terms = array_values(array_filter(preg_split('/[^a-zA-Z0-9]/', $params->q)));
+        foreach($this->getFillable() as $field) {
+          foreach($terms as $term) {
+            if (empty($q->getQuery()->wheres)) {
+              $q->where($field, 'like', "%{$term}%");
+              continue;
+            }
+  
+            $q->orWhere($field, 'like', "%{$term}%");
+          }
+        }
+      });
+    }
+
     $query = $this->searchQuery($query, $params);
+
     $return = (object) $query->paginate($params->per_page)->toArray();
     return [
       'current_page' => $return->current_page,

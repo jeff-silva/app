@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+
+    public $model = false;
     
     public function route($methods, $path, $method)
     {
@@ -32,9 +35,14 @@ class Controller extends BaseController
         return call_user_func_array(['App\Utils', 'error'], func_get_args());
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return [ 'index' ];
+        if (! $this->model) {
+            return $this->error('Model not defined');
+        }
+
+        $data = $this->model->search($request);
+        return $this->success($data);
     }
 
     public function store()

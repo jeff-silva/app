@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class UserController extends Controller
+class AppUserGroupController extends Controller
 {
     public function __construct()
     {
+        $this->model = new \App\Models\AppUserGroup;
         $this->middleware('auth:api', ['except' => []]);
-        $this->apiResource('user');
+        $this->apiResource('app_user_group');
     }
 }

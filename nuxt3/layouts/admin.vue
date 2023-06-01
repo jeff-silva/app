@@ -63,25 +63,9 @@
                       {to:'/admin/app_place', name:'Search'},
                       {to:'/admin/app_place/new', name:'Create'},
                     ]},
-                    {to:'/admin', name:'Products', icon:'mdi-tshirt-crew', children: [
-                      {to:'/admin?page=products/search', name:'Search'},
-                      {to:'/admin?page=products/new', name:'Create'},
-                    ]},
-                    {to:'/admin', name:'Loto', icon:'mdi-slot-machine', children: [
-                      {to:'/admin/loto/loto_megasena', name:'Megasena'},
-                      {to:'/admin/loto/loto_lotofacil', name:'Lotofácil'},
-                    ]},
-                    {to:'/admin', name:'Tur', icon:'mdi-bus-marker', children: [
-                      {to:'/admin/tur/trip', name:'Trips'},
-                      {to:'/admin/tur/vehicle', name:'Vehicles'},
-                      {to:'/admin/tur/driver', name:'Drivers'},
-                      {to:'/admin/tur/vehicle_type', name:'Vehicle Types'},
-                      {to:'/admin/tur/vehicle_brand', name:'Vehicle Brands'},
-                      {to:'/admin/tur/vehicle_model', name:'Vehicle Models'},
-                    ]},
                     {to:'/', name:'Settings', icon:'mdi-cog', children: [
                       {to:'/admin/settings', name:'Configurações'},
-                      {to:'/dev', name:'Dev'},
+                      {to:'/admin/app_mail_template', name:'E-mail templates'},
                     ]},
                   ]" />
                 </slot>
