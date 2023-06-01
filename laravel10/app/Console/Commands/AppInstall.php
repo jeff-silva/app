@@ -2,7 +2,7 @@
  
 namespace App\Console\Commands;
  
-use App\Models\AppMail;
+use App\Models\AppSettings;
 use App\Models\AppMailTemplate;
 use Illuminate\Console\Command;
  
@@ -40,7 +40,7 @@ class AppInstall extends Command
 
     public function registerSettings()
     {
-        // 
+        AppSettings::registerSettings();
     }
 
     public function registerEmailTemplates()
