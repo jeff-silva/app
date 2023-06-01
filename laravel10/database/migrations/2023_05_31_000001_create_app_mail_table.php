@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('app_mail', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('emails');
+            $table->string('email_to');
             $table->string('subject');
             $table->text('content');
+            $table->integer('send_attempt');
+            $table->string('send_group');
             $table->integer('sent');
-            $table->integer('attempt');
+            $table->integer('read');
+            $table->string('email_template');
             $table->timestamps();
         });
     }
