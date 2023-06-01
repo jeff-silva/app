@@ -44,10 +44,10 @@ class AppInstall extends Command
 
     public function registerEmailTemplates()
     {
-        AppMail::send('jeff@grr.la', 'app-user-welcome', [
-            // 'user' => 123,
-            'user' => \App\Models\AppUser::query()->find(1),
-        ]);
-        return AppMail::registerTemplates();
+        // AppMail::send('jeff@grr.la', 'app-user-welcome', [
+        //     // 'user' => 123,
+        //     'user' => \App\Models\AppUser::query()->find(1),
+        // ]);
+        return AppMailTemplate::registerTemplates();
     }
 }

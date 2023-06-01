@@ -10,11 +10,5 @@ class AppMailController extends Controller
     {
         $this->middleware('auth:api', ['except' => []]);
         $this->apiResource('app_mail');
-        $this->route(['post'], '/app_mail/test', 'test')->name('app_mail.test');
-    }
-
-    public function test()
-    {
-        // 
     }
 }
