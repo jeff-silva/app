@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use Illuminate\Http\Request;
 
-trait Model
+trait ModelTrait
 {
 
   public static function bootModel()

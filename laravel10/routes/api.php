@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+new \App\Http\Controllers\AppMailController;
 new \App\Http\Controllers\AuthController;
 new \App\Http\Controllers\TestController;
 new \App\Http\Controllers\UserController;
