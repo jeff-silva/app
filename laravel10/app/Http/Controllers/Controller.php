@@ -41,23 +41,29 @@ class Controller extends BaseController
             return $this->error('Model not defined');
         }
 
-        $data = $this->model->search($request);
+        $data = $this->model->searchPaginate($request);
         return $this->success($data);
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        return [ 'store' ];
+        $data = $this->model->store($request);
+        return $this->success($data);
     }
 
-    public function show($id)
+    public function show($id, Request $request)
     {
-        return [ 'show', $id ];
+        $request->merge(['find' => $id]);
+        $data = $this->model->search($request)->first();
+        if (!$data) return $this->error(404, 'Not found');
+        return $this->success($data);
     }
 
-    public function update($id)
+    public function update($id, Request $request)
     {
-        return [ 'update', $id ];
+        $request->merge(['id' => $id]);
+        $data = $this->model->store($request);
+        return $this->success($data);
     }
 
     public function destroy($id)

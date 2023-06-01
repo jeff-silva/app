@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-  import { defineProps, onMounted } from 'vue';
+  import { ref, defineProps, onMounted } from 'vue';
   import axios from 'axios';
 
   const route = useRoute();

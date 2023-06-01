@@ -1,8 +1,10 @@
 <template>
   <template v-if="route.query.edit">
-    <app-model-crud-edit
-      v-bind="props"
-    ></app-model-crud-edit>
+    <app-model-crud-edit v-bind="props">
+      <template #edit-fields="bind">
+        <slot name="edit-fields" v-bind="bind"></slot>
+      </template>
+    </app-model-crud-edit>
   </template>
 
   <template v-if="!route.query.edit">
@@ -34,7 +36,11 @@
       default: () => ([]),
     },
     searchParams: {
-      type: Array,
+      type: Object,
+      default: () => ({}),
+    },
+    editParams: {
+      type: Object,
       default: () => ({}),
     },
   });

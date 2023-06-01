@@ -138,6 +138,7 @@ trait ModelTrait
     $merge = array_merge(
       [
         'q' => null,
+        'find' => null,
         'with' => null,
         'page' => 1,
         'per_page' => 10,
@@ -159,6 +160,16 @@ trait ModelTrait
   {
     $params = $this->searchParamsDefault($params);
     $query = $this->query();
+
+    // ?find=123
+    if ($params->find) {
+      $query->where(function($q) use($params) {
+        $q->where('id', $params->find);
+        if (in_array('slug', $this->getFillable())) {
+          $q->orWhere('slug', $params->find);
+        }
+      });
+    }
 
     // ?q=the+terms
     if ($params->q) {
@@ -205,10 +216,14 @@ trait ModelTrait
   public function scopeSearch($query, $params=[])
   {
     $params = $this->searchParamsDefault($params);
-
-    
     $query = $this->searchQueryDefault($params);
-    $query = $this->searchQuery($query, $params);
+    return $this->searchQuery($query, $params);
+  }
+
+  public function scopeSearchPaginate($query, $params=[])
+  {
+    $params = $this->searchParamsDefault($params);
+    $query = $this->scopeSearch($query, $params);
 
     $options = array_merge(
       $this->searchOptionsDefault($query, $params),
@@ -276,6 +291,21 @@ trait ModelTrait
 
   //   return parent::find($id, $columns);
   // }
+
+
+  public function store($data)
+  {
+    if ($data instanceof Request) {
+      $data = $data->all();
+    }
+
+    $data = array_merge(['id' => null], $data);
+    $model = $this->firstOrNew(['id' => $data['id']], $data);
+    $model->fill($data);
+    $model->save();
+    
+    return $model;
+  }
 
 
   public static function scopeToRawSql($query)

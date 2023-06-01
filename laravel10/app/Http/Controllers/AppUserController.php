@@ -10,7 +10,7 @@ class AppUserController extends Controller
     public function __construct()
     {
         $this->model = new \App\Models\AppUser;
-        $this->middleware('auth:api', ['except' => ['index']]);
+        $this->middleware('auth:api', ['except' => []]);
         $this->apiResource('app_user');
     }
 }

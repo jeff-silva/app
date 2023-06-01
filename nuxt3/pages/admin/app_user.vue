@@ -21,6 +21,31 @@
           <td>{{ bind.item.email }}</td>
           <td>{{ bind.item.app_user_group ? bind.item.app_user_group.name : null }}</td>
         </template>
+
+        <template #edit-fields="bind">
+          <v-row>
+            <v-col cols="12">
+              <v-text-field
+                v-model="bind.edit.data.name"
+                label="Subject"
+              />
+            </v-col>
+            <v-col cols="12">
+              <v-text-field
+                v-model="bind.edit.data.email"
+                label="E-mail"
+              />
+            </v-col>
+            <v-col cols="12">
+              <app-model-select
+                name="app_user_group"
+                v-model="bind.edit.data.group_id"
+                label="User Group"
+              />
+            </v-col>
+          </v-row>
+          <pre>{{ bind }}</pre>
+        </template>
       </app-model-crud>
     </template>
   </nuxt-layout>

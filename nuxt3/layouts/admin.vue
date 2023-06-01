@@ -2,6 +2,8 @@
   <v-defaults-provider
     :defaults="{
       VTextField: { variant: 'outlined' },
+      VTextarea: { variant: 'outlined' },
+      VSelect: { variant: 'outlined' },
     }"
   >
     <v-app>
