@@ -8,7 +8,27 @@
       <!-- Auth -->
       <template v-if="!app.auth.user">
         <div class="h-100 d-flex align-center justify-center bg-grey-lighten-3">
-          <app-auth-login style="width:400px; max-width:90vw;" />
+          <div style="width:400px; max-width:90vw;">
+            <v-card>
+              <v-tabs v-model="auth.tab">
+                <v-tab value="login">Login</v-tab>
+                <v-tab value="register">Register</v-tab>
+                <v-tab value="password">Password</v-tab>
+              </v-tabs>
+              <v-divider />
+              <v-window v-model="auth.tab">
+                <v-window-item value="login">
+                  <app-auth-login />
+                </v-window-item>
+                <v-window-item value="register">
+                  <app-auth-register />
+                </v-window-item>
+                <v-window-item value="password">
+                  <app-auth-password />
+                </v-window-item>
+              </v-window>
+            </v-card>
+          </div>
         </div>
       </template>
 
@@ -90,7 +110,15 @@
       </template>
 
       <v-dialog v-model="drawer.account">
-        <app-auth-login style="width:400px; max-width:90vw; margin:0 auto;" />
+        <v-card style="width:400px; max-width:90vw; margin:0 auto;">
+          <v-card-title>Switch account</v-card-title>
+          <app-auth-login />
+          <v-divider />
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="drawer.account=false">Close</v-btn>
+          </v-card-actions>
+        </v-card>
       </v-dialog>
     </v-app>
   </v-defaults-provider>
@@ -115,6 +143,10 @@
   const drawer = ref({
     main: breakpoints.xs,
     account: false,
+  });
+
+  const auth = ref({
+    tab: 'login',
   });
 </script>
 

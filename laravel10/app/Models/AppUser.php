@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Traits\ModelTrait;
+use App\Models\AppMail;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\ModelTrait;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -99,6 +100,9 @@ class AppUser extends Authenticatable implements JWTSubject
                 if (!$user->remember_token) {
                     $user->remember_token = uniqid();
                     $user->save();
+                    AppMail::send($user->email, 'app-user-password-recover', [
+                        'user' => $user,
+                    ]);
                 }
             }
         }
@@ -123,5 +127,10 @@ class AppUser extends Authenticatable implements JWTSubject
             'user_found' => $user_found,
             'password_changed' => $password_changed,
         ];
+    }
+
+    public function getRememberToken()
+    {
+        return $this;
     }
 }
