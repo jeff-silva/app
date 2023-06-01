@@ -36,4 +36,11 @@ class AppSettings extends Model
         }
         return $models;
     }
+
+    static function getAll()
+    {
+        return self::get()->mapWithKeys(function($item) {
+            return [ $item['name'] => $item['value'] ];
+        })->toArray();
+    }
 }

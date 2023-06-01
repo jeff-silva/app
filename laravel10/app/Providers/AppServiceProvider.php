@@ -20,14 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (\Schema::hasTable('app_settings')) {
-            $data = AppSettings::get()->mapWithKeys(function($item) {
-                return [ $item['name'] => $item['value'] ];
-            })->toArray();
-
-            config($data);
-            // dd($data);
-            // \App::setLocale(config('app.locale'));
-        }
+        // if (\Schema::hasTable('app_settings')) {
+        //     config(AppSettings::getAll());
+        //     // dd($data);
+        //     // \App::setLocale(config('app.locale'));
+        // }
     }
 }
