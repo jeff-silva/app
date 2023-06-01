@@ -6,9 +6,7 @@
   </template>
 
   <template v-if="!route.query.edit">
-    <app-model-crud-search
-      :name="props.name"
-    >
+    <app-model-crud-search v-bind="props">
       <template #search-table-header="bind">
         <slot name="search-table-header" v-bind="bind"></slot>
       </template>
@@ -30,6 +28,10 @@
     name: {
       type: String,
       default: '',
+    },
+    searchTableSizes: {
+      type: Array,
+      default: () => ([]),
     },
   });
 </script>

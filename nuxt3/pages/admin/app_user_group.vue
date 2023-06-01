@@ -1,7 +1,12 @@
 <template>
   <nuxt-layout name="admin">
     <template #default>
-      <app-model-crud name="app_user_group">
+      <app-model-crud
+        v-bind="{
+          name: 'app_user_group',
+          searchTableSizes: ['*'],
+        }"
+      >
         <template #search-table-header="bind">
           <th>Name</th>
         </template>

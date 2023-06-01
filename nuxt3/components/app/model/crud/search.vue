@@ -13,10 +13,14 @@
     />
   </div>
 
+  <pre>{{ props.searchTableSizes }}</pre>
+
   <v-table class="border" hover density="compact">
     <colgroup>
       <col width="60">
-      <col width="*">
+      <template v-for="_width in props.searchTableSizes">
+        <col :width="_width">
+      </template>
       <col width="60">
     </colgroup>
     <thead>
@@ -30,9 +34,11 @@
     <tbody>
       <!-- Empty -->
       <tr v-if="!search.loading && search.data.length==0">
-        <td>
+        <td colspan="100%">
           <slot name="search-table-empty" v-bind="slotBind({ item })">
-            No data found
+            <div class="text-center text-disabled py-5">
+              No data found
+            </div>
           </slot>
         </td>
       </tr>
@@ -71,6 +77,10 @@
       type: String,
       default: '',
     },
+    searchTableSizes: {
+      type: Array,
+      default: () => ([]),
+    },
   });
 
   const search = ref({
@@ -78,6 +88,7 @@
     params: {},
     data: [],
     async submit() {
+      if (this.loading) return;
       this.loading = true;
       try {
         const params = this.params;

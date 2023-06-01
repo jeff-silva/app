@@ -115,6 +115,7 @@ trait ModelTrait
     $merge = array_merge(
       [
         'q' => null,
+        'with' => null,
         'page' => 1,
         'per_page' => 10,
         'order' => 'id:desc',
@@ -157,6 +158,12 @@ trait ModelTrait
           }
         }
       });
+    }
+
+    // ?with=relation1,relation2
+    if ($params->with) {
+      $withs = is_array($params->with) ? $params->with : explode(',', $params->with);
+      dd($withs);
     }
 
     $query = $this->searchQuery($query, $params);
