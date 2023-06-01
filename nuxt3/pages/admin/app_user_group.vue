@@ -24,7 +24,6 @@
               />
             </v-col>
           </v-row>
-          <pre>{{ bind }}</pre>
         </template>
       </app-model-crud>
     </template>

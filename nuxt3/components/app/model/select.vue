@@ -7,7 +7,6 @@
     item-title="name"
     @update:modelValue="emit('update:modelValue', $event)"
   />
-  <pre>{{ props }}</pre>
 </template>
 
 <script setup>

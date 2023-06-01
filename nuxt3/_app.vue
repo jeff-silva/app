@@ -23,8 +23,6 @@
         </v-col>
       </v-row>
     </v-container>
-
-    <pre>{{ app }}</pre>
   </v-defaults-provider>
 </template>
 

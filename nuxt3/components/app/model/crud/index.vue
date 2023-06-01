@@ -17,8 +17,6 @@
       </template>
     </app-model-crud-search>
   </template>
-  
-  <!-- <pre>{{ { props, route } }}</pre> -->
 </template>
 
 <script setup>
