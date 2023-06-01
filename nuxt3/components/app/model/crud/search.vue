@@ -47,12 +47,12 @@
         <td>
           <v-menu location="start">
             <template #activator="{ props }">
-              <v-btn icon="mdi-dots-vertical" size="small" flat v-bind="props"></v-btn>
+              <v-btn icon="mdi-dots-vertical" size="x-small" flat v-bind="props"></v-btn>
             </template>
 
             <div class="d-flex me-2" style="gap:10px;">
-              <v-btn icon="mdi-pencil" size="small" flat :to="`/admin/${props.name}?edit=${item.id}`"></v-btn>
-              <v-btn icon="mdi-close" size="small" flat color="error"></v-btn>
+              <v-btn icon="mdi-pencil" size="x-small" flat :to="`/admin/${props.name}?edit=${item.id}`"></v-btn>
+              <v-btn icon="mdi-close" size="x-small" flat color="error"></v-btn>
             </div>
           </v-menu>
         </td>

@@ -68,6 +68,8 @@
                     {to:'/', name:'Settings', icon:'mdi-cog', children: [
                       {to:'/admin/settings', name:'Configurações'},
                       {to:'/admin/app_mail_template', name:'E-mail templates'},
+                      {to:'/admin/app_file', name:'Uploads'},
+                      {to:'/admin/app_place', name:'Places'},
                     ]},
                   ]" />
                 </slot>

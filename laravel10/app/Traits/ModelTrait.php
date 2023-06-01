@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 trait ModelTrait
 {
 
-  public static function bootModel()
+  public static function bootModelTrait()
   {
     static::retrieved(function($model) {
       $model->mutatorRetrieve();
@@ -18,7 +18,7 @@ trait ModelTrait
     });
 
     static::saving(function($model) {
-      // print_r($model);
+      // print_r($model); die;
       $model->mutatorSave();
 
       $validate = $model->validate();
@@ -142,7 +142,7 @@ trait ModelTrait
         'with' => null,
         'page' => 1,
         'per_page' => 10,
-        'order' => 'id:desc',
+        'order' => 'updated_at:desc',
       ],
       $this->searchParams(),
       $merge
