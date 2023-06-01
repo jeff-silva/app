@@ -13,8 +13,6 @@
     />
   </div>
 
-  <pre>{{ props.searchTableSizes }}</pre>
-
   <v-table class="border" hover density="compact">
     <colgroup>
       <col width="60">
@@ -81,11 +79,15 @@
       type: Array,
       default: () => ([]),
     },
+    searchParams: {
+      type: Array,
+      default: () => ({}),
+    },
   });
 
   const search = ref({
     loading: false,
-    params: {},
+    params: props.searchParams,
     data: [],
     async submit() {
       if (this.loading) return;

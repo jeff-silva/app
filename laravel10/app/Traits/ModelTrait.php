@@ -101,7 +101,30 @@ trait ModelTrait
     return $this->plural;
   }
 
-  public function searchOptions($pagination, $params=[])
+  public function searchOptionsDefault($query, $params=[])
+  {
+    $params = $this->searchParamsDefault($params);
+    $options = [];
+
+    // Withs
+    $options['with'] = [];
+    $withTypes = [
+      'Illuminate\Database\Eloquent\Relations\HasOne',
+      'Illuminate\Database\Eloquent\Relations\HasMany',
+      'Illuminate\Database\Eloquent\Relations\BelongsTo',
+    ];
+    foreach((new \ReflectionClass($this))->getMethods() as $refMethod) {
+      if ($returnType = $refMethod->getReturnType()) {
+        if (in_array($returnType->getName(), $withTypes)) {
+          $options['with'][] = $refMethod->getName();
+        }
+      }
+    }
+
+    return $options;
+  }
+
+  public function searchOptions($query, $params=[])
   {
     return [];
   }
@@ -132,15 +155,9 @@ trait ModelTrait
     return [];
   }
   
-  public function searchQuery($query, $params)
-  {
-    return $query;
-  }
-
-  public function scopeSearch($query, $params=[])
+  public function searchQueryDefault($params=[])
   {
     $params = $this->searchParamsDefault($params);
-
     $query = $this->query();
 
     // ?q=the+terms
@@ -161,12 +178,42 @@ trait ModelTrait
     }
 
     // ?with=relation1,relation2
+    // ?with[]=relation1&with[]=relation2
     if ($params->with) {
       $withs = is_array($params->with) ? $params->with : explode(',', $params->with);
-      dd($withs);
+      $query->with($withs);
     }
 
+    // ?order=id:desc,name:asc
+    // ?order[]=id:desc&order[]=name:asc
+    if ($params->order) {
+      $orders = is_array($params->order) ? $params->order : explode(',', $params->order);
+      foreach($orders as $order) {
+        list($field, $type) = explode(':', $order);
+        $query->orderBy($field, $type);
+      }
+    }
+
+    return $query;
+  }
+
+  public function searchQuery($query, $params)
+  {
+    return $query;
+  }
+
+  public function scopeSearch($query, $params=[])
+  {
+    $params = $this->searchParamsDefault($params);
+
+    
+    $query = $this->searchQueryDefault($params);
     $query = $this->searchQuery($query, $params);
+
+    $options = array_merge(
+      $this->searchOptionsDefault($query, $params),
+      $this->searchOptions($query, $params)
+    );
 
     $return = (object) $query->paginate($params->per_page)->toArray();
     return [
@@ -175,7 +222,7 @@ trait ModelTrait
       'last_page' => $return->last_page,
       'data' => $return->data,
       'params' => $params->all(),
-      'options' => $this->searchOptions($return, $params),
+      'options' => $options,
     ];
   }
 

@@ -1,7 +1,7 @@
 <template>
   <template v-if="route.query.edit">
     <app-model-crud-edit
-      :name="props.name"
+      v-bind="props"
     ></app-model-crud-edit>
   </template>
 
@@ -32,6 +32,10 @@
     searchTableSizes: {
       type: Array,
       default: () => ([]),
+    },
+    searchParams: {
+      type: Array,
+      default: () => ({}),
     },
   });
 </script>

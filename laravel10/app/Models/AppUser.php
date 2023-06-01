@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Models\AppMail;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Traits\ModelTrait;
+use App\Models\AppUserGroup;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -132,5 +134,10 @@ class AppUser extends Authenticatable implements JWTSubject
     public function getRememberToken()
     {
         return $this;
+    }
+
+    public function appUserGroup(): HasOne
+    {
+        return $this->hasOne(AppUserGroup::class, 'id', 'group_id');
     }
 }
