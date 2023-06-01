@@ -44,16 +44,25 @@
       <tr v-for="item in search.data">
         <td><v-checkbox v-bind="{ hideDetails: true }" /></td>
         <slot name="search-table-loop" v-bind="slotBind({ item })"></slot>
-        <td><v-btn icon="mdi-dots-vertical" size="small" flat></v-btn></td>
+        <td>
+          <v-menu location="start">
+            <template #activator="{ props }">
+              <v-btn icon="mdi-dots-vertical" size="small" flat v-bind="props"></v-btn>
+            </template>
+
+            <div class="d-flex me-2" style="gap:10px;">
+              <v-btn icon="mdi-pencil" size="small" flat :to="`/admin/${props.name}?edit=${item.id}`"></v-btn>
+              <v-btn icon="mdi-close" size="small" flat color="error"></v-btn>
+            </div>
+          </v-menu>
+        </td>
       </tr>
     </tbody>
   </v-table>
 
-  <pre>{{ search }}</pre>
-
   <v-pagination
     class="mt-4"
-    :length="6"
+    :length="search.pagination.last_page"
   />
 
   <v-bottom-navigation>
@@ -89,6 +98,7 @@
     loading: false,
     params: props.searchParams,
     data: [],
+    pagination: {},
     async submit() {
       if (this.loading) return;
       this.loading = true;
@@ -97,6 +107,7 @@
         const { data } = await axios.get(`api://${props.name}`, { params });
         this.data = data.data;
         this.params = data.params;
+        this.pagination = data.pagination;
       } catch(err) {}
       this.loading = false;
     },
