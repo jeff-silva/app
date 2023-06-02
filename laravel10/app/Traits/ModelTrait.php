@@ -159,6 +159,7 @@ trait ModelTrait
         'q' => null,
         'find' => null,
         'with' => null,
+        'limit' => 1,
         'page' => 1,
         'per_page' => 10,
         'order' => 'updated_at:desc',
@@ -180,16 +181,6 @@ trait ModelTrait
     $params = $this->searchParamsDefault($params);
     $query = $this->query();
 
-    // ?find=123
-    if ($params->find) {
-      $query->where(function($q) use($params) {
-        $q->where('id', $params->find);
-        if (in_array('slug', $this->getFillable())) {
-          $q->orWhere('slug', $params->find);
-        }
-      });
-    }
-
     // ?q=the+terms
     if ($params->q) {
       $query->where(function($q) use($params) {
@@ -207,11 +198,26 @@ trait ModelTrait
       });
     }
 
+    // ?find=123
+    if ($params->find) {
+      $query->where(function($q) use($params) {
+        $q->where('id', $params->find);
+        if (in_array('slug', $this->getFillable())) {
+          $q->orWhere('slug', $params->find);
+        }
+      });
+    }
+
     // ?with=relation1,relation2
     // ?with[]=relation1&with[]=relation2
     if ($params->with) {
       $withs = is_array($params->with) ? $params->with : explode(',', $params->with);
       $query->with($withs);
+    }
+
+    // ?limit=10
+    if ($params->limit) {
+      $query->take($params->limit);
     }
 
     // ?order=id:desc,name:asc
