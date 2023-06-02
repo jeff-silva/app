@@ -26,11 +26,11 @@
         </template>
 
         <template #search-fields="bind">
-          <div class="bg-grey-lighten-3 pa-2">
+          <div class="bg-grey-lighten-3 pa-2" v-if="bind.search.options.total_size">
             Total size: {{ $filter.numberFilesize(bind.search.options.total_size) }}
           </div>
 
-          <div class="bg-grey-lighten-3 pa-2">
+          <div class="bg-grey-lighten-3 pa-2" v-if="bind.search.options.result_size">
             Search size: {{ $filter.numberFilesize(bind.search.options.result_size) }}
           </div>
         </template>
@@ -58,7 +58,7 @@
               />
             </v-col> -->
           </v-row>
-          <pre>{{ bind }}</pre>
+          <!-- <pre>bind.edit: {{ bind.edit }}</pre> -->
         </template>
       </app-model-crud>
     </template>

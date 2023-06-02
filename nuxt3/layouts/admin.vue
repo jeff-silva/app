@@ -7,101 +7,171 @@
       VSelect: { variant: 'outlined' },
     }"
   >
-    <v-app>
-      <!-- Auth -->
-      <template v-if="!app.auth.user">
-        <div class="h-100 d-flex align-center justify-center bg-grey-lighten-3">
-          <div style="width:400px; max-width:90vw;">
-            <v-card>
-              <v-tabs v-model="auth.tab">
-                <v-tab value="login">Login</v-tab>
-                <v-tab value="register">Register</v-tab>
-                <v-tab value="password">Password</v-tab>
-              </v-tabs>
-              <v-divider />
-              <v-window v-model="auth.tab">
-                <v-window-item value="login">
-                  <app-auth-login />
-                </v-window-item>
-                <v-window-item value="register">
-                  <app-auth-register />
-                </v-window-item>
-                <v-window-item value="password">
-                  <app-auth-password />
-                </v-window-item>
-              </v-window>
-            </v-card>
-          </div>
+
+    <!-- Auth -->
+    <template v-if="!app.auth.user">
+      <div class="d-flex align-center justify-center bg-grey-lighten-3" style="height:100vh;">
+        <div style="width:400px; max-width:90vw;">
+          <v-card>
+            <v-tabs v-model="auth.tab">
+              <v-tab value="login">Login</v-tab>
+              <v-tab value="register">Register</v-tab>
+              <v-tab value="password">Password</v-tab>
+            </v-tabs>
+            <v-divider />
+            <v-window v-model="auth.tab">
+              <v-window-item value="login">
+                <app-auth-login />
+              </v-window-item>
+              <v-window-item value="register">
+                <app-auth-register />
+              </v-window-item>
+              <v-window-item value="password">
+                <app-auth-password />
+              </v-window-item>
+            </v-window>
+          </v-card>
         </div>
-      </template>
+      </div>
+    </template>
 
-      <!-- Screen -->
-      <template v-if="app.auth.user">
-        <v-layout>
-          <v-navigation-drawer
-            v-model="drawer.main"
-            v-bind="{
-              width: 250,
-              border: 0,
-              class: 'border-e',
-            }"
-          >
-            <div class="d-flex flex-column" style="height:100vh;">
-              <div class="pa-3 text-subtitle-2 text-uppercase" v-if="app.auth.user">
-                {{ app.auth.user.name }}
-              </div>
-              <div class="flex-grow-1" style="overflow:auto;">
-                <slot name="sidebar">
-                  <app-nav variant="plain" :items="[
-                    {to:'/admin', name:'Dashboard'},
-                    {to:'/admin', name:'Users', icon:'mdi-account', children: [
-                      {to:'/admin/app_user', name:'Users list'},
-                      {to:'/admin/app_user_group', name:'Groups list'},
-                    ]},
-                    {to:'/', name:'Settings', icon:'mdi-cog', children: [
-                      {to:'/admin/settings', name:'Configurações'},
-                      {to:'/admin/app_mail_template', name:'E-mail templates'},
-                      {to:'/admin/app_file', name:'Uploads'},
-                      {to:'/admin/app_place', name:'Places'},
-                    ]},
-                  ]" />
-                </slot>
-              </div>
-              <app-nav
-                variant="plain"
-                density="compact"
-                :items="[
-                  {name:'Switch account', onClick() { drawer.account = true; }},
-                  {name:'Sair', onClick() { app.logout(); }},
-                ]"
-              />
+
+    <!-- Logged -->
+    <template v-if="app.auth.user">
+      <v-layout>
+        <v-app-bar :title="`Welcome ${app.auth.user.name}`"></v-app-bar>
+  
+        <v-navigation-drawer
+          v-model="drawer.main"
+          v-bind="{
+            width: 250,
+            border: 0,
+            class: 'border-e',
+          }"
+        >
+          <!-- <slot name="sidebar">
+            <app-nav variant="plain" :items="[
+              {to:'/admin', name:'Dashboard'},
+              {to:'/admin', name:'Users', icon:'mdi-account', children: [
+                {to:'/admin/app_user', name:'Users list'},
+                {to:'/admin/app_user_group', name:'Groups list'},
+              ]},
+              {to:'/', name:'Settings', icon:'mdi-cog', children: [
+                {to:'/admin/settings', name:'Configurações'},
+                {to:'/admin/app_mail_template', name:'E-mail templates'},
+                {to:'/admin/app_file', name:'Uploads'},
+                {to:'/admin/app_place', name:'Places'},
+              ]},
+            ]" />
+          </slot> -->
+
+          <div class="d-flex flex-column" style="height: calc(100vh - 64px);">
+            <div class="flex-grow-1" style="overflow:auto;">
+              <slot name="sidebar">
+                <app-nav variant="plain" :items="[
+                  {to:'/admin', name:'Dashboard'},
+                  {to:'/admin', name:'Users', icon:'mdi-account', children: [
+                    {to:'/admin/app_user', name:'Users list'},
+                    {to:'/admin/app_user_group', name:'Groups list'},
+                  ]},
+                  {to:'/', name:'Settings', icon:'mdi-cog', children: [
+                    {to:'/admin/settings', name:'Configurações'},
+                    {to:'/admin/app_mail_template', name:'E-mail templates'},
+                    {to:'/admin/app_file', name:'Uploads'},
+                    {to:'/admin/app_place', name:'Places'},
+                  ]},
+                ]" />
+              </slot>
             </div>
-          </v-navigation-drawer>
-          <v-main style="height:100vh; overflow-y:scroll; overflow-x:hidden; overflow-y:auto;">
-            <v-app-bar class="px-md-3" v-bind="{height:50, color:'grey-lighten-4', elevation:0, location:'top'}">
-              <v-container class="pa-0" :fluid="props.containerFluid">
-                <v-btn icon="mdi-menu" size="small" @click="drawer.main=true" class="d-lg-none"></v-btn>
-              </v-container>
-            </v-app-bar>
-            <v-container class="pa-4 pt-5 px-md-3" :fluid="props.containerFluid">
-              <slot />
-            </v-container>
-          </v-main>
-        </v-layout>
-      </template>
+            <app-nav
+              variant="plain"
+              density="compact"
+              :items="[
+                {name:'Switch account', onClick() { drawer.account = true; }},
+                {name:'Sair', onClick() { app.logout(); }},
+              ]"
+            />
+          </div>
+        </v-navigation-drawer>
+  
+        <v-main>
+          <v-container>
+            <slot></slot>
+          </v-container>
+        </v-main>
+      </v-layout>
+    </template>
 
-      <v-dialog v-model="drawer.account">
-        <v-card style="width:400px; max-width:90vw; margin:0 auto;">
-          <v-card-title>Switch account</v-card-title>
-          <app-auth-login />
-          <v-divider />
-          <v-card-actions>
-            <v-spacer />
-            <v-btn @click="drawer.account=false">Close</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-app>
+
+    <!-- Switch account -->
+    <v-dialog v-model="drawer.account">
+      <v-card style="width:400px; max-width:90vw; margin:0 auto;">
+        <v-card-title>Switch account</v-card-title>
+        <app-auth-login />
+        <v-divider />
+        <v-card-actions>
+          <v-spacer />
+          <v-btn @click="drawer.account=false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    
+
+    <!-- Screen -->
+    <!-- <template v-if="app.auth.user">
+      <v-layout>
+        <v-navigation-drawer
+          v-model="drawer.main"
+          v-bind="{
+            width: 250,
+            border: 0,
+            class: 'border-e',
+          }"
+        >
+          <div class="d-flex flex-column" style="height:100vh;">
+            <div class="pa-3 text-subtitle-2 text-uppercase" v-if="app.auth.user">
+              {{ app.auth.user.name }}
+            </div>
+            <div class="flex-grow-1" style="overflow:auto;">
+              <slot name="sidebar">
+                <app-nav variant="plain" :items="[
+                  {to:'/admin', name:'Dashboard'},
+                  {to:'/admin', name:'Users', icon:'mdi-account', children: [
+                    {to:'/admin/app_user', name:'Users list'},
+                    {to:'/admin/app_user_group', name:'Groups list'},
+                  ]},
+                  {to:'/', name:'Settings', icon:'mdi-cog', children: [
+                    {to:'/admin/settings', name:'Configurações'},
+                    {to:'/admin/app_mail_template', name:'E-mail templates'},
+                    {to:'/admin/app_file', name:'Uploads'},
+                    {to:'/admin/app_place', name:'Places'},
+                  ]},
+                ]" />
+              </slot>
+            </div>
+            <app-nav
+              variant="plain"
+              density="compact"
+              :items="[
+                {name:'Switch account', onClick() { drawer.account = true; }},
+                {name:'Sair', onClick() { app.logout(); }},
+              ]"
+            />
+          </div>
+        </v-navigation-drawer>
+        <v-main style="height:100vh; overflow-y:scroll; overflow-x:hidden; overflow-y:auto;">
+          <v-app-bar class="px-md-3" v-bind="{height:50, color:'grey-lighten-4', elevation:0, location:'top'}">
+            <v-container class="pa-0" :fluid="props.containerFluid">
+              <v-btn icon="mdi-menu" size="small" @click="drawer.main=true" class="d-lg-none"></v-btn>
+            </v-container>
+          </v-app-bar>
+          <v-container class="pa-4 pt-5 px-md-3" :fluid="props.containerFluid">
+            <slot />
+          </v-container>
+        </v-main>
+      </v-layout>
+    </template> -->
+
   </v-defaults-provider>
 </template>
 
@@ -122,7 +192,7 @@
   });
 
   const drawer = ref({
-    main: breakpoints.xs,
+    main: breakpoints.md,
     account: false,
   });
 
@@ -135,43 +205,3 @@
   @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
   html, body { font-family: 'Montserrat', sans-serif; }
 </style>
-
-
-<!-- <script>
-import { breakpointsVuetify, useBreakpoints } from '@vueuse/core';
-const breakpoints = useBreakpoints(breakpointsVuetify);
-
-export default {
-  props: {
-    auth: {
-      type: Boolean,
-      default: true,
-    },
-    containerFluid: {
-      type: Boolean,
-      default: true,
-    },
-    navWidth: {
-      type: Number,
-      default: 250,
-    },
-  },
-
-  data() {
-    return {
-      drawer: breakpoints.xs,
-      breakpoints,
-      navs: [
-        {type:'title', name:'Admin'},
-        {type:'item', to:'/', name:'Dashboard'},
-        {type:'title', name:'User'},
-        {type:'item', to:'/', name:'Create'},
-        {type:'item', to:'/', name:'List'},
-        {type:'divider'},
-        {type:'item', to:'/', name:'Dashboard'},
-      ],
-      app: useApp(),
-    };
-  },
-};
-</script> -->

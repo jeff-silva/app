@@ -67,17 +67,17 @@ class Controller extends BaseController
 
     public function show($id, Request $request)
     {
-        $request->merge(['find' => $id]);
-        $data = $this->model->search($request)->first();
-        if (!$data) return $this->error(404, 'Not found');
-        return $this->success($data);
-
-        // $request->merge(['find' => $id, 'limit' => 1]);
-        // $data = $this->model->searchPaginate($request);
-        // $data['data'] = isset($data['data'][0]) ? $data['data'][0] : null;
-        // if (!$data['data']) return $this->error(404, 'Not found');
-        // unset($data['pagination'], $data['params']);
+        // $request->merge(['find' => $id]);
+        // $data = $this->model->search($request)->first();
+        // if (!$data) return $this->error(404, 'Not found');
         // return $this->success($data);
+
+        $request->merge(['find' => $id, 'limit' => 1]);
+        $data = $this->model->searchPaginate($request);
+        $data['data'] = isset($data['data'][0]) ? $data['data'][0] : null;
+        if (!$data['data']) return $this->error(404, 'Not found');
+        unset($data['pagination'], $data['params']);
+        return $this->success($data);
     }
 
     public function update($id, Request $request)

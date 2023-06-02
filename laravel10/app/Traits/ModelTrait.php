@@ -257,16 +257,21 @@ trait ModelTrait
 
     $pagination = (object) $query->paginate($params->per_page)->toArray();
 
+    $params_data = $params->all();
+    $params_data['limit'] = intval($params_data['limit']);
+    $params_data['page'] = intval($params_data['page']);
+    $params_data['per_page'] = intval($params_data['per_page']);
+
     return [
       'data' => $pagination->data,
       'pagination' => [
-        'current_page' => $pagination->current_page,
-        'from' => $pagination->from,
-        'last_page' => $pagination->last_page,
-        'to' => $pagination->to,
-        'total' => $pagination->total,
+        'current_page' => intval($pagination->current_page),
+        'from' => intval($pagination->from),
+        'last_page' => intval($pagination->last_page),
+        'to' => intval($pagination->to),
+        'total' => intval($pagination->total),
       ],
-      'params' => $params->all(),
+      'params' => $params_data,
       'options' => $options,
     ];
   }
