@@ -7,9 +7,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AppUserController extends Controller
 {
-    public function __construct()
+    public $model = \App\Models\AppUser::class;
+
+    public function api()
     {
-        $this->model = new \App\Models\AppUser;
         $this->middleware('auth:api', ['except' => []]);
         $this->apiResource('app_user');
     }

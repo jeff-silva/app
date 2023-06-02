@@ -31,18 +31,24 @@ class AppFile extends Model
     protected $appends = [
         'is_text',
         'is_image',
+        'url',
     ];
 
     protected function getIsTextAttribute()
     {
         $text_exts = ['htm', 'html', 'svg', 'txt', 'xml'];
-        return str_starts_with('text/', $this->mime) OR in_array($this->ext, $text_exts);
+        return str_starts_with($this->mime, 'text/') OR in_array($this->ext, $text_exts);
     }
 
     protected function getIsImageAttribute()
     {
         $text_exts = ['bmp', 'gif', 'jpg', 'jpeg', 'png', 'svg'];
-        return str_starts_with('image/', $this->mime) OR in_array($this->ext, $text_exts);
+        return str_starts_with($this->mime, 'image/') OR in_array($this->ext, $text_exts);
+    }
+
+    protected function getUrlAttribute()
+    {
+        return \URL::to("/file/{$this->slug}");
     }
 
     public function validationRules()

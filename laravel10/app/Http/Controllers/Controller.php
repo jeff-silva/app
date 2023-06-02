@@ -13,7 +13,18 @@ class Controller extends BaseController
     use AuthorizesRequests, ValidatesRequests;
 
     public $model = false;
+
+    public function __construct($context=null)
+    {
+        $this->model = $this->model ? new $this->model : false;
+
+        if ($context=='api') $this->api();
+        if ($context=='web') $this->web();
+    }
     
+    public function api() {}
+    public function web() {}
+
     public function route($methods, $path, $method)
     {
         $methods = is_array($methods) ? $methods : [ $methods ];
@@ -32,7 +43,7 @@ class Controller extends BaseController
 
     public function error()
     {
-        return call_user_func_array(['App\Utils', 'error'], func_get_args());
+        return call_user_func_array(['\App\Utils', 'error'], func_get_args());
     }
 
     public function index(Request $request)

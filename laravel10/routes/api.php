@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-new \App\Http\Controllers\AppFileController;
-new \App\Http\Controllers\AppMailController;
-new \App\Http\Controllers\AppMailTemplateController;
-new \App\Http\Controllers\AppPlaceController;
-new \App\Http\Controllers\AppUserController;
-new \App\Http\Controllers\AppUserGroupController;
-new \App\Http\Controllers\AuthController;
-new \App\Http\Controllers\TestController;
+foreach(\App\Utils::cachedControllers() as $controller) {
+  new $controller('api');
+}

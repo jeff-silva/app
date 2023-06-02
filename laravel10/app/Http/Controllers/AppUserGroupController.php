@@ -7,9 +7,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AppUserGroupController extends Controller
 {
-    public function __construct()
+    public $model = \App\Models\AppUserGroup::class;
+
+    public function api()
     {
-        $this->model = new \App\Models\AppUserGroup;
         $this->middleware('auth:api', ['except' => []]);
         $this->apiResource('app_user_group');
     }

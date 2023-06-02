@@ -12,7 +12,7 @@ class AuthController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function api()
     {
         $this->route(['post'], '/auth/login', 'login');
         $this->route(['post'], '/auth/logout', 'logout');
