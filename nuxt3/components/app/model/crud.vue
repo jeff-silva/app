@@ -125,7 +125,7 @@
         <span>Cancel</span>
       </v-btn>
   
-      <v-btn type="submit" :loading="edit.saving">
+      <v-btn :loading="edit.saving" @click="edit.save()">
         <v-icon>mdi-content-save-outline</v-icon>
         <span>Save</span>
       </v-btn>
@@ -154,6 +154,7 @@
   const breakpoints = useBreakpoints(breakpointsVuetify);
 
   const route = useRoute();
+  const router = useRouter();
 
   const props = defineProps({
     name: {
@@ -251,13 +252,12 @@
           // this.data = data.data;
           // this.options = data.options;
           search.value.submit();
+          router.push(`/admin/${props.name}`);
         } catch(err) {
           this.error = err.response || err;
         }
         this.saving = false;
       }, 1000);
-
-      console.log('load', { id });
     },
   });
 

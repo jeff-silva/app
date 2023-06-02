@@ -39,7 +39,13 @@
     <!-- Logged -->
     <template v-if="app.auth.user">
       <v-layout>
-        <v-app-bar :title="`Welcome ${app.auth.user.name}`"></v-app-bar>
+        <v-app-bar @click="drawer.main=true">
+          <v-btn icon="mdi-menu" flat class="d-lg-none"></v-btn>
+          <v-spacer></v-spacer>
+          <div class="px-2">Welcome {{ app.auth.user.name }}</div>
+          <v-spacer></v-spacer>
+          <div class="px-2">Aaa</div>
+        </v-app-bar>
   
         <v-navigation-drawer
           v-model="drawer.main"
