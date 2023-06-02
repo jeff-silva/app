@@ -1,13 +1,13 @@
 <template>
   <form @submit.prevent="search.submit()">
     <v-table class="border" hover density="compact">
-      <!-- <colgroup>
-        <col width="60px">
+      <colgroup>
+        <col width="0">
         <template v-for="_width in props.searchTableSizes">
           <col :width="_width">
         </template>
-        <col width="60px">
-      </colgroup> -->
+        <col width="0">
+      </colgroup>
 
       <thead>
         <tr class="bg-grey-lighten-4">

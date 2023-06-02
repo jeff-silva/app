@@ -39,7 +39,6 @@ export default (params={}) => {
           this.user = data;
         },
         setToken(access_token) {
-          console.log({ access_token });
           const state = useStorage('access_token', '');
           state.value = access_token;
           this.token = access_token;
@@ -185,7 +184,6 @@ export default (params={}) => {
   r.value.password.error = useValidate(r.value.password.params, params.password.validation);
 
   r.value.load();
-  console.log(r.value.test);
   return r;
 };
 
