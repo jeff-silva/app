@@ -58,14 +58,6 @@
                       {to:'/admin/app_user', name:'Users list'},
                       {to:'/admin/app_user_group', name:'Groups list'},
                     ]},
-                    {to:'/admin', name:'Arquivos', icon:'mdi-account', children: [
-                      {to:'/admin/app_file', name:'Search'},
-                      {to:'/admin/app_file/new', name:'Create'},
-                    ]},
-                    {to:'/admin', name:'Endereços', icon:'mdi-account', children: [
-                      {to:'/admin/app_place', name:'Search'},
-                      {to:'/admin/app_place/new', name:'Create'},
-                    ]},
                     {to:'/', name:'Settings', icon:'mdi-cog', children: [
                       {to:'/admin/settings', name:'Configurações'},
                       {to:'/admin/app_mail_template', name:'E-mail templates'},
@@ -91,7 +83,7 @@
                 <v-btn icon="mdi-menu" size="small" @click="drawer.main=true" class="d-lg-none"></v-btn>
               </v-container>
             </v-app-bar>
-            <v-container class="pa-0 pa-md-3" :fluid="props.containerFluid">
+            <v-container class="pa-4 pt-5 px-md-3" :fluid="props.containerFluid">
               <slot />
             </v-container>
           </v-main>

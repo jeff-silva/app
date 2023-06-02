@@ -12,8 +12,13 @@
       <template #search-table-header="bind">
         <slot name="search-table-header" v-bind="bind"></slot>
       </template>
+
       <template #search-table-loop="bind">
         <slot name="search-table-loop" v-bind="bind"></slot>
+      </template>
+
+      <template #search-fields="bind">
+        <slot name="search-fields" v-bind="bind"></slot>
       </template>
     </app-model-crud-search>
   </template>

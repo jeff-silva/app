@@ -4,7 +4,7 @@
       <app-model-crud
         v-bind="{
           name: 'app_file',
-          searchTableSizes: ['*', '100', '100', '100'],
+          searchTableSizes: ['*', '100px', '100px', '100px'],
           searchParams: {},
         }"
       >
@@ -17,12 +17,22 @@
 
         <template #search-table-loop="bind">
           <td><a :href="bind.item.url" target="_blank" style="text-decoration:none!important; color:inherit;">{{ bind.item.name }}</a></td>
-          <td>{{ bind.item.size }}b</td>
+          <td>{{ $filter.numberFilesize(bind.item.size) }}</td>
           <td>{{ bind.item.mime }}</td>
           <td>{{ [
             (bind.item.is_text ? 'Text' : null),  
             (bind.item.is_image ? 'Image' : null),  
           ].filter(val => val).join(', ') }}</td>
+        </template>
+
+        <template #search-fields="bind">
+          <div class="bg-grey-lighten-3 pa-2">
+            Total size: {{ bind.search.options.total_size }}
+          </div>
+
+          <div class="bg-grey-lighten-3 pa-2">
+            Search size: {{ bind.search.options.result_size }}
+          </div>
         </template>
 
         <template #edit-fields="bind">
