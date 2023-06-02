@@ -23,4 +23,30 @@ class AppFile extends Model
         'folder',
         'content',
     ];
+
+    protected $hidden = [
+        'content',
+    ];
+
+    protected $appends = [
+        'is_text',
+        'is_image',
+    ];
+
+    protected function getIsTextAttribute()
+    {
+        $text_exts = ['htm', 'html', 'svg', 'txt', 'xml'];
+        return str_starts_with('text/', $this->mime) OR in_array($this->ext, $text_exts);
+    }
+
+    protected function getIsImageAttribute()
+    {
+        $text_exts = ['bmp', 'gif', 'jpg', 'jpeg', 'png', 'svg'];
+        return str_starts_with('image/', $this->mime) OR in_array($this->ext, $text_exts);
+    }
+
+    public function validationRules()
+    {
+        return [];
+    }
 }

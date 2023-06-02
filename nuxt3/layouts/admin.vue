@@ -3,6 +3,7 @@
     :defaults="{
       VTextField: { variant: 'outlined' },
       VTextarea: { variant: 'outlined' },
+      VFileInput: { variant: 'outlined' },
       VSelect: { variant: 'outlined' },
     }"
   >

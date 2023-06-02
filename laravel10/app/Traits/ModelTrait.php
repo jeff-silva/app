@@ -18,7 +18,6 @@ trait ModelTrait
     });
 
     static::saving(function($model) {
-      // print_r($model); die;
       $model->mutatorSave();
 
       $validate = $model->validate();
@@ -30,7 +29,30 @@ trait ModelTrait
         $model->slug = \Str::slug($model->name);
       }
 
+      $fill = $model->toArray();
+
+      // try upload
       foreach($model->attributes as $name => $value) {
+        if ($file = request()->file($name)) {
+          if ('app_file' == $model->getTable()) {
+            $uploadData = $model->uploadData($file);
+            $fill['slug'] = $uploadData['slug'];
+            $fill['name'] = $uploadData['name'];
+            $fill['size'] = $uploadData['size'];
+            $fill['mime'] = $uploadData['mime'];
+            $fill['ext'] = $uploadData['ext'];
+            $fill['content'] = $uploadData['content'];
+            continue;
+          }
+
+          $fill[ $name ] = $model->upload($file);
+        }
+      }
+
+      // error_log(var_export($fill, true));
+
+      // proccess data
+      foreach($fill as $name => $value) {
         if (is_array($value)) {
           $value = json_encode($value);
         }
@@ -43,13 +65,10 @@ trait ModelTrait
           $value = true;
         }
 
-        // else if ($file = request()->file($name)) {
-        //   $value = $model->upload($file);
-        // }
-
-        $model->attributes[ $name ] = $value;
+        $fill[ $name ] = $value;
       }
       
+      $model->fill($fill);
       return $model;
     });
   }
@@ -252,30 +271,30 @@ trait ModelTrait
   // }
 
 
+  public function uploadData($file)
+  {
+    $ext = strtolower($file->getClientOriginalExtension());
+    $mime = strtolower($file->getClientMimeType());
+
+    return [
+      'slug' => \Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . ".{$ext}",
+      'name' => $file->getClientOriginalName(),
+      'size' => $file->getSize(),
+      'mime' => $mime,
+      'ext' => $ext,
+      // 'content' => mb_convert_encoding(file_get_contents($file), 'UTF-8', 'UTF-8'),
+      'content' => mb_convert_encoding((string) $file->getContent(), 'UTF-8', 'UTF-8'),
+    ];
+  }
+
+
   // Upload
   public function upload($file, $folder='')
   {
-    try {
-      $file_content = mb_convert_encoding(file_get_contents($file), 'UTF-8', 'UTF-8');
-
-      if ('files'==$this->getTable()) {
-        return $file_content;
-      }
-
-      $save = \App\Models\Files::create([
-        'slug' => \Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) .'.'. $file->getClientOriginalExtension(),
-        'name' => $file->getClientOriginalName(),
-        'mime' => $file->getClientMimeType(),
-        'ext' => $file->getClientOriginalExtension(),
-        'size' => $file->getSize(),
-        'folder' => $folder,
-        'file' => $file_content,
-      ]);
-      return $save->id;
-    }
-    catch(\Exception $e) {
-      \App\Utils::error(500, $e->getMessage());
-    }
+    $data = $this->uploadData($file);
+    $data['folder'] = $folder;
+    $save = \App\Models\AppFile::store($data);
+    return $save->id;
   }
 
 

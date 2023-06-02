@@ -40,7 +40,7 @@ class Utils
 
     foreach(func_get_args() as $data) {
       print_r($data);
-      error_log(print_r($data, true) . PHP_EOL);
+      error_log(json_stringify($data) . PHP_EOL);
     }
   }
 

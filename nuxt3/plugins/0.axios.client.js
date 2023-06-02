@@ -6,6 +6,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   axios.interceptors.request.use(config => {
 		const conf = useRuntimeConfig();
 
+		config.headers['Content-Type'] = 'multipart/form-data';
+
 		if (config.url.startsWith('api://')) {
 			let { protocol, hostname } = (new URL(location.href));
 			config.baseURL = `${protocol}//${hostname}:${conf.public.APP_PORT}`;
