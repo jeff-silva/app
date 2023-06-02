@@ -55,4 +55,12 @@ class AppFile extends Model
     {
         return [];
     }
+
+    public function searchOptions($query, $params)
+    {
+        return [
+            'total_size' => intval($this->sum('size')),
+            'result_size' => intval($query->sum('size')),
+        ];
+    }
 }

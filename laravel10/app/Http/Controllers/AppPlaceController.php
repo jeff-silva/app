@@ -6,10 +6,9 @@ use Illuminate\Http\Request;
 
 class AppPlaceController extends Controller
 {
-    public $model = \App\Models\AppPlace::class;
-
-    public function api()
+    public function __construct()
     {
+        $this->model = new \App\Models\AppPlace;
         $this->middleware('auth:api', ['except' => []]);
         $this->apiResource('app_place');
     }

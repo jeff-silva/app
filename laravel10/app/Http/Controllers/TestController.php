@@ -10,7 +10,7 @@ class TestController extends Controller
      *
      * @return void
      */
-    public function api()
+    public function __construct()
     {
         $this->route('get', '/test', 'test')->name('test.test');
     }

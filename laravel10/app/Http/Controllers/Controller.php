@@ -14,16 +14,19 @@ class Controller extends BaseController
 
     public $model = false;
 
-    public function __construct($context=null)
-    {
-        $this->model = $this->model ? new $this->model : false;
+    // public function __construct($context=null)
+    // {
+    //     $this->model = $this->model ? new $this->model : false;
 
-        if ($context=='api') $this->api();
-        if ($context=='web') $this->web();
-    }
+    //     // if ($context=='api') $this->api();
+    //     // if ($context=='web') $this->web();
+
+    //     // dump($this);
+    //     // dump(get_class_methods($this->route));
+    // }
     
-    public function api() {}
-    public function web() {}
+    // public static function api() {}
+    // public static function web() {}
 
     public function route($methods, $path, $method)
     {

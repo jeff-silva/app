@@ -6,10 +6,9 @@ use Illuminate\Http\Request;
 
 class AppMailController extends Controller
 {
-    public $model = \App\Models\AppMail::class;
-
-    public function api()
+    public function __construct()
     {
+        $this->model = new \App\Models\AppMail;
         $this->middleware('auth:api', ['except' => []]);
         $this->apiResource('app_mail');
     }

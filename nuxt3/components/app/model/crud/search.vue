@@ -51,8 +51,8 @@
             </template>
 
             <div class="d-flex me-2" style="gap:10px;">
-              <v-btn icon="mdi-pencil" size="x-small" flat :to="`/admin/${props.name}?edit=${item.id}`"></v-btn>
               <v-btn icon="mdi-close" size="x-small" flat color="error"></v-btn>
+              <v-btn icon="mdi-pencil" size="x-small" flat :to="`/admin/${props.name}?edit=${item.id}`"></v-btn>
             </div>
           </v-menu>
         </td>
@@ -99,6 +99,7 @@
     params: props.searchParams,
     data: [],
     pagination: {},
+    options: {},
     async submit() {
       if (this.loading) return;
       this.loading = true;
@@ -108,6 +109,7 @@
         this.data = data.data;
         this.params = data.params;
         this.pagination = data.pagination;
+        this.options = data.options;
       } catch(err) {}
       this.loading = false;
     },

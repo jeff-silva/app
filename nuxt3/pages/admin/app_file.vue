@@ -16,7 +16,7 @@
         </template>
 
         <template #search-table-loop="bind">
-          <td><a :href="bind.item.url" target="_blank">{{ bind.item.name }}</a></td>
+          <td><a :href="bind.item.url" target="_blank" style="text-decoration:none!important; color:inherit;">{{ bind.item.name }}</a></td>
           <td>{{ bind.item.size }}b</td>
           <td>{{ bind.item.mime }}</td>
           <td>{{ [

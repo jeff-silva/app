@@ -6,18 +6,17 @@ use Illuminate\Http\Request;
 
 class AppFileController extends Controller
 {
-    public $model = \App\Models\AppFile::class;
-
-    public function api()
+    public function __construct()
     {
+        $this->model = new \App\Models\AppFile;
         $this->middleware('auth:api', ['except' => []]);
         $this->apiResource('app_file');
     }
 
-    public function web()
-    {
-        $this->route('get', '/file/{slug}', 'file');
-    }
+    // public function web()
+    // {
+    //     $this->route('get', '/file/{slug}', 'file');
+    // }
 
     public function file($slug)
     {

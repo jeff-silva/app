@@ -15,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 foreach(\App\Utils::cachedControllers() as $controller) {
-  new $controller('api');
+  new $controller;
 }

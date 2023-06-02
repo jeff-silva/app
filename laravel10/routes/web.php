@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-foreach(\App\Utils::cachedControllers() as $controller) {
-    new $controller('web');
-}
+// foreach(\App\Utils::cachedControllers() as $controller) {
+//     new $controller('web');
+// }

@@ -12,14 +12,8 @@ class AuthController extends Controller
      *
      * @return void
      */
-    public function api()
+    public function __construct()
     {
-        $this->route(['post'], '/auth/login', 'login');
-        $this->route(['post'], '/auth/logout', 'logout');
-        $this->route(['post'], '/auth/refresh', 'refresh');
-        $this->route(['post'], '/auth/me', 'me');
-        $this->route(['post'], '/auth/register', 'register');
-        $this->route(['post'], '/auth/password', 'password');
         $this->middleware('auth:api', [
             'except' => [
                 'login',
@@ -27,6 +21,12 @@ class AuthController extends Controller
                 'password',
             ],
         ]);
+        $this->route(['post'], '/auth/login', 'login')->name('auth.login');
+        $this->route(['post'], '/auth/logout', 'logout')->name('auth.logout');
+        $this->route(['post'], '/auth/refresh', 'refresh')->name('auth.refresh');
+        $this->route(['post'], '/auth/me', 'me')->name('auth.me');
+        $this->route(['post'], '/auth/register', 'register')->name('auth.register');
+        $this->route(['post'], '/auth/password', 'password')->name('auth.password');
     }
 
     /**
