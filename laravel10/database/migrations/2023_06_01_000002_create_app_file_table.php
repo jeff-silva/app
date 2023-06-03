@@ -22,6 +22,8 @@ return new class extends Migration
             $table->binary('content')->nullable();
             $table->timestamps();
         });
+
+        \DB::statement('ALTER TABLE app_file CHANGE content content LONGBLOB');
     }
 
     /**

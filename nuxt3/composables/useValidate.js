@@ -45,6 +45,10 @@ export default (data, rules) => {
     get(field) {
       return this.errors[field] || false;
     },
+    setData(data) {
+      this.message = data.message || '';
+      this.errors = data.fields || [];
+    },
     setMessage(message) {
       this.message = message;
     },

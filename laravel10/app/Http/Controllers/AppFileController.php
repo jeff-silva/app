@@ -9,8 +9,9 @@ class AppFileController extends Controller
     public function __construct()
     {
         $this->model = new \App\Models\AppFile;
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware('auth:api', ['except' => ['file']]);
         $this->apiResource('app_file');
+        $this->route('get', 'file/{slug}', 'file');
     }
 
     // public function web()
@@ -24,7 +25,7 @@ class AppFileController extends Controller
         return response($file->content)->withHeaders([
             'Content-Type' => $file->mime,
             // 'Cache-Control' => 'no-store, no-cache',
-            // 'Content-Disposition' => 'attachment; filename="logs.txt',
+            // 'Content-Disposition' => "attachment; filename={$file->slug}",
         ]);
     }
 }

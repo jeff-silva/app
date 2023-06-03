@@ -2,11 +2,15 @@
   <nuxt-layout name="admin">
     <template #default>
       <app-model-crud
+        v-model="crud"
         v-bind="{
           name: 'app_place',
           searchTableSizes: ['*'],
           searchParams: {},
         }"
+        @ready="map.init()"
+        @switch="map.init()"
+        @edit:loaded="crudEditLoadedHandler($event)"
       >
         <template #search-table-header="bind">
           <th>Name</th>
@@ -16,13 +20,30 @@
           <td>{{ bind.item.name }}</td>
         </template>
 
+        <!-- Search fields -->
+        <template #search-fields="bind">
+          <l-map
+            :zoom="0"
+            :center="[ 0, 0 ]"
+            :use-global-leaflet="false"
+            style="height:200px"
+          >
+            <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap" />
+
+            <template v-for="p in bind.search.data">
+              <l-marker :lat-lng="[ p.lat, p.lng ]" />
+            </template>
+          </l-map>
+        </template>
+
         <template #edit-fields="bind">
           <v-row>
             <v-col cols="12">
               <v-text-field
                 v-model="bind.edit.data.name"
-                label="Subject"
+                label="Name"
                 :readonly="true"
+                :error-messages="bind.edit.error.get('name')"
               />
             </v-col>
 
@@ -30,6 +51,7 @@
               <v-text-field
                 v-model="bind.edit.data.route"
                 label="Route"
+                :error-messages="bind.edit.error.get('route')"
               />
             </v-col>
 
@@ -37,6 +59,7 @@
               <v-text-field
                 v-model="bind.edit.data.number"
                 label="Number"
+                :error-messages="bind.edit.error.get('number')"
               />
             </v-col>
 
@@ -44,6 +67,7 @@
               <v-text-field
                 v-model="bind.edit.data.zipcode"
                 label="Zip code"
+                :error-messages="bind.edit.error.get('zipcode')"
               />
             </v-col>
 
@@ -51,6 +75,7 @@
               <v-text-field
                 v-model="bind.edit.data.reference"
                 label="Reference"
+                :error-messages="bind.edit.error.get('reference')"
               />
             </v-col>
 
@@ -58,6 +83,7 @@
               <v-text-field
                 v-model="bind.edit.data.district"
                 label="District"
+                :error-messages="bind.edit.error.get('district')"
               />
             </v-col>
 
@@ -65,32 +91,55 @@
               <v-text-field
                 v-model="bind.edit.data.city"
                 label="City"
+                :error-messages="bind.edit.error.get('city')"
+              />
+            </v-col>
+
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model="bind.edit.data.state"
+                label="State"
+                :error-messages="bind.edit.error.get('state')"
+              />
+            </v-col>
+
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model="bind.edit.data.country"
+                label="Country"
+                :error-messages="bind.edit.error.get('country')"
               />
             </v-col>
           </v-row>
 
-          <l-map
-            ref="mapRef"
-            :zoom="map.zoom"
-            :center="map.initialCenter(bind)"
-            :use-global-leaflet="false"
-            style="height:400px;"
-          >
-            <l-tile-layer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              layer-type="base"
-              name="OpenStreetMap"
-            ></l-tile-layer>
-            <l-marker
-              :lat-lng="map.center"
-              :draggable="true"
-              @update:latLng="map.markerUpdateCoords($event, bind)"
-            />
-          </l-map>
-
-          <pre>{{ map }}</pre>
-          <pre>{{ bind }}</pre>
-
+          <div style="position:relative; height:400px; z-index:1;">
+            <l-map
+              ref="mapRef"
+              :zoom="map.zoom"
+              :center="map.center"
+              :use-global-leaflet="false"
+              style="height:100%;"
+              @ready="map.mapReadyHandler($event)"
+            >
+              <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap" />
+  
+              <l-marker
+                :lat-lng="map.center"
+                :draggable="true"
+                @update:latLng="map.markerUpdateLatLngHandler($event)"
+              />
+            </l-map>
+            <div class="pa-2" style="position:absolute; bottom:0; right:0; z-index:9999;">
+              <v-btn
+                v-if="map.changed"
+                color="primary"
+                :loading="map.setAddressLoading"
+                @click="map.setAddress()"
+              >
+                Set address
+              </v-btn>
+            </div>
+          </div>
         </template>
       </app-model-crud>
     </template>
@@ -103,49 +152,64 @@
   import 'leaflet/dist/leaflet.css';
   import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
 
-  const map = ref({
-    zoom: 14,
-    center: [ -19.932686818611995, -43.95715713500977 ],
-    initialCenter(bind) {
-      const center = [
-        (bind.edit.data.lat || 0),
-        (bind.edit.data.lng || 0),
-      ];
+  const crud = ref({});
+  const mapRef = ref(null);
 
-      this.center = center;
-      return center;
+  const crudEditLoadedHandler = ($event) => {
+    map.value.init();
+    if (!$event.edit.data.lat) return;
+    if (!$event.edit.data.lng) return;
+    map.value.center = [
+      $event.edit.data.lat,
+      $event.edit.data.lng,
+    ];
+  };
+
+  const map = ref({
+    changed: false,
+    zoom: 14,
+    center: [ 0, 0 ],
+    setAddressLoading: false,
+    init() {
+      this.changed = false;
+      this.zoom = 14;
+      this.center = [ 0, 0 ];
+      this.setAddressLoading = false;
     },
-    markerUpdateCoords(ev, bind) {
-      this.center = [ ev.lat, ev.lng ];
-      bind.edit.data.lat = ev.lat;
-      bind.edit.data.lng = ev.lng;
-      this.osmCoords(this.center, bind);
-    },
-    osmCoordsLoading: false,
-    async osmCoords(coords=[], bind) {
+    async setAddress() {
+      this.setAddressLoading = true;
       try {
-        if (this.osmCoordsLoading) {
-          clearTimeout(this.osmCoordsLoading);
-          this.osmCoordsLoading = false;
-        }
-        this.osmCoordsLoading = setTimeout(async () => {
-          const { data } = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&addressdetails=1&extratags=1&namedetails=1&limit=10&lat=${coords[0]||null}&lon=${coords[1]||null}`);
-          bind.edit.data.name = '';
-          bind.edit.data.number = '';
-          bind.edit.data.reference = '';
-          bind.edit.data.route = data.address.road || null;
-          bind.edit.data.zipcode = data.address.postcode || null;
-          bind.edit.data.district = data.address.neighbourhood || data.address.suburb || null;
-          bind.edit.data.city = data.address.city || null;
-          bind.edit.data.state = data.address.state || null;
-          bind.edit.data.state_short = (data.address['ISO3166-2-lvl4'] ? data.address['ISO3166-2-lvl4'].split('-').at(1) : null) || null;
-          bind.edit.data.country = data.address.country || null;
-          bind.edit.data.country_short = data.address.country_code || null;
-          // bind.edit.data.lat = data.lat || null;
-          // bind.edit.data.lng = data.lon || null;
-          console.log(data);
-        }, 1000);
+        const { data } = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&addressdetails=1&extratags=1&namedetails=1&limit=10&lat=${this.center[0]}&lon=${this.center[1]}`);
+        const [ country_short, state_short ] = (data.address['ISO3166-2-lvl4'] || '-').toLowerCase().split('-');
+        crud.value.edit.data.name = '';
+        crud.value.edit.data.number = '';
+        crud.value.edit.data.reference = '';
+        crud.value.edit.data.route = data.address.road || null;
+        crud.value.edit.data.zipcode = data.address.postcode || null;
+        crud.value.edit.data.district = data.address.neighbourhood || data.address.suburb || null;
+        crud.value.edit.data.city = data.address.city || data.address.town || data.address.city_district || null;
+        crud.value.edit.data.state = data.address.state || null;
+        crud.value.edit.data.state_short = state_short || null
+        crud.value.edit.data.country = data.address.country || null;
+        crud.value.edit.data.country_short = data.address.country_code || country_short || null;
+        crud.value.edit.data.lat = data.lat || null;
+        crud.value.edit.data.lng = data.lon || null;
+        this.changed = false;
       } catch(err) {}
+      this.setAddressLoading = true;
+    },
+    setCenter(coords) {
+      this.changed = true;
+      this.setAddressLoading = false;
+      this.center = coords;
+    },
+    mapReadyHandler($ev) {
+      $ev.on('click', (e) => {
+        this.setCenter([ e.latlng.lat, e.latlng.lng ]);
+      });
+    },
+    markerUpdateLatLngHandler($ev) {
+      this.setCenter([ $ev.lat, $ev.lng ]);
     },
   });
 </script>

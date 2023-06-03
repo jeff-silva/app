@@ -48,7 +48,7 @@ class AppFile extends Model
 
     protected function getUrlAttribute()
     {
-        return \URL::to("/file/{$this->slug}");
+        return \URL::to("/api/file/{$this->slug}");
     }
 
     public function validationRules()

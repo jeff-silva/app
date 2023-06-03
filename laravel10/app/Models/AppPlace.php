@@ -40,4 +40,9 @@ class AppPlace extends Model
             $this->state,
         ]));
     }
+
+    public function validationRules()
+    {
+        return [];
+    }
 }

@@ -147,16 +147,31 @@
 </template>
 
 <script setup>
-  import { watch, onMounted, defineProps } from 'vue';
+  import { watch, onMounted, defineProps, defineEmits } from 'vue';
   import axios from 'axios';
 
   import { breakpointsVuetify, useBreakpoints } from '@vueuse/core';
   const breakpoints = useBreakpoints(breakpointsVuetify);
 
+  import useValidate from '@/composables/useValidate';
+
   const route = useRoute();
   const router = useRouter();
 
+  const emit = defineEmits([
+    'update:modelValue',
+    'ready',
+    'switch',
+    'search:loaded',
+    'edit:loaded',
+    'edit:saved',
+  ]);
+
   const props = defineProps({
+    modelValue: {
+      type: [ Boolean, Number, String, Array, Object ],
+      default: false,
+    },
     name: {
       type: String,
       default: '',
@@ -181,9 +196,9 @@
     data: [],
     pagination: {},
     options: {},
-    error: false,
+    error: useValidate(),
     async submit() {
-      this.error = false;
+      this.error.clear();
       if (this.loading) {
         clearTimeout(this.loading);
         this.loading = false;
@@ -197,8 +212,10 @@
           this.params = data.params;
           this.options = data.options;
           this.pagination = data.pagination;
+          emit('search:loaded', slotBind());
         } catch(err) {
-          this.error = err.response || err;
+          if (!err.response) return;
+          this.error.setData(err.response.data);
         }
 
         this.loading = false;
@@ -212,13 +229,15 @@
     params: {},
     data: {},
     options: {},
-    error: false,
+    error: useValidate(),
     async load() {
+      this.error.clear();
+      this.data = {};
+
       const id = parseInt(route.query.edit || null) || null;
       if (!id) return;
       this.data = {};
 
-      this.error = false;
       if (this.loading) {
         clearTimeout(this.loading);
         this.loading = false;
@@ -230,16 +249,16 @@
           const { data } = await axios.get(`api://${props.name}/${id}`, { params });
           this.data = data.data;
           this.options = data.options;
+          emit('edit:loaded', slotBind());
         } catch(err) {
-          this.error = err.response || err;
+          if (!err.response) return;
+          this.error.setData(err.response.data);
         }
         this.loading = false;
       }, 1000);
-
-      console.log('load', { id });
     },
     async save() {
-      this.error = false;
+      this.error.clear();
       if (this.saving) {
         clearTimeout(this.saving);
         this.saving = false;
@@ -248,13 +267,14 @@
       this.saving = setTimeout(async () => {
         try {
           const { data } = await axios.post(`api://${props.name}/`, this.data);
-          console.log(data);
           // this.data = data.data;
           // this.options = data.options;
           search.value.submit();
+          emit('edit:saved', slotBind());
           router.push(`/admin/${props.name}`);
         } catch(err) {
-          this.error = err.response || err;
+          if (!err.response) return;
+          this.error.setData(err.response.data);
         }
         this.saving = false;
       }, 1000);
@@ -275,11 +295,14 @@
 
   watch([ route ], ([ routeNew ]) => {
     if (routeNew.query.edit) edit.value.load();
+    emit('switch', slotBind({ edit: routeNew.query.edit || false }));
   });
 
   onMounted(() => {
     search.value.submit();
     edit.value.load();
+    emit('update:modelValue', slotBind());
+    emit('ready', slotBind());
   });
 </script>
 
