@@ -40,28 +40,50 @@
         <!-- Edit fields -->
         <template #edit-fields="bind">
           <v-row>
-            <v-col cols="12">
-              <v-file-input
-                label="File"
-                @update:modelValue="bind.edit.data.content=$event[0]||false"
-              />
+            <v-col cols="12" md="3">
+              <div class="bg-grey-lighten-4 rounded pa-3">
+                <template v-if="(bind.edit.data.mime || '').startsWith('image/')">
+                  <img :src="bind.edit.data.url" alt="" style="width:100%;">
+                </template>
+
+                <template v-else>
+                  <div class="text-center">
+                    <v-avatar color="primary" size="100">
+                      <div class="text-h5 text-uppercase">
+                        {{ bind.edit.data.ext }}
+                      </div>
+                    </v-avatar>
+                  </div>
+                </template>
+              </div>
             </v-col>
 
-            <v-col cols="12">
-              <v-text-field
-                v-model="bind.edit.data.name"
-                label="Name"
-                :error-messages="bind.edit.error.get('name')"
-              />
-            </v-col>
-
-            <v-col cols="12">
-              <v-textarea
-                v-model="bind.edit.data.description"
-                label="Description"
-                :error-messages="bind.edit.error.get('description')"
-                auto-grow
-              />
+            <v-col cols="12" md="9">
+              <v-row>
+                <v-col cols="12">
+                  <v-file-input
+                    label="File"
+                    @update:modelValue="bind.edit.data.content=$event[0]||false"
+                  />
+                </v-col>
+    
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="bind.edit.data.name"
+                    label="Name"
+                    :error-messages="bind.edit.error.get('name')"
+                  />
+                </v-col>
+    
+                <v-col cols="12">
+                  <v-textarea
+                    v-model="bind.edit.data.description"
+                    label="Description"
+                    :error-messages="bind.edit.error.get('description')"
+                    auto-grow
+                  />
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
         </template>
