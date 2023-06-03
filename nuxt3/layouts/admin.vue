@@ -101,7 +101,7 @@
         </v-navigation-drawer>
   
         <v-main>
-          <v-container class="pt-8 pt-md-10">
+          <v-container class="pt-8 pt-md-10" style="max-width:1200px;">
             <slot></slot>
           </v-container>
         </v-main>

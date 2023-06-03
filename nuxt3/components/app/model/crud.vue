@@ -80,7 +80,7 @@
     
                 <div class="d-flex me-2" style="gap:10px;">
                   <v-btn icon="mdi-close" size="x-small" flat color="error"></v-btn>
-                  <v-btn icon="mdi-pencil" size="x-small" flat :to="`/admin/${props.name}?edit=${item.id}`"></v-btn>
+                  <v-btn icon="mdi-pencil" size="x-small" flat :to="`/admin/${props.name}?edit=${item.id}`" @click="edit.data=item"></v-btn>
                 </div>
               </v-menu>
             </td>

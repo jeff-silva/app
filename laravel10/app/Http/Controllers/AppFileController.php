@@ -22,10 +22,18 @@ class AppFileController extends Controller
     public function file($slug)
     {
         $file = \App\Models\AppFile::where('slug', $slug)->first();
-        return response($file->content)->withHeaders([
+        $headers = [
             'Content-Type' => $file->mime,
             // 'Cache-Control' => 'no-store, no-cache',
             // 'Content-Disposition' => "attachment; filename={$file->slug}",
-        ]);
+        ];
+
+        // dd($headers);
+
+        return response($file->content)->withHeaders($headers);
+
+        // return response()->stream(function() use($file) {
+        //     return $file->content;
+        // }, 200, $headers);
     }
 }

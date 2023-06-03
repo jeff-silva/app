@@ -294,7 +294,8 @@ trait ModelTrait
       'mime' => $mime,
       'ext' => $ext,
       // 'content' => mb_convert_encoding(file_get_contents($file), 'UTF-8', 'UTF-8'),
-      'content' => mb_convert_encoding((string) $file->getContent(), 'UTF-8', 'UTF-8'),
+      // 'content' => mb_convert_encoding((string) $file->getContent(), 'UTF-8', 'UTF-8'),
+      'content' => $file->getContent(),
     ];
   }
 

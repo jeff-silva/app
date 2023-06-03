@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('slug')->nullable();
             $table->string('name')->nullable();
+            $table->text('description')->nullable();
             $table->integer('size')->length(11)->nullable();
             $table->string('mime', 20)->length(100)->nullable();
             $table->string('ext', 10)->length(5)->nullable();

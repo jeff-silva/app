@@ -17,6 +17,7 @@ class AppFile extends Model
     protected $fillable = [
         'slug',
         'name',
+        'description',
         'size',
         'mime',
         'ext',

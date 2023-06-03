@@ -19,6 +19,7 @@ class AppPlace extends Model
         'route',
         'number',
         'zipcode',
+        'complement',
         'reference',
         'district',
         'city',
@@ -32,13 +33,18 @@ class AppPlace extends Model
 
     public function mutatorSave()
     {
-        $this->name = join(', ', array_filter([
-            $this->route,
-            $this->number,
-            $this->district,
-            $this->city,
-            $this->state,
-        ]));
+        $this->state_short = strtoupper($this->state_short);
+        $this->country_short = strtoupper($this->country_short);
+        if (!$this->name) {
+            $this->name = join(', ', array_filter([
+                $this->route,
+                $this->number,
+                $this->district,
+                $this->city,
+                $this->state_short,
+                $this->country_short,
+            ]));
+        }
     }
 
     public function validationRules()

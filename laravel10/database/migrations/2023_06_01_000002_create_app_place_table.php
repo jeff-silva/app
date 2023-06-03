@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('route')->nullable();
             $table->string('number', 10)->nullable();
             $table->string('zipcode', 10)->nullable();
+            $table->string('complement')->nullable();
             $table->string('reference')->nullable();
             $table->string('district')->nullable();
             $table->string('city')->nullable();
