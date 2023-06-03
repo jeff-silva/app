@@ -25,7 +25,7 @@
             :zoom="0"
             :center="[ 0, 0 ]"
             :use-global-leaflet="false"
-            style="height:200px"
+            style="height:400px"
             @ready="searchMapReadyHandler($event)"
           >
             <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap" />

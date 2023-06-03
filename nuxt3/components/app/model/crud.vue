@@ -87,14 +87,32 @@
           </tr>
         </tbody>
       </v-table>
-    
-      <v-pagination
-        class="mt-4"
-        size="small"
-        :length="search.pagination.last_page"
-        v-model.number="search.params.page"
-        @update:modelValue="search.submit()"
-      />
+
+      <br>
+
+      <v-row class="align-center">
+        <v-col cols="12" sm="4" class="text-center text-sm-left">
+          {{ search.pagination.total }} registers
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-pagination
+            size="small"
+            :length="search.pagination.last_page"
+            v-model.number="search.params.page"
+            @update:modelValue="search.submit()"
+          />
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-select
+            label="Per page"
+            v-model="search.params.per_page"
+            :items="[ 5, 10, 25, 50, 100 ]"
+            :hide-details="true"
+            density="compact"
+            @update:modelValue="search.submit()"
+          />
+        </v-col>
+      </v-row>
     
       <v-navigation-drawer v-model="drawer.search" location="end">
         <div class="d-flex flex-column pa-2" style="gap:10px;">
