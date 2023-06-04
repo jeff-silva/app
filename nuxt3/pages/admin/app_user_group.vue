@@ -32,12 +32,10 @@
                 item-value="id"
                 item-title="name"
                 :multiple="true"
+                :disabled="bind.edit.data.id && bind.edit.data.id==1"
               />
             </v-col>
           </v-row>
-
-          <pre>{{ bind.edit.data }}</pre>
-          <pre>{{ permission }}</pre>
         </template>
       </app-model-crud>
     </template>

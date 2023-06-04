@@ -2,8 +2,9 @@
 
 return [
   'keys' => [
-    'app_user_group:create' => 'Create user group',
-    'app_user_group:update' => 'Update user group',
-    'app_user_group:delete' => 'Delete user group',
+    'app_settings:update' => 'Settings: Update',
+    'app_user_group:create' => 'User Group: Create',
+    'app_user_group:update' => 'User Group: Update',
+    'app_user_group:delete' => 'User Group: Delete',
   ],
 ];

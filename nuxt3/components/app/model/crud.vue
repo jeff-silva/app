@@ -210,7 +210,7 @@
 
   const search = ref({
     loading: false,
-    params: {},
+    params: props.searchParams,
     data: [],
     pagination: {},
     options: {},

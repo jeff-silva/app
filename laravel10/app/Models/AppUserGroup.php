@@ -25,6 +25,13 @@ class AppUserGroup extends Model
         $this->permissions = is_array($this->permissions) ? $this->permissions : [];
     }
 
+    public function mutatorSave()
+    {
+        if ($this->id==1) {
+            $this->permissions = array_keys(config('app_permissions.keys'));
+        }
+    }
+
     public function getPermissions()
     {
         $return = [];

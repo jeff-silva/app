@@ -27,13 +27,20 @@
             <v-col cols="12">
               <v-text-field
                 v-model="bind.edit.data.name"
-                label="Subject"
+                label="Name"
               />
             </v-col>
             <v-col cols="12">
               <v-text-field
                 v-model="bind.edit.data.email"
                 label="E-mail"
+              />
+            </v-col>
+            <v-col cols="12" v-if="!bind.edit.data.id">
+              <v-text-field
+                v-model="bind.edit.data.password"
+                label="Password"
+                type="password"
               />
             </v-col>
             <v-col cols="12">
