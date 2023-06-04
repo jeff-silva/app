@@ -39,11 +39,6 @@ docker-compose -f docker-compose-prod.yml up
   - ⬛ Migration
     - ☑️ ~~Fields~~
     - ⬛ Foreign keys
-  - ⬛ Graphql
-    - ⬛ Save
-    - ⬛ Find
-    - ⬛ Search (basic and custom params)
-    - ⬛ Bulk Delete
 
 <hr />
 
