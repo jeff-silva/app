@@ -23,9 +23,51 @@
                 label="Subject"
               />
             </v-col>
+
+            <v-col cols="12">
+              <v-select
+                v-model="bind.edit.data.permissions"
+                label="Permissions"
+                :items="permission.data"
+                item-value="id"
+                item-title="name"
+                :multiple="true"
+              />
+            </v-col>
           </v-row>
+
+          <pre>{{ bind.edit.data }}</pre>
+          <pre>{{ permission }}</pre>
         </template>
       </app-model-crud>
     </template>
   </nuxt-layout>
 </template>
+
+<script setup>
+  import { ref, onMounted } from 'vue';
+  import axios from 'axios';
+
+  const permission = ref({
+    loading: false,
+    data: [],
+    async load() {
+      if (this.loading) {
+        clearTimeout(this.loading);
+        this.loading = false;
+      }
+
+      this.loading = setTimeout(async () => {
+        try {
+          const { data } = await axios.get('api://app_user_group/permissions');
+          this.data = data;
+          console.log(data);
+        } catch(err) {}
+      }, 1000);
+    },
+  });
+
+  onMounted(() => {
+    permission.value.load();
+  });
+</script>

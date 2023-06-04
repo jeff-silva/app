@@ -16,7 +16,26 @@ class AppUserGroup extends Model
     protected $fillable = [
         'slug',
         'name',
+        'permissions',
     ];
+
+    public function mutatorRetrieve()
+    {
+        $this->permissions = json_decode($this->permissions, true);
+        $this->permissions = is_array($this->permissions) ? $this->permissions : [];
+    }
+
+    public function getPermissions()
+    {
+        $return = [];
+        foreach(config('app_permissions.keys') as $key_id => $key_name) {
+            $return[] = [
+                'id' => $key_id,
+                'name' => $key_name,
+            ];
+        }
+        return collect($return);
+    }
 
     public function appUsers(): HasMany
     {
