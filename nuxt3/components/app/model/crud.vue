@@ -13,12 +13,32 @@
         VSelect: { disabled: edit.loading },
       }"
     >
+      <v-snackbar
+        v-model="edit.error.message"
+        v-if="edit.error.message"
+        color="error"
+        :close-delay="99000"
+        location="top"
+      >
+        {{ edit.error.message }}
+      </v-snackbar>
       <slot name="edit-fields" v-bind="slotBind()"></slot>
     </v-defaults-provider>
   </form>
 
   <!-- Search -->
   <template v-if="!route.query.edit">
+    <v-snackbar
+      v-model="search.error.message"
+      v-if="search.error.message"
+      color="error"
+      :close-delay="99000"
+      location="top"
+    >
+      {{ search.error.message }}
+    </v-snackbar>
+
+    
     <div style="height:4px;">
       <v-progress-linear indeterminate v-if="search.loading" />
     </div>

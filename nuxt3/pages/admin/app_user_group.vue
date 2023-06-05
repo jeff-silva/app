@@ -59,7 +59,6 @@
         try {
           const { data } = await axios.get('api://app_user_group/permissions');
           this.data = data;
-          console.log(data);
         } catch(err) {}
       }, 1000);
     },

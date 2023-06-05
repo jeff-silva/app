@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-foreach(\App\Utils::cachedControllers() as $controller) {
-  new $controller;
-}
+Route::middleware(['permission'])->group(function () {
+  foreach(\App\Utils::cachedControllers() as $controller) {
+    app($controller);
+  }
+});

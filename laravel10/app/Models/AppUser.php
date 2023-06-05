@@ -136,6 +136,11 @@ class AppUser extends Authenticatable implements JWTSubject
         return $this;
     }
 
+    public function isRoot()
+    {
+        return $this->id==1 OR $this->group_id==1;
+    }
+
     public function appUserGroup(): HasOne
     {
         return $this->hasOne(AppUserGroup::class, 'id', 'group_id');
