@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { watch } from 'vue';
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import _ from 'lodash';
@@ -88,6 +88,10 @@ export default (params={}) => {
   s.access_token = tokenStorage.value;
   s.accounts = accountsStorage.value;
   setTimeout(() => { s.init(); }, Math.round(Math.random()*600));
+
+  watch([ s.access_token ], ([ access_token_new ]) => {
+    console.log(access_token_new);
+  });
 
   return s;
 };
