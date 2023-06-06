@@ -5,6 +5,7 @@
       VTextarea: { variant: 'outlined' },
       VFileInput: { variant: 'outlined' },
       VSelect: { variant: 'outlined' },
+      VCombobox: { variant: 'outlined' },
     }"
   >
 

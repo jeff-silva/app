@@ -12,6 +12,7 @@
         VFileInput: { disabled: edit.loading },
         VSelect: { disabled: edit.loading },
         VCheckbox: { disabled: edit.loading },
+        VCombobox: { disabled: edit.loading },
       }"
     >
       <v-snackbar
