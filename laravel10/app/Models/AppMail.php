@@ -73,7 +73,6 @@ class AppMail extends Model
                 'send_group' => $send_group,
                 'sent' => 0,
                 'read' => 0,
-                'email_template' => $slug,
             ]);
         }
 

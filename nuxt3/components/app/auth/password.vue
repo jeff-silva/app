@@ -1,63 +1,83 @@
 <template>
-  <form @submit.prevent="app.password.submit()">
-    <v-alert
-      type="success"
-      rounded="0"
-      v-if="app.password.resp && app.password.resp.password_changed"
-    >
-      Password changed
-    </v-alert>
+  <form @submit.prevent="password.submit()">
+    <template v-if="password.success && password.success.password_changed">
+      <v-alert type="success">
+        Password changed
+      </v-alert>
+      <br>
+    </template>
 
-    <v-alert
-      type="error"
-      rounded="0"
-      v-if="app.password.error.message"
-    >
-      {{ app.password.error.message }}
-    </v-alert>
-
-    <v-card-text>
+    <template v-if="!password.success">
       <v-text-field
         label="E-mail"
-        v-model="app.password.params.email"
-        :error-messages="app.password.error.get('email')"
-        :disabled="app.password.resp && app.password.resp.user_found && !app.password.resp.password_changed"
+        v-model="password.data.email"
+        :error-messages="password.error.get('email')"
       />
 
-      <template v-if="app.password.resp && app.password.resp.user_found && !app.password.resp.password_changed">
-        <v-text-field
-          label="Code"
-          v-model="app.password.params.code"
-          :error-messages="app.password.error.get('code')"
-        />
-        <v-text-field
-          label="New password"
-          v-model="app.password.params.password"
-          :error-messages="app.password.error.get('password')"
-          type="password"
-        />
-        <v-text-field
-          label="Confirm new password"
-          v-model="app.password.params.password_confirmation"
-          :error-messages="app.password.error.get('password_confirmation')"
-          type="password"
-        />
-      </template>
-    </v-card-text>
-    <v-divider />
-    <v-card-actions>
-      <v-spacer />
-      <v-btn type="submit" :loading="app.password.loading">Send</v-btn>
-    </v-card-actions>
+      <v-btn
+        :loading="password.loading"
+        type="submit"
+        color="primary"
+        block
+      >Send code</v-btn>
+    </template>
+
+    <template v-if="password.success">
+      <v-text-field
+        label="E-mail"
+        v-model="password.data.email"
+        :error-messages="password.error.get('email')"
+        :disabled="true"
+      />
+
+      <v-text-field
+        label="Code"
+        v-model="password.data.code"
+        :error-messages="password.error.get('code')"
+      />
+
+      <v-text-field
+        label="New password"
+        v-model="password.data.password"
+        :error-messages="password.error.get('password')"
+      />
+
+      <v-text-field
+        label="Password confirmation"
+        v-model="password.data.password_confirmation"
+        :error-messages="password.error.get('password_confirmation')"
+      />
+
+      <v-btn
+        :loading="password.loading"
+        type="submit"
+        color="primary"
+        block
+      >Change password</v-btn>
+    </template>
   </form>
 </template>
 
 <script setup>
-  import useApp from '@/composables/useApp';
-  const app = useApp({
-    password: {
-      email: ['required', 'email'],
-      password_confirmation: ['required', 'same:password'],
+  import useAxios from '@/composables/useAxios';
+  const password = useAxios({
+    method: 'post',
+    url: 'api://auth/password',
+    data: {
+      email: '',
+      code: '',
+      password: '',
+      password_confirmation: '',
+    },
+    onSuccess({ data }) {
+      if (data.password_changed) {
+        password.value.data = {
+          email: '',
+          code: '',
+          password: '',
+          password_confirmation: '',
+        };
+      }
     },
   });
 </script>

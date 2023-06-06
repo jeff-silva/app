@@ -1,5 +1,10 @@
 <template>
   <v-list>
+    <v-list-item>
+      <div class="text-disabled text-center">
+        No users logged
+      </div>
+    </v-list-item>
     <v-list-item
       v-for="acc in accounts"
       :active="app.user && app.user.email==acc.email"
