@@ -4,9 +4,9 @@
 docker-compose up
 ```
 
-or with force recreation and rebuild
+or use short command
 ```bash
-docker-compose up --build --force-recreate
+yarn dev
 ```
 
 ## Start prod server
@@ -14,31 +14,19 @@ docker-compose up --build --force-recreate
 docker-compose -f docker-compose-prod.yml up
 ```
 
+or use short command
+```bash
+yarn build
+```
+
 ## TODO
 - ⬛ Ports in settings .env
 - ⬛ Nuxt 3
-  - ☑️ ~~Sync useApp data with Pinia~~
-  - ☑️ ~~Make communication with backend port~~
-  - ☑️ ~~Implement front end useApp~~
-  - ☑️ ~~Error "Windows named pipe error" using entrypoint or command at laravel service in docker-compose.yml~~
-  - ⬛ Admin area
-  - ⬛ Implement Settings
-  - ⬛ Implement Swal2
-    - ⬛ Use axios confirmation
   - ⬛ Masks
   - ⬛ Validation
 - ⬛ Laravel
-  - ☑️ ~~Resolve backend cors~~
-  - ☑️ ~~Implement Laravel JWT~~
-  - ☑️ ~~Installation command~~
-  - ⬛ Model File to upload
-  - ⬛ Model Address to manage system addresses
-  - ⬛ Implement Settings
   - ⬛ Implement crontab
-  - ⬛ PHP Swoole websocket notification system
-  - ⬛ Migration
-    - ☑️ ~~Fields~~
-    - ⬛ Foreign keys
+  - ⬛ PHP websocket
 
 <hr />
 

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node ./scripts/dev.js",
+    "build": "node ./scripts/build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jeferson Silva",
