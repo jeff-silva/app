@@ -11,6 +11,7 @@
         VTextarea: { disabled: edit.loading },
         VFileInput: { disabled: edit.loading },
         VSelect: { disabled: edit.loading },
+        VCheckbox: { disabled: edit.loading },
       }"
     >
       <v-snackbar
@@ -359,9 +360,13 @@
 
       this.saving = setTimeout(async () => {
         try {
-          const { data } = await axios.post(`api://${props.name}/`, this.data);
-          // this.data = data.data;
-          // this.options = data.options;
+          const post = { ...this.data };
+          for(let attr in post) {
+            if (Array.isArray(post[attr]) && post[attr].length==0) {
+              post[attr] = '[]';
+            }
+          }
+          const { data } = await axios.post(`api://${props.name}/`, post);
           search.value.submit();
           emit('edit:saved', slotBind());
           router.push(`/admin/${props.name}`);

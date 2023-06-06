@@ -10,8 +10,18 @@
 
     <!-- <pre>{{ Object.keys(app) }}</pre> -->
 
+    <!-- Loading -->
+    <template v-if="!app.ready">
+      <div class="d-flex align-center justify-center" style="height:100vh;">
+        <div>
+          <div class="text-disabled">Loading</div>
+          <v-progress-linear indeterminate />
+        </div>
+      </div>
+    </template>
+
     <!-- Auth -->
-    <template v-if="!app.user">
+    <template v-if="app.ready && !app.user">
       <div class="d-flex align-center justify-center bg-grey-lighten-3" style="height:100vh;">
         <div style="width:400px; max-width:90vw;">
           <v-card>
@@ -24,6 +34,8 @@
               <v-window-item value="login">
                 <v-card-text>
                   <app-auth-login />
+                  <br>
+                  <app-auth-switch />
                 </v-card-text>
               </v-window-item>
               <v-window-item value="register">
@@ -44,7 +56,7 @@
 
 
     <!-- Logged -->
-    <template v-if="app.user">
+    <template v-if="app.ready && app.user">
       <v-layout>
         <v-app-bar @click="drawer.main=true">
           <v-btn icon="mdi-menu" flat class="d-lg-none"></v-btn>
@@ -62,22 +74,6 @@
             class: 'border-e',
           }"
         >
-          <!-- <slot name="sidebar">
-            <app-nav variant="plain" :items="[
-              {to:'/admin', name:'Dashboard'},
-              {to:'/admin', name:'Users', icon:'mdi-account', children: [
-                {to:'/admin/app_user', name:'Users list'},
-                {to:'/admin/app_user_group', name:'Groups list'},
-              ]},
-              {to:'/', name:'Settings', icon:'mdi-cog', children: [
-                {to:'/admin/settings', name:'Configurações'},
-                {to:'/admin/app_mail_template', name:'E-mail templates'},
-                {to:'/admin/app_file', name:'Uploads'},
-                {to:'/admin/app_place', name:'Places'},
-              ]},
-            ]" />
-          </slot> -->
-
           <div class="d-flex flex-column" style="height: calc(100vh - 64px);">
             <div class="flex-grow-1" style="overflow:auto;">
               <slot name="sidebar">
@@ -127,7 +123,12 @@
     <v-dialog v-model="drawer.account">
       <v-card style="width:400px; max-width:90vw; margin:0 auto;">
         <v-card-title>Switch account</v-card-title>
-        <app-auth-login />
+        <v-divider />
+        <v-card-text>
+          <app-auth-login />
+          <br>
+          <app-auth-switch />
+        </v-card-text>
         <v-divider />
         <v-card-actions>
           <v-spacer />
@@ -135,62 +136,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    
-
-    <!-- Screen -->
-    <!-- <template v-if="app.auth.user">
-      <v-layout>
-        <v-navigation-drawer
-          v-model="drawer.main"
-          v-bind="{
-            width: 250,
-            border: 0,
-            class: 'border-e',
-          }"
-        >
-          <div class="d-flex flex-column" style="height:100vh;">
-            <div class="pa-3 text-subtitle-2 text-uppercase" v-if="app.auth.user">
-              {{ app.auth.user.name }}
-            </div>
-            <div class="flex-grow-1" style="overflow:auto;">
-              <slot name="sidebar">
-                <app-nav variant="plain" :items="[
-                  {to:'/admin', name:'Dashboard'},
-                  {to:'/admin', name:'Users', icon:'mdi-account', children: [
-                    {to:'/admin/app_user', name:'Users list'},
-                    {to:'/admin/app_user_group', name:'Groups list'},
-                  ]},
-                  {to:'/', name:'Settings', icon:'mdi-cog', children: [
-                    {to:'/admin/settings', name:'Configurações'},
-                    {to:'/admin/app_mail_template', name:'E-mail templates'},
-                    {to:'/admin/app_file', name:'Uploads'},
-                    {to:'/admin/app_place', name:'Places'},
-                  ]},
-                ]" />
-              </slot>
-            </div>
-            <app-nav
-              variant="plain"
-              density="compact"
-              :items="[
-                {name:'Switch account', onClick() { drawer.account = true; }},
-                {name:'Sair', onClick() { app.logout(); }},
-              ]"
-            />
-          </div>
-        </v-navigation-drawer>
-        <v-main style="height:100vh; overflow-y:scroll; overflow-x:hidden; overflow-y:auto;">
-          <v-app-bar class="px-md-3" v-bind="{height:50, color:'grey-lighten-4', elevation:0, location:'top'}">
-            <v-container class="pa-0" :fluid="props.containerFluid">
-              <v-btn icon="mdi-menu" size="small" @click="drawer.main=true" class="d-lg-none"></v-btn>
-            </v-container>
-          </v-app-bar>
-          <v-container class="pa-4 pt-5 px-md-3" :fluid="props.containerFluid">
-            <slot />
-          </v-container>
-        </v-main>
-      </v-layout>
-    </template> -->
   </v-defaults-provider>
 </template>
 

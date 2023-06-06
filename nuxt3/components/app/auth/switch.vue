@@ -1,6 +1,6 @@
 <template>
   <v-list>
-    <v-list-item>
+    <v-list-item v-if="accounts.length==0">
       <div class="text-disabled text-center">
         No users logged
       </div>

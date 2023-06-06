@@ -61,7 +61,11 @@ export default (params={}) => {
         const { access_token } = this.accounts[ email ] || {};
         if (!access_token) return;
         await this.setToken(access_token);
-        await this.init(true);
+        if (typeof location != 'undefined') {
+          setTimeout(() => {
+            location.reload();
+          }, 500);
+        }
       },
     },
   })();
