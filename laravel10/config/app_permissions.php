@@ -3,6 +3,7 @@
 return [
   'keys' => [
     'controller:app_settings.update' => 'Settings: Update',
+    'view:admin-settings' => 'Settings: view',
     
     // User
     'controller:app_user.index' => 'Users: Search',

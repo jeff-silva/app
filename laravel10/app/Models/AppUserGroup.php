@@ -21,13 +21,17 @@ class AppUserGroup extends Model
 
     public function mutatorRetrieve()
     {
-        $this->permissions = json_decode($this->permissions, true);
-        $this->permissions = is_array($this->permissions) ? $this->permissions : [];
+        if ($this->isRoot()) {
+            $this->permissions = array_keys(config('app_permissions.keys'));
+        } else {
+            $this->permissions = json_decode($this->permissions, true);
+            $this->permissions = is_array($this->permissions) ? $this->permissions : [];
+        }
     }
 
     public function mutatorSave()
     {
-        if ($this->id==1) {
+        if ($this->isRoot()) {
             $this->permissions = array_keys(config('app_permissions.keys'));
         }
     }
@@ -42,6 +46,11 @@ class AppUserGroup extends Model
             ];
         }
         return collect($return);
+    }
+
+    public function isRoot()
+    {
+        return $this->id == 1;
     }
 
     public function appUsers(): HasMany

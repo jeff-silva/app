@@ -49,9 +49,9 @@
         <v-app-bar @click="drawer.main=true">
           <v-btn icon="mdi-menu" flat class="d-lg-none"></v-btn>
           <v-spacer></v-spacer>
-          <div class="px-2">Welcome {{ app.auth.user.name }}</div>
+          <div class="px-2">Welcome {{ app.user.name }}</div>
           <v-spacer></v-spacer>
-          <div class="px-2">Aaa</div>
+          <div class="px-2">...</div>
         </v-app-bar>
   
         <v-navigation-drawer
@@ -109,7 +109,14 @@
   
         <v-main>
           <v-container class="pt-8 pt-md-10" style="max-width:1200px;">
-            <slot></slot>
+            <template v-if="hasPermission">
+              <slot></slot>
+            </template>
+            <template v-else>
+              <v-alert type="error">
+                Sorry, you have no permission to see this screen.
+              </v-alert>
+            </template>
           </v-container>
         </v-main>
       </v-layout>
@@ -184,17 +191,28 @@
         </v-main>
       </v-layout>
     </template> -->
-
   </v-defaults-provider>
 </template>
 
 
 <script setup>
-  import { ref, defineProps } from 'vue';
+  import { ref, computed, defineProps } from 'vue';
   import { breakpointsVuetify, useBreakpoints } from '@vueuse/core';
+  
   import useApp from '@/composables/useApp';
-
   const app = useApp();
+
+  const route = useRoute();
+
+  const hasPermission = computed(() => {
+    if (!app.ready) return false;
+    const permissionKey = `view:${route.name}`;
+    if (typeof app.permissions[permissionKey] != 'undefined') {
+      return app.user.app_user_group.permissions.includes(permissionKey);
+    }
+    return true;
+  });
+
   const breakpoints = useBreakpoints(breakpointsVuetify);
 
   const props = defineProps({
