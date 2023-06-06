@@ -7,6 +7,13 @@
       <br>
     </template>
 
+    <template v-if="password.error.hasError()">
+      <v-alert type="error" @click="password.error.clear()">
+        {{ password.error.message }}
+      </v-alert>
+      <br>
+    </template>
+
     <template v-if="!password.success">
       <v-text-field
         label="E-mail"

@@ -65,6 +65,9 @@ export default (data, rules) => {
     invalid() {
       return !this.valid();
     },
+    hasError() {
+      return !!this.message || Object.values(this.errors).length > 0;
+    },
   });
 
   watch([ data ], ([ dataNew ]) => {

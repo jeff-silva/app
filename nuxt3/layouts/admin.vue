@@ -11,7 +11,7 @@
     <!-- <pre>{{ Object.keys(app) }}</pre> -->
 
     <!-- Auth -->
-    <template v-if="!app.auth.user">
+    <template v-if="!app.user">
       <div class="d-flex align-center justify-center bg-grey-lighten-3" style="height:100vh;">
         <div style="width:400px; max-width:90vw;">
           <v-card>
@@ -20,16 +20,21 @@
               <v-tab value="register">Register</v-tab>
               <v-tab value="password">Password</v-tab>
             </v-tabs>
-            <v-divider />
             <v-window v-model="auth.tab">
               <v-window-item value="login">
-                <app-auth-login />
+                <v-card-text>
+                  <app-auth-login />
+                </v-card-text>
               </v-window-item>
               <v-window-item value="register">
-                <app-auth-register />
+                <v-card-text>
+                  <app-auth-register />
+                </v-card-text>
               </v-window-item>
               <v-window-item value="password">
-                <app-auth-password />
+                <v-card-text>
+                  <app-auth-password />
+                </v-card-text>
               </v-window-item>
             </v-window>
           </v-card>
@@ -39,7 +44,7 @@
 
 
     <!-- Logged -->
-    <template v-if="app.auth.user">
+    <template v-if="app.user">
       <v-layout>
         <v-app-bar @click="drawer.main=true">
           <v-btn icon="mdi-menu" flat class="d-lg-none"></v-btn>

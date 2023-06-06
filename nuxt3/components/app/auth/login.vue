@@ -2,7 +2,7 @@
   <form @submit.prevent="app.login.submit()">
     <v-text-field label="E-mail" v-model="app.login.data.email" />
     <v-text-field label="Password" type="password" v-model="app.login.data.password" />
-    <v-btn block type="submit" :loading="app.login.loading">Login</v-btn>
+    <v-btn block color="primary" type="submit" :loading="app.login.loading">Login</v-btn>
   </form>
 </template>
 

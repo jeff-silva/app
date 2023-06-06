@@ -45,7 +45,6 @@ export default (params={}) => {
         try {
           axiosParams.params = this.params;
           axiosParams.data = this.data;
-          console.log(axiosParams.data);
           const { data } = await axios(axiosParams);
           params.onSuccess({ data });
           this.success = data;
