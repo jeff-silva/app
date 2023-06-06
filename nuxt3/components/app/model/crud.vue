@@ -123,33 +123,14 @@
       </v-table>
 
       <br>
-
-      <v-row class="align-center">
-        <v-col cols="12" sm="4" class="text-center text-sm-left">
-          {{ search.pagination.total }} registers
-        </v-col>
-        <v-col cols="12" sm="4">
-          <v-pagination
-            size="small"
-            :length="search.pagination.last_page"
-            v-model.number="search.params.page"
-            @update:modelValue="search.submit()"
-          />
-        </v-col>
-        <v-col cols="12" sm="4">
-          <v-select
-            label="Per page"
-            v-model="search.params.per_page"
-            :items="[ 5, 10, 25, 50, 100 ]"
-            :hide-details="true"
-            density="compact"
-            @update:modelValue="search.submit()"
-          />
-        </v-col>
-      </v-row>
     
-      <v-navigation-drawer v-model="dialog.search" location="end">
-        <div class="d-flex flex-column pa-2" style="gap:10px;">
+      <v-navigation-drawer
+        v-model="dialog.search"
+        location="end"
+        style="max-width:calc(100vw - 60px);"
+        width="400"
+      >
+        <div class="d-flex flex-column pa-3" style="gap:15px;">
           <v-text-field
             v-model="search.params.q"
             :hide-details="true"
@@ -162,6 +143,28 @@
           />
     
           <slot name="search-fields" v-bind="slotBind()"></slot>
+
+          <v-divider class="mx-n3 my-3" />
+
+          <v-select
+            label="Per page"
+            v-model="search.params.per_page"
+            :items="[ 5, 10, 25, 50, 100 ]"
+            :hide-details="true"
+            density="compact"
+            @update:modelValue="search.submit()"
+          />
+
+          <v-pagination
+            size="small"
+            :length="search.pagination.last_page"
+            v-model.number="search.params.page"
+            @update:modelValue="search.submit()"
+          />
+
+          <div class="text-center">
+            {{ search.pagination.total }} registers
+          </div>
         </div>
       </v-navigation-drawer>
     </form>

@@ -38,7 +38,9 @@ export default (params={}) => {
         tokenStorage.value = token;
         this.access_token = token;
       },
-      async logout() {},
+      async logout() {
+        await this.accountRemove(this.user.email);
+      },
       async accountAdd(email, token) {
         const data = { access_token: token, valid: true };
         accountsStorage.value[email] = data;
@@ -62,9 +64,10 @@ export default (params={}) => {
         if (!access_token) return;
         await this.setToken(access_token);
         if (typeof location != 'undefined') {
+          this.loading = true;
           setTimeout(() => {
             location.reload();
-          }, 500);
+          }, 1000);
         }
       },
     },
