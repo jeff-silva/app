@@ -8,6 +8,8 @@
     }"
   >
 
+    <!-- <pre>{{ Object.keys(app) }}</pre> -->
+
     <!-- Auth -->
     <template v-if="!app.auth.user">
       <div class="d-flex align-center justify-center bg-grey-lighten-3" style="height:100vh;">

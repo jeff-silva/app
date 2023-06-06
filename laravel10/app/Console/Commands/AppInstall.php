@@ -29,6 +29,7 @@ class AppInstall extends Command
     {
         $this->call('config:clear');
         $this->call('route:clear');
+        $this->call('cache:clear');
         
         $this->migrate();
         $this->call('db:seed');

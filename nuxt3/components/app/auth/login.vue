@@ -1,5 +1,18 @@
 <template>
   <form @submit.prevent="app.login.submit()">
+    <v-text-field label="E-mail" v-model="app.login.data.email" />
+    <v-text-field label="Password" type="password" v-model="app.login.data.password" />
+    <v-btn block type="submit" :loading="app.login.loading">Login</v-btn>
+  </form>
+</template>
+
+<script setup>
+  import useApp from '@/composables/useApp';
+  const app = useApp();
+</script>
+
+<!-- <template>
+  <form @submit.prevent="app.login.submit()">
     <v-fade-transition>
       <v-alert
         type="error"
@@ -57,9 +70,4 @@
 <script setup>
   import useApp from '@/composables/useApp';
   const app = useApp();
-
-  const credentials = ref({
-    email: '',
-    password: '',
-  });
-</script>
+</script> -->

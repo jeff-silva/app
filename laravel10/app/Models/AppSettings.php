@@ -37,10 +37,18 @@ class AppSettings extends Model
         return $models;
     }
 
-    static function getAll()
+    static function getAll($all=false)
     {
-        return self::get()->mapWithKeys(function($item) {
-            return [ $item['name'] => $item['value'] ];
-        })->toArray();
+        return self::query()
+            ->when(!$all, function($q) {
+                $q->where('public', 1);
+            })
+            ->get()
+            ->mapWithKeys(function($item) {
+                if (is_numeric($item['value'])) {
+                    $item['value'] = floatval($item['value']);
+                }
+                return [ $item['name'] => $item['value'] ];
+            })->toArray();
     }
 }

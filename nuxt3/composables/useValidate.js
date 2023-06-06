@@ -1,40 +1,40 @@
 import validate from 'validate.js';
 import { watch } from 'vue';
 
-const validationRules = {
-  required(data) {
-    return {
-      presence: {
-        allowEmpty: false,
-        message: "is required",
-      },
-    };
-  },
-  email(data) {
-    return {
-      presence: {
-        message: "email is invalid",
-      },
-    };
-  },
-  min(data) {
-    return {
-      presence: {
-        message: "email is invalid",
-      },
-    };
-  },
-  same(data) {
-    return {
-      equality: data.params[0],
-      presence: {
-        message: "email is invalid",
-      },
-    };
-  },
-};
-
 export default (data, rules) => {
+  const validationRules = {
+    required(data) {
+      return {
+        presence: {
+          allowEmpty: false,
+          message: "is required",
+        },
+      };
+    },
+    email(data) {
+      return {
+        presence: {
+          message: "email is invalid",
+        },
+      };
+    },
+    min(data) {
+      return {
+        presence: {
+          message: "email is invalid",
+        },
+      };
+    },
+    same(data) {
+      return {
+        equality: data.params[0],
+        presence: {
+          message: "email is invalid",
+        },
+      };
+    },
+  };
+
   const r = ref({
     message: '',
     errors: {},

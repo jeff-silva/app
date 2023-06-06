@@ -4,188 +4,325 @@ import axios from 'axios';
 import _ from 'lodash';
 
 import { useStorage, useEventBus } from '@vueuse/core';
-import useValidate from '@/composables/useValidate';
+import useAxios from '@/composables/useAxios';
 
 export default (params={}) => {
+  const tokenStorage = useStorage('access_token', '');
+  const accountsStorage = useStorage('accounts', {});
 
-  params = _.merge({
-    onLogin: () => {},
-    onLogout: () => {},
-    onRegister: () => {},
-    login: {
-      validation: {},
-    },
-    register: {
-      validation: {},
-    },
-    password: {
-      validation: {},
-    },
-  }, params);
-
-  const r = ref({
-    init: false,
-    loading: false,
-    // access_token: useStorage('access_token', ''),
-    user: false,
-
-    auth: defineStore('appAuth', {
-      state: () => ({
-        token: '',
-        user: false,
-      }),
-      actions: {
-        setUser(data) {
-          this.user = data;
-        },
-        setToken(access_token) {
-          const state = useStorage('access_token', '');
-          state.value = access_token;
-          this.token = access_token;
-        },
-      },
-    })(),
-
-    async load(forced=false) {
-      this.auth.setToken(useStorage('access_token', '').value);
-      if (!forced && this.auth.user) return;
-      try {
-        const { data } = await axios.post('api://auth/me');
-        this.auth.setUser(data);
-      } catch(err) {
-        this.account.list.forEach((acc, accIndex) => {
-          if (this.auth.token!=acc.access_token) return;
-          acc.valid = false;
-          // this.account.list.splice(accIndex, 1);
-        });
-      }
-    },
-
-    login: {
+  const s = defineStore('app', {
+    state: () => ({
+      ready: false,
       loading: false,
-      params: { email: '', password: '' },
-      resp: {},
-      error: {},
-      async submit() {
+      access_token: tokenStorage.value,
+      user: false,
+      settings: {},
+      permissions: {},
+      login: false,
+      accounts: accountsStorage.value,
+    }),
+    actions: {
+      async init(force=false) {
+        if (force==false && this.ready) return;
         this.loading = true;
-        this.error.clear();
-        
         try {
-          const { data } = await axios.post('api://auth/login', this.params);
-          this.resp = data;
-          r.value.auth.setToken(data.access_token);
-          await r.value.account.add(this.params.email, data.access_token);
-          setTimeout(async () => {
-            await r.value.load(true);
-            params.onLogin({ data });
-          }, 100);
-          this.params = {};
-        } catch(err) {
-          this.error.setMessage(err.response.data.message);
-          this.error.setFields(err.response.data.fields);
-        }
-  
+          const { data } = await axios.post('api://app');
+          this.ready = true;
+          this.user = data.user;
+          this.settings = data.settings;
+          this.permissions = data.permissions;
+        } catch(err) {}
         this.loading = false;
       },
-    },
-
-    async logout() {
-      this.account.remove(this.auth.user.email);
-      params.onLogout({
-        access_token: this.auth.token,
-        email: this.auth.user.email,
-      });
-      r.value.auth.setUser(false);
-      r.value.auth.setToken(false);
-      try {
-        await axios.post('api://auth/logout');
-      } catch(err) {}
-    },
-
-    register: {
-      loading: false,
-      error: {},
-      params: { name: '', email: '', password: '', password_confirmation: '' },
-      async submit() {
-        this.loading = true;
-        this.error.clear();
-        try {
-          const { data } = await axios.post('api://auth/register', this.params);
-          this.params = {};
-          params.onRegister(data);
-        } catch(err) {
-          this.error.setMessage(err.response.data.message);
-          this.error.setFields(err.response.data.fields);
+      async setToken(token) {
+        tokenStorage.value = token;
+        this.access_token = token;
+      },
+      async logout() {},
+      async accountAdd(email, token) {
+        const data = { access_token: token, valid: true };
+        accountsStorage.value[email] = data;
+        this.accounts[email] = data;
+      },
+      async accountRemove(email) {
+        if (accountsStorage.value[email]) {
+          delete accountsStorage.value[email];
         }
-        this.loading = false;
-      },
-    },
-
-    password: {
-      loading: false,
-      params: {
-        email: '',
-        code: '',
-        password: '',
-      },
-      resp: false,
-      error: {},
-      async submit() {
-        this.loading = true;
-        this.error.clear();
-        try {
-          const { data } = await axios.post('api://auth/password', this.params);
-          this.resp = data;
-          if (data.password_changed) {
-            this.params = {};
-          }
-        } catch(err) {
-          this.error.setMessage(err.response.data.message);
-          this.error.setFields(err.response.data.fields);
+        if (this.accounts[email]) {
+          delete this.accounts[email];
         }
-        this.loading = false;
-      },
-    },
-
-    account: {
-      list: useStorage('accounts', []),
-      async add(email, access_token) {
-        const state = useStorage('accounts', []);
-        let acc = this.list.filter(acc => acc.email==email).at(0) || false;
-
-        if (acc) {
-          acc.valid = true;
-        } else {
-          acc = { email, access_token, valid: true };
-          state.value.push(acc);
-        }
-
-        this.list.value = state.value;
-      },
-      async remove(email) {
-        const state = useStorage('accounts', []);
-        for(let i in this.list) {
-          if (this.list[i].email != email) continue;
-          this.list.splice(i, 1);
+        if (this.user.email==email) {
+          tokenStorage.value = '';
+          this.access_token = '';
+          this.user = false;
         }
       },
-      async switch(email) {
-        this.list.forEach((acc) => {
-          if (acc.email!=email) return;
-          r.value.auth.setToken(acc.access_token);
-          setTimeout(() => { r.value.load(true); }, 100);
-        });
+      async accountSwitch(email) {
+        const { access_token } = this.accounts[ email ] || {};
+        if (!access_token) return;
+        await this.setToken(access_token);
+        await this.init(true);
       },
+    },
+  })();
+
+  s.login = useAxios({
+    method: 'post',
+    url: 'api://auth/login',
+    data: { email: '', password: '' },
+    onSuccess: async ({ data }) => {
+      await s.setToken(data.access_token);
+      await s.accountAdd(s.login.data.email, data.access_token);
+      await s.init(true);
+      s.login.data = { email: '', password: '' };
     },
   });
 
-  r.value.login.error = useValidate(r.value.login.params, params.login.validation);
-  r.value.register.error = useValidate(r.value.register.params, params.register.validation);
-  r.value.password.error = useValidate(r.value.password.params, params.password.validation);
+  s.access_token = tokenStorage.value;
+  s.accounts = accountsStorage.value;
+  setTimeout(() => { s.init(); }, Math.round(Math.random()*600));
 
-  r.value.load();
-  return r;
+  return s;
 };
+
+
+
+// export default (params={}) => {
+//   // params = _.merge({
+//   //   onReady: () => {},
+//   //   onLogin: () => {},
+//   //   onLogout: () => {},
+//   //   onRegister: () => {},
+//   //   login: {
+//   //     validation: {},
+//   //   },
+//   //   register: {
+//   //     validation: {},
+//   //   },
+//   //   password: {
+//   //     validation: {},
+//   //   },
+//   // }, params);
+
+//   const r = ref({
+//     ready: false,
+
+//     auth: defineStore('appAuth', {
+//       state: () => ({
+//         token: '',
+//         user: false,
+//       }),
+//       actions: {
+//         setUser(data) {
+//           this.user = data;
+//         },
+//         setToken(access_token) {
+//           const state = useStorage('access_token', '');
+//           state.value = access_token;
+//           this.token = access_token;
+//         },
+//       },
+//     })(),
+
+//     storage: defineStore('appStorage', {
+//       state: () => ({
+//         settings: {},
+//         permissions: {},
+//       }),
+//       actions: {
+//         setData(key, value) {
+//           this[key] = value;
+//         },
+//       },
+//     })(),
+
+//     async init(force=false) {
+//       if (this.ready && force==false) return;
+//       return useAxios({
+//         method: 'get',
+//         url: 'api://app',
+//         autoSubmit: true,
+//         onSuccess: ({ data }) => {
+//           this.ready = true;
+//           this.storage.setData('settings', data.settings);
+//           this.storage.setData('permissions', data.permissions);
+//         },
+//       });
+
+//       // axios.value.submit();
+      
+//       // this.auth.setToken(useStorage('access_token', '').value);
+//       // if (!forced && this.auth.user) return;
+//       // try {
+//       //   const { data } = await axios.post('api://auth/me');
+//       //   this.auth.setUser(data);
+//       // } catch(err) {
+//       //   this.account.list.forEach((acc, accIndex) => {
+//       //     if (this.auth.token!=acc.access_token) return;
+//       //     acc.valid = false;
+//       //     // this.account.list.splice(accIndex, 1);
+//       //   });
+//       // }
+//     },
+
+//     login: useAxios({
+//       method: 'post',
+//       url: 'api://auth/login',
+//       params: { email: '', password: '' },
+//     }),
+    
+//     logout: useAxios({
+//       method: 'post',
+//       url: 'api://auth/logout',
+//     }),
+
+//     register: useAxios({
+//       method: 'post',
+//       url: 'api://auth/register',
+//       params: { name: '', email: '', password: '', password_confirmation: '' },
+//     }),
+    
+//     password: useAxios({
+//       method: 'post',
+//       url: 'api://auth/register',
+//       params: { code: '', email: '', password: '' },
+//     }),
+
+//     // login: {
+//     //   loading: false,
+//     //   params: { email: '', password: '' },
+//     //   resp: {},
+//     //   error: {},
+//     //   async submit() {
+//     //     this.loading = true;
+//     //     this.error.clear();
+        
+//     //     try {
+//     //       const { data } = await axios.post('api://auth/login', this.params);
+//     //       this.resp = data;
+//     //       r.value.auth.setToken(data.access_token);
+//     //       await r.value.account.add(this.params.email, data.access_token);
+//     //       setTimeout(async () => {
+//     //         await r.value.load(true);
+//     //         params.onLogin({ data });
+//     //       }, 100);
+//     //       this.params = {};
+//     //     } catch(err) {
+//     //       this.error.setMessage(err.response.data.message);
+//     //       this.error.setFields(err.response.data.fields);
+//     //     }
+  
+//     //     this.loading = false;
+//     //   },
+//     // },
+
+//     // async logout() {
+//     //   this.account.remove(this.auth.user.email);
+//     //   params.onLogout({
+//     //     access_token: this.auth.token,
+//     //     email: this.auth.user.email,
+//     //   });
+//     //   r.value.auth.setUser(false);
+//     //   r.value.auth.setToken(false);
+//     //   try {
+//     //     await axios.post('api://auth/logout');
+//     //   } catch(err) {}
+//     // },
+
+//     // register: {
+//     //   loading: false,
+//     //   error: {},
+//     //   params: { name: '', email: '', password: '', password_confirmation: '' },
+//     //   async submit() {
+//     //     this.loading = true;
+//     //     this.error.clear();
+//     //     try {
+//     //       const { data } = await axios.post('api://auth/register', this.params);
+//     //       this.params = {};
+//     //       params.onRegister(data);
+//     //     } catch(err) {
+//     //       this.error.setMessage(err.response.data.message);
+//     //       this.error.setFields(err.response.data.fields);
+//     //     }
+//     //     this.loading = false;
+//     //   },
+//     // },
+
+//     // password: {
+//     //   loading: false,
+//     //   params: {
+//     //     email: '',
+//     //     code: '',
+//     //     password: '',
+//     //   },
+//     //   resp: false,
+//     //   error: {},
+//     //   async submit() {
+//     //     this.loading = true;
+//     //     this.error.clear();
+//     //     try {
+//     //       const { data } = await axios.post('api://auth/password', this.params);
+//     //       this.resp = data;
+//     //       if (data.password_changed) {
+//     //         this.params = {};
+//     //       }
+//     //     } catch(err) {
+//     //       this.error.setMessage(err.response.data.message);
+//     //       this.error.setFields(err.response.data.fields);
+//     //     }
+//     //     this.loading = false;
+//     //   },
+//     // },
+
+//     account: {
+//       list: useStorage('accounts', []),
+//       async add(email, access_token) {
+//         const state = useStorage('accounts', []);
+//         let acc = this.list.filter(acc => acc.email==email).at(0) || false;
+
+//         if (acc) {
+//           acc.valid = true;
+//         } else {
+//           acc = { email, access_token, valid: true };
+//           state.value.push(acc);
+//         }
+
+//         this.list.value = state.value;
+//       },
+//       async remove(email) {
+//         const state = useStorage('accounts', []);
+//         for(let i in this.list) {
+//           if (this.list[i].email != email) continue;
+//           this.list.splice(i, 1);
+//         }
+//       },
+//       async switch(email) {
+//         this.list.forEach((acc) => {
+//           if (acc.email!=email) return;
+//           r.value.auth.setToken(acc.access_token);
+//           setTimeout(() => { r.value.load(true); }, 100);
+//         });
+//       },
+//     },
+//   });
+
+//   // r.value.login.error = useValidate(r.value.login.params, params.login.validation);
+//   // r.value.register.error = useValidate(r.value.register.params, params.register.validation);
+//   // r.value.password.error = useValidate(r.value.password.params, params.password.validation);
+
+//   r.value.init();
+//   return r;
+// };
+
+
+
+
+
+
+
+
+
+
 
 // // import { useState } from '#app';
 // // import { ref } from 'vue';

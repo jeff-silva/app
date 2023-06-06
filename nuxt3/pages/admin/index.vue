@@ -1,7 +1,7 @@
 <template>
   <nuxt-layout name="admin">
     <template #default>
-      Dashblard
+      Dashboard
     </template>
   </nuxt-layout>
 </template>
