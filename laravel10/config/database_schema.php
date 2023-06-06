@@ -6,7 +6,6 @@ return [
   'tables' => [
     'app_file' => [
       'pk' => 'id',
-      'auto_increment' => false,
       'fields' => [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'slug' => 'VARCHAR(255) NULL DEFAULT NULL',
@@ -24,7 +23,6 @@ return [
     ],
     'app_mail' => [
       'pk' => 'id',
-      'auto_increment' => false,
       'fields' => [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'name' => 'VARCHAR(255) NOT NULL',
@@ -42,7 +40,6 @@ return [
     ],
     'app_mail_template' => [
       'pk' => 'id',
-      'auto_increment' => false,
       'fields' => [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'slug' => 'VARCHAR(255) NOT NULL',
@@ -56,7 +53,6 @@ return [
     ],
     'app_place' => [
       'pk' => 'id',
-      'auto_increment' => false,
       'fields' => [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'name' => 'VARCHAR(255) NULL DEFAULT NULL',
@@ -80,7 +76,6 @@ return [
     ],
     'app_settings' => [
       'pk' => 'id',
-      'auto_increment' => false,
       'fields' => [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'name' => 'VARCHAR(255) NOT NULL',
@@ -93,7 +88,6 @@ return [
     ],
     'app_user' => [
       'pk' => 'id',
-      'auto_increment' => false,
       'fields' => [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'name' => 'VARCHAR(255) NULL DEFAULT NULL',
@@ -116,7 +110,6 @@ return [
     ],
     'app_user_group' => [
       'pk' => 'id',
-      'auto_increment' => false,
       'fields' => [
         'id' => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'slug' => 'VARCHAR(255) NULL DEFAULT NULL',

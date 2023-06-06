@@ -24,5 +24,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 		return config;
 	});
 
+	// axios.interceptors.response.use((response) => {
+  //   console.log(response);
+  //   return response;
+  // });
+
 	// nuxtApp.provide('axios', axios);
 });
