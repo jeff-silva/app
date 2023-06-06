@@ -5,6 +5,8 @@
         v-bind="{
           name: 'app_mail_template',
           searchTableSizes: ['*'],
+          canCreate: false,
+          canDelete: false,
         }"
       >
         <template #search-table-header="bind">

@@ -99,8 +99,21 @@
                 </template>
     
                 <div class="d-flex me-2" style="gap:10px;">
-                  <v-btn icon="mdi-close" size="x-small" flat color="error"></v-btn>
-                  <v-btn icon="mdi-pencil" size="x-small" flat :to="`/admin/${props.name}?edit=${item.id}`" @click="edit.data=item"></v-btn>
+                  <v-btn
+                    flat
+                    icon="mdi-close"
+                    size="x-small"
+                    color="error"
+                    v-if="props.canDelete"
+                    @click="dialog.delete=true"
+                  />
+                  <v-btn
+                    flat
+                    icon="mdi-pencil"
+                    size="x-small"
+                    :to="`/admin/${props.name}?edit=${item.id}`"
+                    @click="edit.data=item"
+                  />
                 </div>
               </v-menu>
             </td>
@@ -134,7 +147,7 @@
         </v-col>
       </v-row>
     
-      <v-navigation-drawer v-model="drawer.search" location="end">
+      <v-navigation-drawer v-model="dialog.search" location="end">
         <div class="d-flex flex-column pa-2" style="gap:10px;">
           <v-text-field
             v-model="search.params.q"
@@ -153,17 +166,48 @@
     </form>
   </template>
 
+
+  <!-- Dialogs -->
+  <!-- Dialog delete -->
+  <v-dialog v-model="dialog.delete">
+    <v-card class="mx-auto" style="width:300px; max-width:90vw;">
+      <v-card-text>
+        Are you sure you want to delete this item?
+      </v-card-text>
+      <v-divider />
+      <v-card-actions>
+        <v-spacer />
+        <v-btn color="red">Delete</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   
   <!-- Actions -->
   <v-bottom-navigation>
     <!-- Edit -->
     <template v-if="route.query.edit">
-      <v-btn :to="`/admin/${props.name}`">
-        <v-icon>mdi-close</v-icon>
+      <v-btn
+        v-if="props.canDelete"
+        class="text-error"
+        @click="dialog.delete=true"
+      >
+        <v-icon>mdi-delete</v-icon>
+        <span>Delete</span>
+      </v-btn>
+
+      <v-btn
+        :to="`/admin/${props.name}`"
+      >
+        <v-icon>mdi-arrow-left</v-icon>
         <span>Cancel</span>
       </v-btn>
   
-      <v-btn :loading="edit.saving" @click="edit.save()">
+      <v-btn
+        :loading="edit.saving"
+        @click="edit.save()"
+        class="text-primary"
+      >
         <v-icon>mdi-content-save-outline</v-icon>
         <span>Save</span>
       </v-btn>
@@ -171,12 +215,15 @@
 
     <!-- Search -->
     <template v-if="!route.query.edit">
-      <v-btn :to="`/admin/${props.name}?edit=new`">
+      <v-btn
+        :to="`/admin/${props.name}?edit=new`"
+        v-if="props.canCreate"
+      >
         <v-icon>mdi-plus</v-icon>
-        <span>Add</span>
+        <span>Create</span>
       </v-btn>
 
-      <v-btn @click="drawer.search=true" class="d-lg-none">
+      <v-btn @click="dialog.search=true" class="d-lg-none">
         <v-icon>mdi-magnify</v-icon>
         <span>Search</span>
       </v-btn>
@@ -225,6 +272,14 @@
     editParams: {
       type: Object,
       default: () => ({}),
+    },
+    canCreate: {
+      type: Boolean,
+      default: true,
+    },
+    canDelete: {
+      type: Boolean,
+      default: true,
     },
   });
 
@@ -319,8 +374,9 @@
     },
   });
 
-  const drawer = ref({
+  const dialog = ref({
     search: breakpoints.md,
+    delete: false,
   });
 
   const slotBind = (merge={}) => {
