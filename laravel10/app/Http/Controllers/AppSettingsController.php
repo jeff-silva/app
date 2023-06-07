@@ -15,18 +15,24 @@ class AppSettingsController extends Controller
         $this->route('post', 'app_settings', 'saveAll');
     }
 
-    public function listAll()
+    public function listAll(Request $request)
     {
         return [
-            'settings' => AppSettings::getAll(true),
+            'settings' => AppSettings::listAll(true),
             'options' => [
                 'timezones' => timezone_identifiers_list(),
             ],
         ];
     }
 
-    public function saveAll()
+    public function saveAll(Request $request)
     {
-        return AppSettings::getAll();
+        $save = [];
+        foreach($request->all() as $key => $value) {
+            $save[ str_replace('_', '.', $key) ] = $value;
+        }
+
+        AppSettings::saveAll($save);
+        return $this->listAll($request);
     }
 }

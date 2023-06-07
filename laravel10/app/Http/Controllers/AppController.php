@@ -22,7 +22,7 @@ class AppController extends Controller
 
         return [
             'user' => $user,
-            'settings' => AppSettings::getAll(),
+            'settings' => AppSettings::listAll(),
             'permissions' => config('app_permissions.keys'),
             // 'access_token' => substr($access_token, -10),
         ];

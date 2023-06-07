@@ -37,7 +37,7 @@ class AppSettings extends Model
         return $models;
     }
 
-    static function getAll($all=false)
+    static function listAll($all=false)
     {
         return self::query()
             ->when(!$all, function($q) {
@@ -50,5 +50,26 @@ class AppSettings extends Model
                 }
                 return [ $item['name'] => $item['value'] ];
             })->toArray();
+    }
+
+    static function saveAll($data=[])
+    {
+        foreach(['public', 'private'] as $type) {
+            $public = $type == 'public' ? 1 : 0;
+            $defaults = config("app_settings.{$type}");
+            
+            foreach($data as $name => $value) {
+                if (!in_array($name, $defaults)) continue;
+                $setting = self::firstOrNew([ 'name' => $name ]);
+                $setting->fill([
+                    'name' => $name,
+                    'value' => $value,
+                    'public' => $public,
+                ]);
+
+                $setting->save();
+            }
+        }
+        return self::listAll(true);
     }
 }

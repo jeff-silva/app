@@ -3,6 +3,7 @@
 return [
     'public' => [
         'app.name',
+        'app.locale',
         'app.timezone',
         'jwt.ttl',
     ],
