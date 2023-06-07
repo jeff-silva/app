@@ -36,7 +36,6 @@
               </template>
             </v-col>
           </v-row>
-          <pre>{{ bind.edit.data }}</pre>
         </template>
       </app-model-crud>
     </template>
