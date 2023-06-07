@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: false,
 
   runtimeConfig: {
     public: {
@@ -41,5 +42,15 @@ export default defineNuxtConfig({
         type: 'module',
       },
     }],
+
+    ['nuxt-monaco-editor', {}],
   ],
-})
+
+  // build: {
+  //   plugins: [
+  //     new MonacoWebpackPlugin({
+  //       languages: ['javascript', 'html', 'css', 'php'],
+  //     }),
+  //   ],
+  // },
+});

@@ -26,10 +26,8 @@
               />
             </v-col>
             <v-col cols="12">
-              <v-textarea
+              <app-html
                 v-model="bind.edit.data.content"
-                label="Body"
-                :auto-grow="true"
               />
             </v-col>
             <v-col cols="12">
@@ -38,6 +36,7 @@
               </template>
             </v-col>
           </v-row>
+          <pre>{{ bind.edit.data }}</pre>
         </template>
       </app-model-crud>
     </template>
