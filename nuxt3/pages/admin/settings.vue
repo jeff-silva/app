@@ -52,8 +52,23 @@
               Login time (minutes)
             </div>
             <div class="admin-settings-form-row-field">
+              <v-select
+                v-model.number="save.data['jwt.ttl']"
+                v-bind="{
+                  label: 'Time options',
+                  items: [
+                    { title: '1 hour', value: 60 },
+                    { title: '1 day', value: 60*24 },
+                    { title: '1 week', value: 60*24*7 },
+                    { title: '1 month', value: 60*24*30 },
+                    { title: '1 year', value: 60*24*365 },
+                  ],
+                }"
+              />
+
               <v-text-field
-                v-model="save.data['jwt.ttl']"
+                :model-value="save.data['jwt.ttl']"
+                @input="save.data['jwt.ttl'] = parseInt($event.target.value);"
                 v-bind="{
                   type: 'number',
                   suffix: 'Minutes',
@@ -171,9 +186,6 @@
             </v-btn>
           </v-bottom-navigation>
         </form>
-  
-        <!-- <pre>{{ save }}</pre> -->
-        <!-- <pre>{{ settings }}</pre> -->
       </template>
     </nuxt-layout>
   </v-defaults-provider>
@@ -181,6 +193,9 @@
 
 <script setup>
   import { ref } from 'vue';
+  import { useDisplay } from 'vuetify';
+  
+  const d = useDisplay();
 
   const settings = useAxios({
     url: 'api://app_settings',
@@ -214,10 +229,20 @@
   .admin-settings-form-row-label {
     min-width: 400px;
     padding: 16px;
+    color: #666;
   }
   .admin-settings-form-row-field {
     flex-grow: 1;
     display: flex;
     gap: 15px;
+  }
+
+  @media (min-width: 0) and (max-width: 960px) {
+    .admin-settings-form-row {
+      display: block;
+    }
+    .admin-settings-form-row-label {
+      padding: 5px;
+    }
   }
 </style>
