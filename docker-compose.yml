@@ -38,7 +38,7 @@ services:
         env_file:
             - ./.env
         build:
-            context: ./.docker/sail/runtimes/8.2
+            context: ./.docker/laravel
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP:-1000}'
@@ -83,7 +83,7 @@ services:
             # FORWARD_DB_PORT: '${DB_PORT}'
         volumes:
             - 'sail-mysql:/var/lib/mysql'
-            - './.docker/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+            - './.docker/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
         networks:
             - sail
         healthcheck:

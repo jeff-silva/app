@@ -17,5 +17,6 @@ if ($_SERVER['QUERY_STRING'] === '' || empty($_COOKIE['adminer_permanent'])) {
   ];
 }
 
+
 // include __DIR__ . '/editor-4.8.1-mysql-en.php';
 include __DIR__ . '/adminer-4.8.1-en.php';

@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 const path = require('path');
 
 exec(
-  "docker-compose up --build --force-recreate --detach",
+  "docker-compose up --build --force-recreate --remove-orphans --detach",
   {
     cwd: path.join(__dirname, '..'),
     detached: true,
