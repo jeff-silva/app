@@ -9,8 +9,6 @@
     }"
   >
 
-    <!-- <pre>{{ Object.keys(app) }}</pre> -->
-
     <!-- Loading -->
     <template v-if="!app.ready">
       <div class="d-flex align-center justify-center" style="height:100vh;">
@@ -22,7 +20,7 @@
     </template>
 
     <!-- Auth -->
-    <template v-if="app.ready && !app.user">
+    <template v-if="app.ready && (!app.user || (app.user && !app.user.app_user_group))">
       <div class="d-flex align-center justify-center bg-grey-lighten-3" style="height:100vh;">
         <div style="width:400px; max-width:90vw;">
           <v-card>
@@ -31,6 +29,10 @@
               <v-tab value="register">Register</v-tab>
               <v-tab value="password">Password</v-tab>
             </v-tabs>
+            <div class="text-center py-2" v-if="app.user && !app.user.app_user_group">
+              Sorry {{ app.user.name }}. <br>
+              You are not an admin.
+            </div>
             <v-window v-model="auth.tab">
               <v-window-item value="login">
                 <v-card-text>
@@ -57,7 +59,7 @@
 
 
     <!-- Logged -->
-    <template v-if="app.ready && app.user">
+    <template v-if="app.ready && app.user && app.user.app_user_group">
       <v-layout>
         <v-app-bar @click="drawer.main=true">
           <v-btn icon="mdi-menu" flat class="d-lg-none"></v-btn>
