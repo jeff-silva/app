@@ -65,13 +65,6 @@
           theme: 'vs-dark',
         }"
       />
-
-      <!-- <app-code
-        v-if="!editor.html"
-        :model-value="props.modelValue"
-      /> -->
-  
-      <!-- <pre>{{ editor }}</pre> -->
     </div>
   </v-defaults-provider>
 </template>
@@ -101,8 +94,16 @@
     },
   });
 
-  watch([ props ], ([ propsNew ]) => {
+  const setValueHandler = () => {
     const canUpdate = !(editorRef.value && (document.activeElement==editorRef.value || editorRef.value.contains(document.activeElement)));
-    if (canUpdate && editorRef.value) { editorRef.value.innerHTML = propsNew.modelValue; }
+    if (canUpdate && editorRef.value) { editorRef.value.innerHTML = props.modelValue; }
+  };
+
+  watch([ props ], ([ propsNew ]) => {
+    setValueHandler();
+  });
+
+  onMounted(() => {
+    setValueHandler();
   });
 </script>

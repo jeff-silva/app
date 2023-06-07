@@ -108,6 +108,57 @@
               />
             </div>
           </div>
+
+          <div class="admin-settings-form-row">
+            <div class="admin-settings-form-row-label">
+              E-mail template
+            </div>
+            <div class="admin-settings-form-row-field">
+              <v-btn
+                class="flex-grow-1"
+                @click="modal.header=true"
+              >Header</v-btn>
+
+              <v-dialog v-model="modal.header">
+                <v-card width="600" class="mx-auto" style="max-width:90vw;">
+                  <v-card-title>Header</v-card-title>
+                  <v-divider />
+                  <v-card-text>
+                    <app-html v-model="save.data['mail.header']" />
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                      color="primary"
+                      @click="modal.header=false"
+                    >Ok</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+
+              <v-btn
+                class="flex-grow-1"
+                @click="modal.footer=true"
+              >Footer</v-btn>
+
+              <v-dialog v-model="modal.footer">
+                <v-card width="600" class="mx-auto" style="max-width:90vw;">
+                  <v-card-title>Footer</v-card-title>
+                  <v-divider />
+                  <v-card-text>
+                    <app-html v-model="save.data['mail.footer']" />
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                      color="primary"
+                      @click="modal.footer=false"
+                    >Ok</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </div>
+          </div>
   
           <v-bottom-navigation>
             <v-btn
@@ -129,6 +180,8 @@
 </template>
 
 <script setup>
+  import { ref } from 'vue';
+
   const settings = useAxios({
     url: 'api://app_settings',
     method: 'get',
@@ -137,6 +190,13 @@
       save.value.data = data.settings;
     },
   });
+
+  const modal = ref({
+    header: false,
+    footer: false,
+  });
+  
+  const log = console.log;
 
   const save = useAxios({
     url: 'api://app_settings',

@@ -122,4 +122,7 @@ return [
         ],
     ],
 
+    'header' => '',
+    'footer' => '',
+
 ];

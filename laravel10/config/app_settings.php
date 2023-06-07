@@ -14,5 +14,7 @@ return [
         'mail.mailers.smtp.encryption',
         'mail.mailers.smtp.username',
         'mail.mailers.smtp.password',
+        'mail.header',
+        'mail.footer',
     ],
 ];
