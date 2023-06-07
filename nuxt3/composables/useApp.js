@@ -24,6 +24,7 @@ export default (params={}) => {
     actions: {
       async init(force=false) {
         if (force==false && this.ready) return;
+        this.ready = false;
         this.loading = true;
         try {
           const { data } = await axios.post('api://app');
@@ -37,6 +38,13 @@ export default (params={}) => {
       async setToken(token) {
         tokenStorage.value = token;
         this.access_token = token;
+
+        this.ready = false;
+        this.loading = true;
+
+        setTimeout(async () => {
+          await this.init(true);
+        }, 1000);
       },
       async logout() {
         await this.accountRemove(this.user.email);
@@ -60,15 +68,14 @@ export default (params={}) => {
         }
       },
       async accountSwitch(email) {
-        const { access_token } = this.accounts[ email ] || {};
-        if (!access_token) return;
+        // const acc = accountsStorage.value[ email ] || false;
+        const acc = this.accounts[ email ] || false;
+        if (!acc) return console.error(`no account found for ${email}`);
+
+        const access_token = acc.access_token;
+        if (!access_token) return console.error(`no token found`);
+
         await this.setToken(access_token);
-        if (typeof location != 'undefined') {
-          this.loading = true;
-          setTimeout(() => {
-            location.reload();
-          }, 1000);
-        }
       },
     },
   })();
@@ -78,9 +85,8 @@ export default (params={}) => {
     url: 'api://auth/login',
     data: { email: '', password: '' },
     onSuccess: async ({ data }) => {
-      await s.setToken(data.access_token);
       await s.accountAdd(s.login.data.email, data.access_token);
-      await s.init(true);
+      await s.setToken(data.access_token);
       s.login.data = { email: '', password: '' };
     },
   });

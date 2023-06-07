@@ -57,12 +57,13 @@
   
       <monaco-editor
         v-if="!editor.html"
-        style="min-height: 400px;"
+        style="min-height:100px; height:auto;"
         lang="html"
         :model-value="props.modelValue"
         @update:modelValue="emit('update:modelValue', $event)"
         :options="{
           theme: 'vs-dark',
+          automaticLayout: true,
         }"
       />
     </div>

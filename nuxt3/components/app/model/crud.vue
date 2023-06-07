@@ -95,29 +95,29 @@
             <td class="app-model-crud-search-table-fixed-s"><v-checkbox v-bind="{ hideDetails: true }" /></td>
             <slot name="search-table-loop" v-bind="slotBind({ item })"></slot>
             <td class="app-model-crud-search-table-fixed-e">
-              <v-menu location="start">
-                <template #activator="{ props }">
-                  <v-btn icon="mdi-dots-vertical" size="x-small" flat v-bind="props"></v-btn>
-                </template>
-    
-                <div class="d-flex me-2" style="gap:10px;">
-                  <v-btn
-                    flat
-                    icon="mdi-close"
-                    size="x-small"
-                    color="error"
-                    v-if="props.canDelete"
-                    @click="dialog.delete=true"
-                  />
-                  <v-btn
-                    flat
-                    icon="mdi-pencil"
-                    size="x-small"
-                    :to="`/admin/${props.name}?edit=${item.id}`"
-                    @click="edit.data=item"
-                  />
-                </div>
-              </v-menu>
+              <v-defaults-provider :defaults="searchActions">
+                <v-menu location="start">
+                  <template #activator="{ props }">
+                    <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
+                  </template>
+      
+                  <div class="d-flex me-2" style="gap:8px;">
+                    <v-defaults-provider :defaults="searchActions">
+                      <v-btn
+                        icon="mdi-close"
+                        color="error"
+                        v-if="props.canDelete"
+                        @click="dialog.delete=true"
+                      />
+                      <v-btn
+                        icon="mdi-pencil"
+                        :to="`/admin/${props.name}?edit=${item.id}`"
+                        @click="edit.data=item"
+                      />
+                    </v-defaults-provider>
+                  </div>
+                </v-menu>
+              </v-defaults-provider>
             </td>
           </tr>
         </tbody>
@@ -288,6 +288,13 @@
     },
   });
 
+  const searchActions = {
+    VBtn: {
+      size: 'x-small',
+      flat: true,
+    },
+  };
+
   const search = ref({
     loading: false,
     params: props.searchParams,
@@ -413,13 +420,13 @@
   .app-model-crud-search-table-fixed-s {
     position: sticky;
     left: 0;
-    padding: 0 !important;
+    padding: 0 0 0 0 !important;
     min-width: 25px !important;
   }
 
   .app-model-crud-search-table-fixed-e {
     position: sticky;
     right: 0;
-    padding: 0 !important;
+    padding: 0 5px 0 0 !important;
   }
 </style>

@@ -128,7 +128,7 @@
         <v-card-text>
           <app-auth-login />
           <br>
-          <app-auth-switch />
+          <app-auth-switch @switch="drawer.account=false" />
         </v-card-text>
         <v-divider />
         <v-card-actions>
