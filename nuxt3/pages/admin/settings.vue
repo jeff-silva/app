@@ -188,6 +188,13 @@
                 <v-card width="600" class="mx-auto" style="max-width:90vh;">
                   <v-card-title>Test</v-card-title>
                   <v-divider />
+                  <v-alert
+                    v-if="emailTest.success && emailTest.success.sent"
+                    type="success"
+                    rounded="0"
+                  >
+                    E-mail sent!
+                  </v-alert>
                   <v-card-text>
                     <v-text-field
                       v-model="emailTest.data.email"
@@ -207,8 +214,6 @@
                         label: 'Message',
                       }"
                     />
-
-                    <!-- <pre>{{ emailTest }}</pre> -->
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer />

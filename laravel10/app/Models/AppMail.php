@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\ModelTrait;
 use Illuminate\Mail\Message;
 use App\Models\AppMailTemplate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -26,12 +27,25 @@ class AppMail extends Model
         'email_template',
     ];
 
+    static function send($data=[])
+    {
+        $data = (object) array_merge([
+            'email' => '',
+            'subject' => '',
+            'body' => '',
+        ], $data);
+
+        return !!Mail::raw($data->body, function(Message $message) use ($data) {
+            $message->to($data->email)->subject($data->subject);
+        });
+    }
+
     /*
-    AppMail::send(['user1@grr.la', 'user2@grr.la', 'user3@grr.la'], 'app-user-welcome', [
+    AppMail::sendTemplate(['user1@grr.la', 'user2@grr.la', 'user3@grr.la'], 'app-user-welcome', [
         'user' => \App\Models\AppUser::query()->find(1),
     ]);
     */
-    static function send($emails, $slug, $params=[])
+    static function sendTemplate($emails, $slug, $params=[])
     {
         $emails = is_array($emails) ? $emails : [ $emails ];
         $data = AppMailTemplate::getTemplateData($slug);
@@ -64,14 +78,23 @@ class AppMail extends Model
         $sents = [];
         $send_group = uniqid();
         foreach($emails as $email) {
+            $subject = call_user_func($bladeCompile, $data['subject'], $params);
+            $body = call_user_func($bladeCompile, $data['body'], $params);
+
+            $sent = self::send([
+                'email' => $email,
+                'subject' => $subject,
+                'body' => $body,
+            ]);
+
             $sents[] = self::create([
                 'name' => "To {$email}",
                 'email_to' => $email,
-                'subject' => call_user_func($bladeCompile, $data['subject'], $params),
-                'body' => call_user_func($bladeCompile, $data['body'], $params),
-                'send_attempt' => 0,
+                'subject' => $subject,
+                'body' => $body,
+                'send_attempt' => 1,
                 'send_group' => $send_group,
-                'sent' => 0,
+                'sent' => $sent,
                 'read' => 0,
             ]);
         }

@@ -102,7 +102,7 @@ class AppUser extends Authenticatable implements JWTSubject
                 if (!$user->remember_token) {
                     $user->remember_token = uniqid();
                     $user->save();
-                    AppMail::send($user->email, 'app-user-password-recover', [
+                    AppMail::sendTemplate($user->email, 'app-user-password-recover', [
                         'user' => $user,
                     ]);
                 }
