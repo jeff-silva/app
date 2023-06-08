@@ -68,4 +68,27 @@ class AppMailTemplate extends Model
             return $model;
         }, glob(resource_path('/emails/*.php')));
     }
+
+    public function test($data)
+    {
+        $data = array_merge([
+            'slug' => '',
+            'subject' => '',
+            'body' => '',
+        ], $data);
+
+        if ($template = self::getTemplateData($data['slug']) AND is_callable($template['test'])) {
+            $header = config('mail.header');
+            $footer = config('mail.footer');
+
+            $data['subject'] = str_replace('-&gt;', '->', $data['subject']);
+            $data['body'] = str_replace('-&gt;', '->', $data['body']);
+            
+            $params = call_user_func($template['test']);
+            $data['subject'] = \Blade::render($data['subject'], $params);
+            $data['body'] = $header . \Blade::render($data['body'], $params) . $footer;
+        }
+        
+        return $data;
+    }
 }

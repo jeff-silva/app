@@ -35,7 +35,12 @@ class AppMail extends Model
             'body' => '',
         ], $data);
 
-        return !!Mail::raw($data->body, function(Message $message) use ($data) {
+        $header = config('mail.header');
+        $footer = config('mail.footer');
+
+        $data->body = $header . $data->body . $footer;
+
+        return !!Mail::html($data->body, function(Message $message) use ($data) {
             $message->to($data->email)->subject($data->subject);
         });
     }

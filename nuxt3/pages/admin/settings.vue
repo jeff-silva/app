@@ -274,8 +274,8 @@
     method: 'post',
     data: {
       email: '',
-      subject: '',
-      body: '',
+      subject: 'Hello John Doe',
+      body: `This is a test e-mail. <br />Our website configuration is working fine!`,
     },
   });
 </script>

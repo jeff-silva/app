@@ -16,4 +16,10 @@
   'vars' => [
     '{{ $user->getRememberToken() }}'
   ],
+
+  'test' => function() {
+    return [
+      'user' => \App\Models\AppUser::find(1),
+    ];
+  },
 ];

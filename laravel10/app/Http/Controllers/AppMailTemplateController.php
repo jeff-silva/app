@@ -14,8 +14,8 @@ class AppMailTemplateController extends Controller
         $this->route(['post'], '/app_mail_template/test', 'test')->name('app_mail_template.test');
     }
 
-    public function test()
+    public function test(Request $request)
     {
-        // 
+        return $this->model->test($request->all());
     }
 }

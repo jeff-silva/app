@@ -11,4 +11,10 @@
   'params' => [
     'user' => \App\Models\AppUser::class,
   ],
+
+  'test' => function() {
+    return [
+      'user' => \App\Models\AppUser::find(1),
+    ];
+  },
 ];

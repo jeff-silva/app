@@ -7,6 +7,7 @@ import useValidate from '@/composables/useValidate';
 export default (params={}) => {
   params = _.merge({
     autoSubmit: false,
+    onBeforeRequest: () => {},
     onSuccess: () => {},
     onError: () => {},
     url: false,
@@ -14,6 +15,11 @@ export default (params={}) => {
     params: {},
     data: {},
   }, params);
+
+  const _call = (data) => {
+    if (typeof data=='function') return data.call(this);
+    return data;
+  };
 
   let axiosParams = {
     url: false,
@@ -28,8 +34,8 @@ export default (params={}) => {
 
   const r = ref({
     loading: false,
-    params: axiosParams.params,
-    data: axiosParams.data,
+    params: _call(axiosParams.params),
+    data: _call(axiosParams.data),
     error: useValidate(),
     success: false,
     async submit() {
@@ -43,8 +49,9 @@ export default (params={}) => {
       this.error.clear();
       this.loading = setTimeout(async () => {
         try {
-          axiosParams.params = this.params;
-          axiosParams.data = this.data;
+          axiosParams.params = _call(this.params);
+          axiosParams.data = _call(this.data);
+          params.onBeforeRequest(axiosParams);
           const { data } = await axios(axiosParams);
           params.onSuccess({ data });
           this.success = data;
