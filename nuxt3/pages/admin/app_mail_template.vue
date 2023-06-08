@@ -27,7 +27,7 @@
             </v-col>
             <v-col cols="12">
               <app-html
-                v-model="bind.edit.data.content"
+                v-model="bind.edit.data.body"
               />
             </v-col>
             <v-col cols="12">
@@ -44,6 +44,6 @@
 
 <script setup>
   const editAddVar = (bind, strvar) => {
-    bind.edit.data.content += strvar;
+    bind.edit.data.body += strvar;
   };
 </script>

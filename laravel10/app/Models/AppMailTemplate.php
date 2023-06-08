@@ -17,7 +17,7 @@ class AppMailTemplate extends Model
         'slug',
         'name',
         'subject',
-        'content',
+        'body',
     ];
 
     protected $appends = [
@@ -51,7 +51,7 @@ class AppMailTemplate extends Model
             'slug' => $slug,
             'name' => '',
             'subject' => '',
-            'content' => '',
+            'body' => '',
             'vars' => [],
             'test' => false,
         ], $data);
@@ -63,6 +63,7 @@ class AppMailTemplate extends Model
             $data = self::getTemplateData(pathinfo($file, PATHINFO_FILENAME));
             $model = self::firstOrNew([ 'slug' => $data['slug'] ], $data);
             $model->name = $data['name'];
+            $model->body = $model->body ? $model->body : $data['body'];
             $model->save();
             return $model;
         }, glob(resource_path('/emails/*.php')));

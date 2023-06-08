@@ -37,6 +37,7 @@
         v-if="editor.html"
         :hide-details="true"
         class="border"
+        :label="props.label"
       >
         <div class="w-100">
           <div
@@ -77,6 +78,10 @@
     modelValue: {
       type: [ String ],
       default: '',
+    },
+    label: {
+      type: String,
+      value: '',
     },
   });
 

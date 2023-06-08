@@ -54,17 +54,26 @@ class AppInstall extends Command
 
     public function migrate()
     {
-        // $this->query('DROP TABLE `app_user`;');
-
         $database_schema = config('database_schema');
         $tables = $this->query('SHOW TABLE STATUS', 'Name');
         $foreign_keys_sqls = [];
+        
+        // Delete tables that is not in settings
+        $tables_delete = array_values(array_diff(array_keys($tables), array_keys($database_schema['tables'])));
+        foreach($tables_delete as $table_delete) {
+            $this->query("DROP TABLE `{$table_delete}`;");
+        }
 
         foreach($database_schema['tables'] as $table_name => $table_data) {
 
             // Table exists
             if (isset($tables[ $table_name ])) {
                 $table_fields = $this->query("SHOW COLUMNS FROM {$table_name}", 'Field');
+                
+                $table_fields_delete = array_values(array_diff(array_keys($table_fields), array_keys($table_data['fields'])));
+                foreach($table_fields_delete as $table_field_delete) {
+                    $this->query("ALTER TABLE `{$table_name}` DROP COLUMN `{$table_field_delete}`;");
+                }
                 
                 if (isset($table_data['fields']) AND is_array($table_data['fields'])) {
                     $field_name_last = false;

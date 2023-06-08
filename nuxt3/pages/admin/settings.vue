@@ -76,6 +76,8 @@
               />
             </div>
           </div>
+
+          <v-divider class="mb-6" />
     
           <div class="admin-settings-form-row">
             <div class="admin-settings-form-row-label">
@@ -131,10 +133,10 @@
             <div class="admin-settings-form-row-field">
               <v-btn
                 class="flex-grow-1"
-                @click="modal.header=true"
+                @click="modal.emailHeader=true"
               >Header</v-btn>
 
-              <v-dialog v-model="modal.header">
+              <v-dialog v-model="modal.emailHeader">
                 <v-card width="600" class="mx-auto" style="max-width:90vw;">
                   <v-card-title>Header</v-card-title>
                   <v-divider />
@@ -145,7 +147,7 @@
                     <v-spacer />
                     <v-btn
                       color="primary"
-                      @click="modal.header=false"
+                      @click="modal.emailHeader=false"
                     >Ok</v-btn>
                   </v-card-actions>
                 </v-card>
@@ -153,10 +155,10 @@
 
               <v-btn
                 class="flex-grow-1"
-                @click="modal.footer=true"
+                @click="modal.emailFooter=true"
               >Footer</v-btn>
 
-              <v-dialog v-model="modal.footer">
+              <v-dialog v-model="modal.emailFooter">
                 <v-card width="600" class="mx-auto" style="max-width:90vw;">
                   <v-card-title>Footer</v-card-title>
                   <v-divider />
@@ -167,8 +169,53 @@
                     <v-spacer />
                     <v-btn
                       color="primary"
-                      @click="modal.footer=false"
+                      @click="modal.emailFooter=false"
                     >Ok</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </div>
+          </div>
+
+          <div class="admin-settings-form-row">
+            <div class="admin-settings-form-row-label">
+              E-mail test
+            </div>
+            <div class="admin-settings-form-row-field">
+              <v-btn class="w-100" @click="modal.emailTest=true">Show test</v-btn>
+
+              <v-dialog v-model="modal.emailTest">
+                <v-card width="600" class="mx-auto" style="max-width:90vh;">
+                  <v-card-title>Test</v-card-title>
+                  <v-divider />
+                  <v-card-text>
+                    <v-text-field
+                      v-model="emailTest.data.email"
+                      v-bind="{
+                        label: 'To email',
+                      }"
+                    />
+                    <v-text-field
+                      v-model="emailTest.data.subject"
+                      v-bind="{
+                        label: 'Subject',
+                      }"
+                    />
+                    <app-html
+                      v-model="emailTest.data.body"
+                      v-bind="{
+                        label: 'Message',
+                      }"
+                    />
+
+                    <!-- <pre>{{ emailTest }}</pre> -->
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                      :loading="emailTest.loading"
+                      @click="emailTest.submit()"
+                    >Test</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -193,9 +240,6 @@
 
 <script setup>
   import { ref } from 'vue';
-  import { useDisplay } from 'vuetify';
-  
-  const d = useDisplay();
 
   const settings = useAxios({
     url: 'api://app_settings',
@@ -207,17 +251,26 @@
   });
 
   const modal = ref({
-    header: false,
-    footer: false,
+    emailHeader: false,
+    emailFooter: false,
+    emailTest: false,
   });
-  
-  const log = console.log;
 
   const save = useAxios({
     url: 'api://app_settings',
     method: 'post',
     onSuccess: ({ data }) => {
       save.value.data = data.settings;
+    },
+  });
+  
+  const emailTest = useAxios({
+    url: 'api://app_mail/test',
+    method: 'post',
+    data: {
+      email: '',
+      subject: '',
+      body: '',
     },
   });
 </script>

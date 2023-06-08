@@ -2,7 +2,7 @@
   'name' => 'Password recover',
   'subject' => 'Password recovery request',
 
-  'content' => join("\n", [
+  'body' => join("\n", [
     'Hello {{ $user->name }}.<br>',
     'A password change has been requested for your account. <br>',
     'If it wasn\'t you, please ignore this email. <br>',
