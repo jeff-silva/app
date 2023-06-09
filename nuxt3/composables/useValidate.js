@@ -1,6 +1,3 @@
-import validate from 'validate.js';
-// import { watch } from 'vue';
-
 export default (inputs, rules=[]) => {
 
   const validationRules = {
