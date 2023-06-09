@@ -1,31 +1,50 @@
 import validate from 'validate.js';
 // import { watch } from 'vue';
 
-export default (inputs, constraints) => {
+export default (inputs, rules=[]) => {
 
-  const _log = (data) => {
-    console.clear(); console.log(JSON.stringify(data, null, 2));
+  const validationRules = {
+    required(params) {
+      if (!!params.value) return;
+      return `${params.field} is required`;
+    },
+    email(params) {
+      if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(params.value||'')) return;
+      return 'Invalid email';
+    },
+    min(params, number) {
+      if (params.value >= number) return;
+      return `${params.field} lower than ${number}`;
+    },
+    max(params, number) {
+      if (params.value <= number) return;
+      return `${params.field} greather than ${number}`;
+    },
   };
 
-  let errorsRaw = validate(inputs.value, constraints) || {};
+  let errorsRaw = {};
 
-  return ref({
+  const r = ref({
     message: '',
     errors: {},
-    constraints,
+    rules,
     inputs,
     errorsRaw,
     get(field) {
       return this.errors[field] || false;
     },
-    bind(field, fieldConstraint=null) {
+    bind(field, fieldRules=null) {
 
-      if (fieldConstraint && typeof fieldConstraint=='object' && !Array.isArray(fieldConstraint)) {
-        constraints[field] = fieldConstraint;
+      if (Array.isArray(fieldRules)) {
+        rules[field] = rules[field] || [];
+        fieldRules.map((fieldRule) => {
+          rules[field].push(fieldRule);
+          rules[field] = [...new Set(rules[field])];
+        });
       }
 
       const elemHandler = (ev) => {
-        errorsRaw = validate(inputs.value, constraints) || {};
+        errorsRaw = this.validateData(inputs.value);
         this.errors[field] = errorsRaw[field] || [];
       };
 
@@ -37,9 +56,30 @@ export default (inputs, constraints) => {
         onBlur: elemHandler,
       };
     },
+    validateData(values={}) {
+      const _forceNumber = (n) => isNaN(n) ? n : parseFloat(n);
+      let error = {};
+      Object.entries(rules).map(([ field, validRules ]) => {
+        error[field] = error[field] || [];
+        validRules.map((validRule) => {
+          const value = _forceNumber(values[field] || '') || '';
+          let [ methodName, methodParams='' ] = validRule.split(':');
+          if (typeof validationRules[methodName] != 'function') return;
+          methodParams = (methodParams||'').split(',').filter(v => !!v);
+          methodParams.unshift({ value, field, values });
+          methodParams = methodParams.map(_forceNumber);
+          const errorMsg = validationRules[methodName].apply(this, methodParams) || false;
+          error[field].push(errorMsg);
+        });
+        error[field] = error[field].filter(v => !!v);
+      });
+      return error;
+    },
     setData(data) {
+      console.log(data);
       this.message = data.message || '';
       this.errors = data.fields || [];
+      errorsRaw = data.fields || [];
     },
     errorsList() {
       let errors = [];
@@ -53,6 +93,7 @@ export default (inputs, constraints) => {
     clear() {
       this.message = '';
       this.errors = {};
+      errorsRaw = {};
     },
     valid() {
       return !this.message && this.errorsList().length==0;
@@ -61,4 +102,7 @@ export default (inputs, constraints) => {
       return !this.valid();
     },
   });
+
+  errorsRaw = r.value.validateData(inputs.value);
+  return r;
 };

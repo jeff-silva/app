@@ -12,7 +12,7 @@
       v-model="data.email"
       v-bind="{
         label: 'Email',
-        ...valid.bind('email', { presence: { allowEmpty: false }, email: true })
+        ...valid.bind('email')
       }"
     />
 
@@ -20,12 +20,13 @@
       v-model="data.age"
       v-bind="{
         label: 'Age',
-        ...valid.bind('age', ['required', 'min:18'])
+        ...valid.bind('age', ['required', 'min:18', 'max:30'])
       }"
     />
 
-    <v-btn :active="valid.invalid()">Send</v-btn>
+    <v-btn :disabled="valid.invalid()">Send</v-btn>
 
+    <pre>valid.errorsList(): {{ valid.errorsList() }}</pre>
     <pre>valid: {{ valid.valid() }}</pre>
     <pre>data: {{ data }}</pre>
     <pre>valid: {{ valid }}</pre>
@@ -42,10 +43,7 @@
   });
 
   const valid = useValidate(data, {
-    name: {
-      presence: {
-        allowEmpty: false,
-      },
-    },
+    name: ['required'],
+    email: ['required', 'email'],
   });
 </script>
