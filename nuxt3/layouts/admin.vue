@@ -29,10 +29,11 @@
               <v-tab value="register">Register</v-tab>
               <v-tab value="password">Password</v-tab>
             </v-tabs>
-            <div class="text-center py-2" v-if="app.user && !app.user.app_user_group">
-              Sorry {{ app.user.name }}. <br>
-              You are not an admin.
-            </div>
+
+            <v-alert type="error" rounded="0" v-if="app.user && !app.user.app_user_group">
+              Sorry {{ app.user.name }}. You are not an admin.
+            </v-alert>
+
             <v-window v-model="auth.tab">
               <v-window-item value="login">
                 <v-card-text>

@@ -1,99 +1,64 @@
 import validate from 'validate.js';
-import { watch } from 'vue';
+// import { watch } from 'vue';
 
-export default (data, rules) => {
-  const validationRules = {
-    required(data) {
-      return {
-        presence: {
-          allowEmpty: false,
-          message: "is required",
-        },
-      };
-    },
-    email(data) {
-      return {
-        presence: {
-          message: "email is invalid",
-        },
-      };
-    },
-    min(data) {
-      return {
-        presence: {
-          message: "email is invalid",
-        },
-      };
-    },
-    same(data) {
-      return {
-        equality: data.params[0],
-        presence: {
-          message: "email is invalid",
-        },
-      };
-    },
+export default (inputs, constraints) => {
+
+  const _log = (data) => {
+    console.clear(); console.log(JSON.stringify(data, null, 2));
   };
 
-  const r = ref({
+  let errorsRaw = validate(inputs.value, constraints) || {};
+
+  return ref({
     message: '',
     errors: {},
-    constraints: {},
-    mergeErrors(errors={}) {
-      // this.errors = { ...this.errors, ...errors };
-    },
+    constraints,
+    inputs,
+    errorsRaw,
     get(field) {
       return this.errors[field] || false;
+    },
+    bind(field, fieldConstraint=null) {
+
+      if (fieldConstraint && typeof fieldConstraint=='object' && !Array.isArray(fieldConstraint)) {
+        constraints[field] = fieldConstraint;
+      }
+
+      const elemHandler = (ev) => {
+        errorsRaw = validate(inputs.value, constraints) || {};
+        this.errors[field] = errorsRaw[field] || [];
+      };
+
+      return {
+        errorMessages: (this.errors[field] || []),
+        onKeyup: elemHandler,
+        onKeydown: elemHandler,
+        onFocus: elemHandler,
+        onBlur: elemHandler,
+      };
     },
     setData(data) {
       this.message = data.message || '';
       this.errors = data.fields || [];
     },
-    setMessage(message) {
-      this.message = message;
-    },
-    setFields(errors) {
-      this.errors = errors;
+    errorsList() {
+      let errors = [];
+      Object.entries(errorsRaw).map(([ errorField, errorList ]) => {
+        (errorList || []).map(errorItem => {
+          errors.push(errorItem);
+        });
+      });
+      return errors;
     },
     clear() {
       this.message = '';
       this.errors = {};
     },
     valid() {
-      return 0==Object.values(this.errors).length
+      return !this.message && this.errorsList().length==0;
     },
     invalid() {
       return !this.valid();
     },
-    hasError() {
-      return !!this.message || Object.values(this.errors).length > 0;
-    },
   });
-
-  watch([ data ], ([ dataNew ]) => {
-    const attributes = { ...data };
-
-    let constraints = {};
-
-    Object.entries(rules).forEach(([ ruleField, ruleRules ]) => {
-      ruleRules.forEach((rule) => {
-        let [ ruleName, ruleParams='' ] = rule.split(':');
-        ruleParams = (ruleParams||'').split(',');
-        if (validationRules[ruleName]) {
-          constraints[ruleField] = validationRules[ruleName]({
-            rule: ruleName,
-            field: ruleField,
-            value: dataNew[ruleField]||false,
-            values: dataNew,
-            params: ruleParams,
-          });
-        }
-      });
-    });
-
-    r.value.errors = validate(attributes, constraints) || {};
-    r.value.constraints = constraints;
-  });
-
-  return r;
 };
