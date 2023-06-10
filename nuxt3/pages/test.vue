@@ -20,7 +20,25 @@
       v-model="data.age"
       v-bind="{
         label: 'Age',
-        ...valid.bind('age', ['required', 'min:18', 'max:30'])
+        ...valid.bind('age')
+      }"
+    />
+
+    <v-text-field
+      v-model="data.phone"
+      v-imask="'phone-br'"
+      v-bind="{
+        label: 'Phone',
+        ...valid.bind('phone')
+      }"
+    />
+
+    <v-text-field
+      v-model="data.creditCard"
+      v-imask="'0000 0000 0000 0000'"
+      v-bind="{
+        label: 'Credit card',
+        ...valid.bind('creditCard')
       }"
     />
 
@@ -40,10 +58,15 @@
     name: '',
     email: '',
     age: '',
+    phone: '',
+    creditCard: '',
   });
 
   const valid = useValidate(data, {
     name: ['required'],
     email: ['required', 'email'],
+    age: ['required', 'min:18', 'max:30'],
+    phone: ['required'],
+    creditCard: ['required'],
   });
 </script>

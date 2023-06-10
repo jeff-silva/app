@@ -16,6 +16,7 @@
     "@vue-leaflet/vue-leaflet": "^0.9.0",
     "@vueuse/nuxt": "^10.1.2",
     "axios": "^1.4.0",
+    "imask": "^6.6.3",
     "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
     "monaco-editor": "^0.39.0",

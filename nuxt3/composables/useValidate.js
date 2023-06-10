@@ -24,9 +24,6 @@ export default (inputs, rules=[]) => {
   const r = ref({
     message: '',
     errors: {},
-    rules,
-    inputs,
-    errorsRaw,
     get(field) {
       return this.errors[field] || false;
     },
