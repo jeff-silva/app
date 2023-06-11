@@ -1,21 +1,31 @@
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 const path = require('path');
 
-exec(
-  "docker-compose up --build --force-recreate --remove-orphans --detach",
+const dockerCompose = spawn(
+  'docker-compose',
+  [
+    'up',
+    '--build',
+    '--force-recreate',
+    '--remove-orphans',
+  ],
   {
     cwd: path.join(__dirname, '..'),
-    detached: true,
-  },
-  (error, stdout, stderr) => {
-    if (error) {
-        console.log(`error: ${error.message}`);
-        return;
-    }
-    if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        return;
-    }
-    console.log(`stdout: ${stdout}`);
   }
 );
+
+dockerCompose.stdout.on('data', (data) => {
+  console.log(`${data}`);
+});
+
+dockerCompose.stderr.on('data', (data) => {
+  console.error(`${data}`);
+});
+
+dockerCompose.on('error', (error) => {
+  console.error(`${error.message}`);
+});
+
+dockerCompose.on('close', (code) => {
+  console.log(`child process exited with code ${code}`);
+});
