@@ -31,6 +31,7 @@ class AppInstall extends Command
         $this->call('route:clear');
         $this->call('cache:clear');
         
+        // $this->call('migrate');
         $this->migrate();
         $this->call('db:seed');
 
@@ -58,11 +59,11 @@ class AppInstall extends Command
         $tables = $this->query('SHOW TABLE STATUS', 'Name');
         $foreign_keys_sqls = [];
         
-        // Delete tables that is not in settings
-        $tables_delete = array_values(array_diff(array_keys($tables), array_keys($database_schema['tables'])));
-        foreach($tables_delete as $table_delete) {
-            $this->query("DROP TABLE `{$table_delete}`;");
-        }
+        // // Delete tables that is not in settings
+        // $tables_delete = array_values(array_diff(array_keys($tables), array_keys($database_schema['tables'])));
+        // foreach($tables_delete as $table_delete) {
+        //     $this->query("DROP TABLE `{$table_delete}`;");
+        // }
 
         foreach($database_schema['tables'] as $table_name => $table_data) {
 

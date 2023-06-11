@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,5 @@ use Illuminate\Support\Facades\Route;
 // foreach(\App\Utils::cachedControllers() as $controller) {
 //     new $controller('web');
 // }
+
+WebSocketsRouter::webSocket('/test', \App\Http\Sockets\TestSocket::class);

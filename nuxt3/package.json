@@ -22,6 +22,7 @@
     "monaco-editor": "^0.39.0",
     "nuxt": "^3.5.0",
     "nuxt-monaco-editor": "^1.2.2",
+    "pusher-js": "^8.0.2",
     "vuetify": "^3.3.2"
   }
 }

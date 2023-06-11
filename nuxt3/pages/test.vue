@@ -69,4 +69,61 @@
     phone: ['required'],
     creditCard: ['required'],
   });
+
+  const createWebsocket = (url) => {
+    const socket = new WebSocket(url);
+    console.log(`Connection: ${url}`);
+
+    socket.addEventListener('open', (event) => {
+      console.log(`${url}: Conexão WebSocket aberta`);
+    });
+
+    socket.addEventListener('message', (event) => {
+      console.log(`${url}: Mensagem recebida do servidor:`, event.data);
+    });
+
+    socket.addEventListener('close', (event) => {
+      console.log(`${url} Conexão WebSocket fechada`);
+    });
+
+    socket.addEventListener('error', (event) => {
+      console.error(`${url} Erro na conexão WebSocket:`, event);
+    });
+
+    return socket;
+  };
+
+  import Pusher from 'pusher-js';
+  const conf = useRuntimeConfig();
+  console.log(JSON.stringify(conf.public, null, 2));
+
+  const pusher = new Pusher('app', {
+    cluster: conf.public.PUSHER_APP_CLUSTER,
+    wsHost: conf.public.PUSHER_HOST,
+    wsPort: conf.public.PUSHER_PORT,
+    wssPort: conf.public.PUSHER_PORT,
+    encrypted: conf.public.PUSHER_SCHEME=='https',
+    forceTLS: conf.public.PUSHER_SCHEME=='https',
+    disableStats: true,
+    enabledTransports: ['ws', 'wss'],
+    scheme: conf.public.PUSHER_SCHEME === 'https' ? 'wss' : 'ws',
+  });
+
+  const channel = pusher.subscribe('test');
+
+  channel.bind('init', (data) => {
+    console.log(data);
+  });
+
+  console.log({ pusher, channel });
+  console.log(pusher.allChannels());
+
+  // const conns = [
+  //   'ws://laravel.tes:6001',
+  //   'wss://laravel.tes:6001',
+  //   'ws://localhost:6001',
+  //   'wss://localhost:6001',
+  //   'ws://localhost:6001/test',
+  //   'wss://localhost:6001/test',
+  // ].map(host => createWebsocket(host));
 </script>

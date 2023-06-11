@@ -5,6 +5,13 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       APP_PORT: process.env.APP_PORT,
+      PUSHER_APP_ID: process.env.PUSHER_APP_ID,
+      PUSHER_APP_KEY: process.env.PUSHER_APP_KEY,
+      PUSHER_APP_SECRET: process.env.PUSHER_APP_SECRET,
+      PUSHER_HOST: process.env.PUSHER_HOST,
+      PUSHER_PORT: process.env.PUSHER_PORT,
+      PUSHER_SCHEME: process.env.PUSHER_SCHEME,
+      PUSHER_APP_CLUSTER: process.env.PUSHER_APP_CLUSTER,
     },
   },
 

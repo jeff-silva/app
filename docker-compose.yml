@@ -2,6 +2,7 @@ version: '3'
 services:
 
     nuxt3:
+        container_name: nuxt3
         image: node:18.16.0
         working_dir: /nuxt3
         command: bash -c "yarn install && yarn dev"
@@ -23,6 +24,7 @@ services:
             - APP_PORT=${APP_PORT:-80}
 
     adminer:
+        container_name: adminer
         build: ./.docker/adminer
         env_file:
             - ./.env
@@ -34,6 +36,7 @@ services:
             - sail
     
     laravel.test:
+        container_name: laravel.test
         image: sail-8.2/app
         env_file:
             - ./.env
@@ -49,6 +52,7 @@ services:
         ports:
             - '${APP_PORT:-80}:80'
             - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - '6001:6001'
         environment:
             WWWUSER: '${WWWUSER:-1000}'
             LARAVEL_SAIL: 1
@@ -68,6 +72,7 @@ services:
             - selenium
     
     mysql:
+        container_name: mysql
         image: 'mysql/mysql-server:8.0'
         env_file:
             - ./.env
@@ -96,6 +101,7 @@ services:
             timeout: 5s
     
     redis:
+        container_name: redis
         image: 'redis:alpine'
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
@@ -112,6 +118,7 @@ services:
             timeout: 5s
     
     meilisearch:
+        container_name: meilisearch
         image: 'getmeili/meilisearch:latest'
         ports:
             - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
@@ -130,6 +137,7 @@ services:
             timeout: 5s
     
     mailpit:
+        container_name: mailpit
         image: 'axllent/mailpit:latest'
         ports:
             - '${FORWARD_MAILPIT_PORT:-1025}:1025'

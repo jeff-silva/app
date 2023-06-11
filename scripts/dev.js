@@ -29,3 +29,7 @@ dockerCompose.on('error', (error) => {
 dockerCompose.on('close', (code) => {
   console.log(`child process exited with code ${code}`);
 });
+
+process.on('SIGINT', () => {
+  dockerCompose.kill('SIGINT');
+});

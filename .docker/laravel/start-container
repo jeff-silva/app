@@ -14,4 +14,6 @@ if [ $# -gt 0 ]; then
     exec gosu $WWWUSER "$@"
 else
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+    supervisorctl status >> /var/log/supervisor.log
+    tail -f /dev/null
 fi
