@@ -44,15 +44,33 @@
 
     <v-btn :disabled="valid.invalid()">Send</v-btn>
 
-    <pre>valid.errorsList(): {{ valid.errorsList() }}</pre>
-    <pre>valid: {{ valid.valid() }}</pre>
-    <pre>data: {{ data }}</pre>
-    <pre>valid: {{ valid }}</pre>
+    <!-- <pre>valid.errorsList(): {{ valid.errorsList() }}</pre> -->
+    <!-- <pre>valid: {{ valid.valid() }}</pre> -->
+    <!-- <pre>data: {{ data }}</pre> -->
+    <!-- <pre>valid: {{ valid }}</pre> -->
+
+    <v-row>
+      <v-col cols="4" v-for="(w, index) in websocket.list" :key="index">
+        <pre
+          :class="{
+            'bg-warning': w.loading,
+            'bg-error': w.status=='close',
+          }"
+        >{{ w }}</pre>
+        <v-btn
+          block
+          @click="w.send(w, { index })"
+          :loading="w.loading"
+        >Send</v-btn>
+      </v-col>
+    </v-row>
+    <pre>websocket: {{ websocket }}</pre>
   </v-container>
 </template>
 
 <script setup>
   import { ref } from 'vue';
+  const conf = useRuntimeConfig();
 
   const data = ref({
     name: '',
@@ -93,30 +111,81 @@
     return socket;
   };
 
-  import Pusher from 'pusher-js';
-  const conf = useRuntimeConfig();
-  console.log(JSON.stringify(conf.public, null, 2));
 
-  const pusher = new Pusher('app', {
-    cluster: conf.public.PUSHER_APP_CLUSTER,
-    wsHost: conf.public.PUSHER_HOST,
-    wsPort: conf.public.PUSHER_PORT,
-    wssPort: conf.public.PUSHER_PORT,
-    encrypted: conf.public.PUSHER_SCHEME=='https',
-    forceTLS: conf.public.PUSHER_SCHEME=='https',
-    disableStats: true,
-    enabledTransports: ['ws', 'wss'],
-    scheme: conf.public.PUSHER_SCHEME === 'https' ? 'wss' : 'ws',
+  // import Pusher from 'pusher-js';
+  // console.log(JSON.stringify(conf.public, null, 2));
+
+  // const pusher = new Pusher('app', {
+  //   cluster: conf.public.PUSHER_APP_CLUSTER,
+  //   wsHost: conf.public.PUSHER_HOST,
+  //   wsPort: conf.public.PUSHER_PORT,
+  //   wssPort: conf.public.PUSHER_PORT,
+  //   encrypted: conf.public.PUSHER_SCHEME=='https',
+  //   forceTLS: conf.public.PUSHER_SCHEME=='https',
+  //   disableStats: true,
+  //   enabledTransports: ['ws', 'wss'],
+  //   scheme: conf.public.PUSHER_SCHEME === 'https' ? 'wss' : 'ws',
+  // });
+
+  // const channel = pusher.subscribe('test');
+
+  // channel.bind('init', (data) => {
+  //   console.log(data);
+  // });
+
+  // console.log({ pusher, channel });
+  // console.log(pusher.allChannels());
+
+  const websocket = ref({
+    list: [
+      `ws://0.0.0.0:${conf.public.WEBSOCKET_PORT}`,
+      `wss://0.0.0.0:${conf.public.WEBSOCKET_PORT}`,
+      `ws://127.0.0.1:${conf.public.WEBSOCKET_PORT}`,
+      `wss://127.0.0.1:${conf.public.WEBSOCKET_PORT}`,
+      `ws://localhost:${conf.public.WEBSOCKET_PORT}`,
+      `wss://localhost:${conf.public.WEBSOCKET_PORT}`,
+      `ws://laravel.test:${conf.public.WEBSOCKET_PORT}`,
+      `wss://laravel.test:${conf.public.WEBSOCKET_PORT}`,
+    ].map(url => {
+      return {
+        open: false,
+        loading: false,
+        status: false,
+        url,
+        ws: false,
+        send: (self, data) => {
+          console.log({ self, data });
+        },
+      };
+    }),
+    loadAll() {
+      this.list.map((item) => {
+        item.ws = new WebSocket(item.url);
+        item.loading = true;
+        item.ws.addEventListener("open", (event) => {
+          item.loading = false;
+          item.status = 'open';
+        });
+
+        item.ws.addEventListener("message", (event) => {
+          item.loading = false;
+          console.log("Message from server ", event.data);
+        });
+
+        item.ws.addEventListener("error", (event) => {
+          item.loading = false;
+          item.status = 'error';
+        });
+
+        item.ws.addEventListener("close", (event) => {
+          item.loading = false;
+          item.status = 'close';
+        });
+      });
+    },
   });
 
-  const channel = pusher.subscribe('test');
-
-  channel.bind('init', (data) => {
-    console.log(data);
-  });
-
-  console.log({ pusher, channel });
-  console.log(pusher.allChannels());
+  websocket.value.loadAll();
 
   // const conns = [
   //   'ws://laravel.tes:6001',

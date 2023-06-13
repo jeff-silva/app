@@ -12,6 +12,7 @@ export default defineNuxtConfig({
       PUSHER_PORT: process.env.PUSHER_PORT,
       PUSHER_SCHEME: process.env.PUSHER_SCHEME,
       PUSHER_APP_CLUSTER: process.env.PUSHER_APP_CLUSTER,
+      WEBSOCKET_PORT: process.env.WEBSOCKET_PORT,
     },
   },
 

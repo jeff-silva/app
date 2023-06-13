@@ -30,6 +30,7 @@ dockerCompose.on('close', (code) => {
   console.log(`child process exited with code ${code}`);
 });
 
-process.on('SIGINT', () => {
-  dockerCompose.kill('SIGINT');
+process.on('SIGINT', async () => {
+  await dockerCompose.kill('SIGINT');
+  // process.exit();
 });
