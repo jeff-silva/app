@@ -17,5 +17,3 @@ use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 // foreach(\App\Utils::cachedControllers() as $controller) {
 //     new $controller('web');
 // }
-
-WebSocketsRouter::webSocket('/test', \App\Http\Sockets\TestSocket::class);
