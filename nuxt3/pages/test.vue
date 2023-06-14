@@ -43,6 +43,7 @@
     />
 
     <v-btn :disabled="valid.invalid()">Send</v-btn>
+    <br><br>
 
     <!-- <pre>valid.errorsList(): {{ valid.errorsList() }}</pre> -->
     <!-- <pre>valid: {{ valid.valid() }}</pre> -->
@@ -52,6 +53,8 @@
     <v-row>
       <v-col cols="4" v-for="(w, index) in websocket.list" :key="index">
         <pre
+          style="font-size:14px;"
+          class="pa-3"
           :class="{
             'bg-warning': w.loading,
             'bg-error': w.status=='close',
@@ -69,7 +72,7 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue';
+  import { ref, onMounted } from 'vue';
   const conf = useRuntimeConfig();
 
   const data = ref({
@@ -138,6 +141,7 @@
 
   const websocket = ref({
     list: [
+      // `http://127.0.0.1:${conf.public.WEBSOCKET_PORT}`,
       `ws://0.0.0.0:${conf.public.WEBSOCKET_PORT}`,
       `wss://0.0.0.0:${conf.public.WEBSOCKET_PORT}`,
       `ws://127.0.0.1:${conf.public.WEBSOCKET_PORT}`,
@@ -146,6 +150,7 @@
       `wss://localhost:${conf.public.WEBSOCKET_PORT}`,
       `ws://laravel.test:${conf.public.WEBSOCKET_PORT}`,
       `wss://laravel.test:${conf.public.WEBSOCKET_PORT}`,
+      // 'wss://stream.binance.com:9443/ws/!miniTicker@arr',
     ].map(url => {
       return {
         open: false,
@@ -153,6 +158,7 @@
         status: false,
         url,
         ws: false,
+        data: false,
         send: (self, data) => {
           console.log({ self, data });
         },
@@ -160,32 +166,41 @@
     }),
     loadAll() {
       this.list.map((item) => {
-        item.ws = new WebSocket(item.url);
         item.loading = true;
-        item.ws.addEventListener("open", (event) => {
+        const ws = new WebSocket(item.url);
+        ws.addEventListener("open", (event) => {
           item.loading = false;
           item.status = 'open';
         });
 
-        item.ws.addEventListener("message", (event) => {
+        ws.addEventListener("message", (event) => {
           item.loading = false;
-          console.log("Message from server ", event.data);
+          item.data = JSON.parse(event.data);
+          // console.log("Message from server ", event.data);
         });
 
-        item.ws.addEventListener("error", (event) => {
+        ws.addEventListener("error", (event) => {
           item.loading = false;
           item.status = 'error';
         });
 
-        item.ws.addEventListener("close", (event) => {
+        ws.addEventListener("close", (event) => {
           item.loading = false;
           item.status = 'close';
         });
+
+        item.ws = ws;
+        console.log(ws);
       });
     },
   });
 
-  websocket.value.loadAll();
+  onMounted(() => {
+    setTimeout(() => {
+      websocket.value.loadAll();
+    }, 1000);
+  });
+
 
   // const conns = [
   //   'ws://laravel.tes:6001',

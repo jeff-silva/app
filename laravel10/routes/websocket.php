@@ -13,12 +13,18 @@ use SwooleTW\Http\Websocket\Facades\Websocket;
 |
 */
 
+Websocket::on('open', function ($websocket, $request) {
+    Log::info('open' . $websocket->getSender());
+});
+
 Websocket::on('connect', function ($websocket, Request $request) {
     // called while socket on connect
+    Log::info('connect' . $websocket->getSender());
 });
 
 Websocket::on('disconnect', function ($websocket) {
     // called while socket on disconnect
+    Log::info('disconnect' . $websocket->getSender());
 });
 
 Websocket::on('example', function ($websocket, $data) {

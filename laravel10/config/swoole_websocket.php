@@ -41,7 +41,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'handshake' => [
-        'enabled' => false,
+        'enabled' => true,
         'handler' => SwooleTW\Http\Websocket\HandShakeHandler::class,
     ],
 
