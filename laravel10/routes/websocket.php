@@ -14,13 +14,21 @@ use SwooleTW\Http\Websocket\Facades\Websocket;
 */
 
 Websocket::on('connect', function ($websocket, Request $request) {
-    // called while socket on connect
+    $websocket->emit('message', 'welcome');
+    dump('connect', $websocket, $request);
 });
 
 Websocket::on('disconnect', function ($websocket) {
     // called while socket on disconnect
+    dump('disconnect', $websocket);
+});
+
+Websocket::on('message', function ($websocket, $data) {
+    $websocket->emit('message', $data);
+    dump('message', $websocket, $data);
 });
 
 Websocket::on('example', function ($websocket, $data) {
     $websocket->emit('message', $data);
+    dump('example', $websocket, $data);
 });
