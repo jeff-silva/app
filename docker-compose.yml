@@ -58,11 +58,6 @@ services:
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
         volumes:
             - './laravel10:/var/www/html'
-        cap_add:
-            - NET_ADMIN
-        security_opt:
-            - "apparmor=unconfined"
-            - "no-new-privileges:true"
         networks:
             - sail
         depends_on:
