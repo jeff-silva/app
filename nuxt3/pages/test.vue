@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-text-field
+    <!-- <v-text-field
       v-model="data.name"
       v-bind="{
         label: 'Name',
@@ -43,20 +43,21 @@
     />
 
     <v-btn :disabled="valid.invalid()">Send</v-btn>
-    <br><br>
+    <br><br> -->
 
     <!-- <pre>valid.errorsList(): {{ valid.errorsList() }}</pre> -->
     <!-- <pre>valid: {{ valid.valid() }}</pre> -->
     <!-- <pre>data: {{ data }}</pre> -->
     <!-- <pre>valid: {{ valid }}</pre> -->
 
-    <v-row>
+    <!-- <v-row>
       <v-col cols="4" v-for="(w, index) in websocket.list" :key="index">
         <pre
           style="font-size:14px;"
           class="pa-3"
           :class="{
             'bg-warning': w.loading,
+            'bg-success': w.status=='open',
             'bg-error': w.status=='close',
           }"
         >{{ w }}</pre>
@@ -67,7 +68,27 @@
         >Send</v-btn>
       </v-col>
     </v-row>
-    <pre>websocket: {{ websocket }}</pre>
+    <pre>websocket: {{ websocket }}</pre> -->
+
+    <v-row>
+      <v-col
+        v-for="(c, index) in connects"
+        cols="6"
+        md="4"
+      >
+        <v-btn
+          v-bind="{
+            block: true,
+            onClick: (ev) => {
+              c.value.send('client-test', { index });
+            },
+          }"
+        >Send</v-btn>
+        <!-- <pre>{{ c }}</pre> -->
+      </v-col>
+    </v-row>
+
+    <!-- <pre>connects: {{ connects }}</pre> -->
   </v-container>
 </template>
 
@@ -139,67 +160,157 @@
   // console.log({ pusher, channel });
   // console.log(pusher.allChannels());
 
-  const websocket = ref({
-    list: [
-      // `http://127.0.0.1:${conf.public.WEBSOCKET_PORT}`,
-      `ws://0.0.0.0:${conf.public.WEBSOCKET_PORT}`,
-      `wss://0.0.0.0:${conf.public.WEBSOCKET_PORT}`,
-      `ws://127.0.0.1:${conf.public.WEBSOCKET_PORT}`,
-      `wss://127.0.0.1:${conf.public.WEBSOCKET_PORT}`,
-      `ws://localhost:${conf.public.WEBSOCKET_PORT}`,
-      `wss://localhost:${conf.public.WEBSOCKET_PORT}`,
-      `ws://laravel.test:${conf.public.WEBSOCKET_PORT}`,
-      `wss://laravel.test:${conf.public.WEBSOCKET_PORT}`,
-      // 'wss://stream.binance.com:9443/ws/!miniTicker@arr',
-    ].map(url => {
-      return {
-        open: false,
-        loading: false,
-        status: false,
-        url,
-        ws: false,
-        data: false,
-        send: (self, data) => {
-          console.log({ self, data });
-        },
-      };
+  
+  import Pusher from 'pusher-js';
+  import _ from 'lodash';
+
+  const useWebsocket = (params={}) => {
+
+    params = _.merge({
+      channel: false,
+    }, params);
+
+    const r = ref({
+      status: false,
+      channel: false,
+      params,
+
+      init() {
+        if (!params.channel) return;
+
+        const pusher = new Pusher('app', {
+          cluster: conf.public.PUSHER_APP_CLUSTER,
+          // wsHost: conf.public.PUSHER_HOST,
+          wsHost: 'localhost',
+          wsPort: conf.public.PUSHER_PORT,
+          wssPort: conf.public.PUSHER_PORT,
+          encrypted: conf.public.PUSHER_SCHEME=='https',
+          forceTLS: conf.public.PUSHER_SCHEME=='https',
+          disableStats: true,
+          enabledTransports: ['ws', 'wss'],
+          scheme: conf.public.PUSHER_SCHEME === 'https' ? 'wss' : 'ws',
+        });
+
+        this.channel = pusher.subscribe(params.channel);
+
+        this.channel.bind('init', (data) => {
+          console.log(data);
+        });
+
+        console.log(pusher.allChannels());
+
+        return channels[channelName].map(fn => fn(message));
+
+
+        // const ws = new WebSocket(`ws://localhost:${conf.public.WEBSOCKET_PORT}`);
+
+        // ws.addEventListener("open", (event) => {
+        //   this.status = 'open';
+        // });
+
+        // ws.addEventListener("message", (event) => {
+        //   // this.data = JSON.parse(event.data);
+        //   console.log("Message from server ", event.data);
+        // });
+
+        // ws.addEventListener("error", (event) => {
+        //   this.status = 'error';
+        // });
+
+        // ws.addEventListener("close", (event) => {
+        //   this.status = 'close';
+        // });
+
+        // this.ws = ws;
+      },
+
+      send(event, data={}) {
+        // this.ws.send(JSON.stringify(data));
+        const t = this.channel.trigger(event, data);
+        console.log(t);
+      }
+    });
+
+    r.value.init();
+    return r;
+  };
+
+  const connects = ref([
+    useWebsocket({
+      channel: 'aaa',
     }),
-    loadAll() {
-      this.list.map((item) => {
-        item.loading = true;
-        const ws = new WebSocket(item.url);
-        ws.addEventListener("open", (event) => {
-          item.loading = false;
-          item.status = 'open';
-        });
+    useWebsocket({
+      channel: 'aaa',
+    }),
+    useWebsocket({
+      channel: 'aaa',
+    }),
+    useWebsocket({
+      channel: 'aaa',
+    }),
+  ]);
 
-        ws.addEventListener("message", (event) => {
-          item.loading = false;
-          item.data = JSON.parse(event.data);
-          // console.log("Message from server ", event.data);
-        });
+  // const websocket = ref({
+  //   list: [
+  //     // `http://127.0.0.1:${conf.public.WEBSOCKET_PORT}`,
+  //     `ws://0.0.0.0:${conf.public.WEBSOCKET_PORT}`,
+  //     `wss://0.0.0.0:${conf.public.WEBSOCKET_PORT}`,
+  //     `ws://127.0.0.1:${conf.public.WEBSOCKET_PORT}`,
+  //     `wss://127.0.0.1:${conf.public.WEBSOCKET_PORT}`,
+  //     `ws://localhost:${conf.public.WEBSOCKET_PORT}`,
+  //     `wss://localhost:${conf.public.WEBSOCKET_PORT}`,
+  //     `ws://laravel.test:${conf.public.WEBSOCKET_PORT}`,
+  //     `wss://laravel.test:${conf.public.WEBSOCKET_PORT}`,
+  //     // 'wss://stream.binance.com:9443/ws/!miniTicker@arr',
+  //   ].map(url => {
+  //     return {
+  //       open: false,
+  //       loading: false,
+  //       status: false,
+  //       url,
+  //       ws: false,
+  //       data: false,
+  //       send: (self, data) => {
+  //         self.ws.send(JSON.stringify(data));
+  //       },
+  //     };
+  //   }),
+  //   loadAll() {
+  //     this.list.map((item) => {
+  //       item.loading = true;
+  //       const ws = new WebSocket(item.url);
+  //       ws.addEventListener("open", (event) => {
+  //         item.loading = false;
+  //         item.status = 'open';
+  //       });
 
-        ws.addEventListener("error", (event) => {
-          item.loading = false;
-          item.status = 'error';
-        });
+  //       ws.addEventListener("message", (event) => {
+  //         item.loading = false;
+  //         // item.data = JSON.parse(event.data);
+  //         console.log("Message from server ", event.data);
+  //       });
 
-        ws.addEventListener("close", (event) => {
-          item.loading = false;
-          item.status = 'close';
-        });
+  //       ws.addEventListener("error", (event) => {
+  //         item.loading = false;
+  //         item.status = 'error';
+  //       });
 
-        item.ws = ws;
-        console.log(ws);
-      });
-    },
-  });
+  //       ws.addEventListener("close", (event) => {
+  //         item.loading = false;
+  //         item.status = 'close';
+  //       });
 
-  onMounted(() => {
-    setTimeout(() => {
-      websocket.value.loadAll();
-    }, 1000);
-  });
+  //       item.ws = ws;
+  //       console.log(ws);
+  //     });
+  //   },
+  // });
+
+  // onMounted(() => {
+  //   setTimeout(() => {
+  //     websocket.value.loadAll();
+  //   }, 1000);
+  // });
 
 
   // const conns = [
