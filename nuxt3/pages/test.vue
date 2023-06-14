@@ -115,29 +115,33 @@
   };
 
 
-  // import Pusher from 'pusher-js';
-  // console.log(JSON.stringify(conf.public, null, 2));
+  
 
-  // const pusher = new Pusher('app', {
-  //   cluster: conf.public.PUSHER_APP_CLUSTER,
-  //   wsHost: conf.public.PUSHER_HOST,
-  //   wsPort: conf.public.PUSHER_PORT,
-  //   wssPort: conf.public.PUSHER_PORT,
-  //   encrypted: conf.public.PUSHER_SCHEME=='https',
-  //   forceTLS: conf.public.PUSHER_SCHEME=='https',
-  //   disableStats: true,
-  //   enabledTransports: ['ws', 'wss'],
-  //   scheme: conf.public.PUSHER_SCHEME === 'https' ? 'wss' : 'ws',
-  // });
+  import Pusher from 'pusher-js';
+  console.log(JSON.stringify(conf.public, null, 2));
 
-  // const channel = pusher.subscribe('test');
+  const pusher = new Pusher('app', {
+    cluster: conf.public.PUSHER_APP_CLUSTER,
+    wsHost: conf.public.PUSHER_HOST,
+    wsPort: conf.public.PUSHER_PORT,
+    wssPort: conf.public.PUSHER_PORT,
+    encrypted: conf.public.PUSHER_SCHEME=='https',
+    forceTLS: conf.public.PUSHER_SCHEME=='https',
+    disableStats: true,
+    enabledTransports: ['ws', 'wss'],
+    scheme: conf.public.PUSHER_SCHEME === 'https' ? 'wss' : 'ws',
+  });
 
-  // channel.bind('init', (data) => {
-  //   console.log(data);
-  // });
+  const channel = pusher.subscribe('test');
 
-  // console.log({ pusher, channel });
-  // console.log(pusher.allChannels());
+  channel.bind('init', (data) => {
+    console.log(data);
+  });
+
+  console.log({ pusher, channel });
+  console.log(pusher.allChannels());
+
+
 
   const websocket = ref({
     list: [
@@ -150,6 +154,8 @@
       `wss://localhost:${conf.public.WEBSOCKET_PORT}`,
       `ws://laravel.test:${conf.public.WEBSOCKET_PORT}`,
       `wss://laravel.test:${conf.public.WEBSOCKET_PORT}`,
+      `ws://soketi:${conf.public.WEBSOCKET_PORT}`,
+      `wss://soketi:${conf.public.WEBSOCKET_PORT}`,
       // 'wss://stream.binance.com:9443/ws/!miniTicker@arr',
     ].map(url => {
       return {
