@@ -55,9 +55,14 @@ class AppInstall extends Command
         return $data;
     }
 
+    public function getDatabaseSchema()
+    {
+        return include base_path('/database/schema.php');
+    }
+
     public function migrate()
     {
-        $database_schema = config('database_schema');
+        $database_schema = $this->getDatabaseSchema();
         $tables = $this->query('SHOW TABLE STATUS', 'Name');
         $foreign_keys_sqls = [];
         
