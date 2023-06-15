@@ -26,13 +26,19 @@ class AppTestCommand extends Command
      */
     public function handle()
     {
-        $data = [
-            'random' => rand(0, 9999),
-            'uniqid' => uniqid(),
-        ];
+        // $data = [
+        //     'random' => rand(0, 9999),
+        //     'uniqid' => uniqid(),
+        // ];
 
-        $evt['Event'] = event(new \App\Events\Event('test', 'test', $data));
+        // $evt['Event'] = event(new \App\Events\Event('test', 'test', $data));
         // $evt['Event'] = event(new \App\Events\Event('test', 'aaa', $data));
         // $evt['Event'] = event(new \App\Events\Event('test', 'bbb', $data));
+
+        $data = \App\Models\AppUser::search()->sendNotification([
+            'name' => 'Hello World :)',
+            'text' => 'Welcome!',
+        ]);
+        dd($data);
     }
 }

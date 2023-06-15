@@ -12,10 +12,19 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "api" middleware group. Make something great!
 |
+| This file is auto-generated.
+| DON'T WRITE ROUTES HERE.
+|
 */
 
-Route::middleware(['permission'])->group(function () {
-  foreach(\App\Utils::cachedControllers() as $controller) {
-    app($controller);
-  }
-});
+new \App\Http\Controllers\AppController();
+new \App\Http\Controllers\AppFileController();
+new \App\Http\Controllers\AppMailController();
+new \App\Http\Controllers\AppMailTemplateController();
+new \App\Http\Controllers\AppPlaceController();
+new \App\Http\Controllers\AppSettingsController();
+new \App\Http\Controllers\AppUserController();
+new \App\Http\Controllers\AppUserGroupController();
+new \App\Http\Controllers\AppUserNotificationController();
+new \App\Http\Controllers\AuthController();
+new \App\Http\Controllers\TestController();

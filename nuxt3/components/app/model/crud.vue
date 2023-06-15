@@ -212,6 +212,7 @@
         :loading="edit.saving"
         @click="edit.save()"
         class="text-primary"
+        v-if="props.canSave"
       >
         <v-icon>mdi-content-save-outline</v-icon>
         <span>Save</span>
@@ -277,6 +278,10 @@
     editParams: {
       type: Object,
       default: () => ({}),
+    },
+    canSave: {
+      type: Boolean,
+      default: true,
     },
     canCreate: {
       type: Boolean,
@@ -350,7 +355,7 @@
 
       this.loading = setTimeout(async () => {
         try {
-          const params = this.params;
+          const params = { ...props.editParams, ...this.params };
           const { data } = await axios.get(`api://${props.name}/${id}`, { params });
           this.data = data.data;
           this.options = data.options;

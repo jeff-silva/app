@@ -82,18 +82,4 @@ class Utils
     return DocBlockFactory::createInstance()->create($comment);
   }
 
-
-  static function cachedControllers()
-  {
-    return \Cache::remember('routes/api', 60*60, function () {
-      return array_filter(array_map(function($file) {
-        if ($file == app_path('/Http/Controllers/Controller.php')) return false;
-        $file = str_replace(app_path(), 'App', $file);
-        $file = str_replace('.php', '', $file);
-        $file = str_replace('/', '\\', $file);
-        return $file;
-      }, glob(app_path('/Http/Controllers/*.php'))));
-    });
-  }
-
 }

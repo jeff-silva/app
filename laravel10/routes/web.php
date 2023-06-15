@@ -13,7 +13,3 @@ use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-// foreach(\App\Utils::cachedControllers() as $controller) {
-//     new $controller('web');
-// }

@@ -7,9 +7,11 @@ use App\Models\AppMail;
 use App\Traits\ModelTrait;
 use App\Models\AppUserGroup;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\AppUserNotification;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -136,6 +138,18 @@ class AppUser extends Authenticatable implements JWTSubject
         return $this;
     }
 
+    public function scopeSendNotification($query, $data=[])
+    {
+        $return = [];
+        foreach($query->get() as $user) {
+            $data['user_id'] = $user->id;
+            $notification = new AppUserNotification($data);
+            $notification->save();
+            $return[] = $notification;
+        }
+        return $return;
+    }
+
     public function isRoot()
     {
         return $this->id==1 OR $this->group_id==1;
@@ -144,5 +158,10 @@ class AppUser extends Authenticatable implements JWTSubject
     public function appUserGroup(): HasOne
     {
         return $this->hasOne(AppUserGroup::class, 'id', 'group_id');
+    }
+
+    public function appUserNotifications(): HasMany
+    {
+        return $this->hasMany(AppUserNotification::class, 'user_id', 'id');
     }
 }

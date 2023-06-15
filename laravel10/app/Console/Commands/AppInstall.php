@@ -39,6 +39,7 @@ class AppInstall extends Command
         $this->registerSettings();
         $this->registerEmailTemplates();
         $this->clearLogFiles();
+        $this->makeApiRoutes();
 
         $this->comment('app:install finish');
     }
@@ -155,5 +156,46 @@ class AppInstall extends Command
         foreach(glob(storage_path('/logs/*.log')) as $path) {
             File::put($path, '');
         }
+    }
+
+    public function makeApiRoutes()
+    {
+        $lines = [
+            '<?php',
+            '',
+            'use Illuminate\Http\Request;',
+            'use Illuminate\Support\Facades\Route;',
+            '',
+            '/*',
+            '|--------------------------------------------------------------------------',
+            '| API Routes',
+            '|--------------------------------------------------------------------------',
+            '|',
+            '| Here is where you can register API routes for your application. These',
+            '| routes are loaded by the RouteServiceProvider and all of them will',
+            '| be assigned to the "api" middleware group. Make something great!',
+            '|',
+            '| This file is auto-generated.',
+            '| DON\'T WRITE ROUTES HERE.',
+            '|',
+            '*/',
+            '',
+        ];
+        
+        $except = [
+            base_path('/app/Http/Controllers/Controller.php'),
+        ];
+
+        foreach(\File::allFiles(base_path('/app/Http/Controllers')) as $file) {
+            if (in_array($file->getPathname(), $except)) continue;
+            $class = str_replace(base_path('/app'), '\App', $file->getPathname());
+            $class = str_replace($file->getFilename(), pathinfo($file->getPathname(), PATHINFO_FILENAME), $class);
+            $class= str_replace('/', '\\', $class);
+            $lines[] = "new {$class}();";
+        }
+
+        $lines[] = '';
+
+        \File::put(base_path('/routes/api.php'), join("\n", $lines));
     }
 }
