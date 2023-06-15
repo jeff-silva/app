@@ -8,7 +8,7 @@ export default (params={}) => {
     events: [],
   }, params);
 
-  const pusherSettings = {
+  const pusher = new Pusher(conf.public.PUSHER_APP_KEY, {
     cluster: conf.public.PUSHER_APP_CLUSTER,
     wsHost: conf.public.PUSHER_HOST,
     wsPort: conf.public.PUSHER_PORT,
@@ -18,19 +18,6 @@ export default (params={}) => {
     disableStats: true,
     enabledTransports: ['ws', 'wss'],
     scheme: conf.public.PUSHER_SCHEME === 'https' ? 'wss' : 'ws',
-  };
-
-  console.clear();
-  console.log(JSON.stringify(conf.public, null, 2));
-  console.log(JSON.stringify(pusherSettings, null, 2));
-
-  const pusher = new Pusher(conf.public.PUSHER_APP_KEY, pusherSettings);
-  const channel = pusher.subscribe('test');
-
-  ['client-test', 'test'].map(evt => {
-    channel.bind(evt, (data) => {
-      console.log(evt, data);
-    });
   });
 
   let channels = {};

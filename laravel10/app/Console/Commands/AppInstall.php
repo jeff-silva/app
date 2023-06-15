@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\AppSettings;
 use App\Models\AppMailTemplate;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
  
 class AppInstall extends Command
 {
@@ -37,6 +38,7 @@ class AppInstall extends Command
 
         $this->registerSettings();
         $this->registerEmailTemplates();
+        $this->clearLogFiles();
 
         $this->comment('app:install finish');
     }
@@ -141,5 +143,12 @@ class AppInstall extends Command
     public function registerEmailTemplates()
     {
         return AppMailTemplate::registerTemplates();
+    }
+
+    public function clearLogFiles()
+    {
+        foreach(glob(storage_path('/logs/*.log')) as $path) {
+            File::put($path, '');
+        }
     }
 }

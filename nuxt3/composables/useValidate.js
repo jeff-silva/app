@@ -97,6 +97,6 @@ export default (inputs, rules=[]) => {
     },
   });
 
-  errorsRaw = r.value.validateData(inputs.value);
+  errorsRaw = r.value.validateData(inputs ? inputs.value : {});
   return r;
 };
