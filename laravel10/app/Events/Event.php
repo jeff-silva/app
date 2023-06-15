@@ -37,10 +37,14 @@ class Event implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel($this->event);
-        // return $this->private ?
-        //     new PrivateChannel($this->channels):
-        //     new Channel($this->channels);
+        return $this->private ?
+            new PrivateChannel($this->channel):
+            new Channel($this->channel);
+    }
+    
+    public function broadcastAs()
+    {
+        return $this->channel;
     }
 
     public function broadcastWith()

@@ -30,7 +30,7 @@ class TestEvent
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('test'),
+            new Channel('test'),
         ];
     }
 }
