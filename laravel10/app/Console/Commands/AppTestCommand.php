@@ -27,17 +27,12 @@ class AppTestCommand extends Command
     public function handle()
     {
         $data = [
+            'random' => rand(0, 9999),
             'uniqid' => uniqid(),
         ];
 
-        // $evt = event(new TestEvent([
-        //     'uniqid' => uniqid(),
-        // ]));
-
-        $evt = event(new \App\Events\Event('test', 'init', $data));
-        $evt = event(new \App\Events\PusherEvent('test', 'init', $data));
-        $evt = event(new \App\Events\TestEvent());
-
-        dump($evt);
+        $evt['Event'] = event(new \App\Events\Event('test', 'test', $data));
+        // $evt['Event'] = event(new \App\Events\Event('test', 'aaa', $data));
+        // $evt['Event'] = event(new \App\Events\Event('test', 'bbb', $data));
     }
 }
