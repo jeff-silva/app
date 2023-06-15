@@ -22,11 +22,8 @@ yarn build
 ## TODO
 - ⬛ Ports in settings .env
 - ⬛ Nuxt 3
-  - ⬛ Masks
-  - ⬛ Validation
 - ⬛ Laravel
-  - ⬛ Implement crontab
-  - ⬛ PHP websocket
+  - ⬛ File garbage collector
 
 <hr />
 

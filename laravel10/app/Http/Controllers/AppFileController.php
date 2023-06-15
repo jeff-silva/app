@@ -9,7 +9,7 @@ class AppFileController extends Controller
     public function __construct()
     {
         $this->model = new \App\Models\AppFile;
-        $this->middleware('auth:api', ['except' => ['file']]);
+        $this->middleware('auth:api', ['except' => ['file', 'store']]);
         $this->apiResource('app_file');
         $this->route('get', 'file/{slug}', 'file');
     }

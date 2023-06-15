@@ -95,6 +95,7 @@ return [
         'email_verified_at' => 'TIMESTAMP NULL DEFAULT NULL',
         'password' => 'VARCHAR(255) NULL DEFAULT NULL',
         'group_id' => 'BIGINT(20) UNSIGNED NULL DEFAULT NULL',
+        'photo_id' => 'BIGINT(20) UNSIGNED NULL DEFAULT NULL',
         'remember_token' => 'VARCHAR(100) NULL DEFAULT NULL',
         'created_at' => 'TIMESTAMP NULL DEFAULT NULL',
         'updated_at' => 'TIMESTAMP NULL DEFAULT NULL',

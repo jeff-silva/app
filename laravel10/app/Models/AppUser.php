@@ -31,6 +31,7 @@ class AppUser extends Authenticatable implements JWTSubject
         'email',
         'password',
         'group_id',
+        'photo_id',
     ];
 
     /**
@@ -158,6 +159,11 @@ class AppUser extends Authenticatable implements JWTSubject
     public function appUserGroup(): HasOne
     {
         return $this->hasOne(AppUserGroup::class, 'id', 'group_id');
+    }
+
+    public function photo(): HasOne
+    {
+        return $this->hasOne(AppFile::class, 'id', 'photo_id');
     }
 
     public function appUserNotifications(): HasMany
