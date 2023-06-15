@@ -44,7 +44,7 @@ class Event implements ShouldBroadcast
     
     public function broadcastAs()
     {
-        return $this->channel;
+        return $this->event;
     }
 
     public function broadcastWith()
