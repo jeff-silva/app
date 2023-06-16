@@ -45,7 +45,6 @@
     <v-btn :disabled="valid.invalid()">Send</v-btn> -->
 
     <pre>{{ socket }}</pre>
-    <pre>{{ Object.keys(socket) }}</pre>
 
     <v-btn @click="socket.trigger('test', 'client-test', { random: Math.round(Math.random()*99999) })">
       Pusher trigger
@@ -80,14 +79,11 @@
 
   const socket = useWebsocket({
     events: [
-      ['test@test', (ev) => {
-        // console.log(ev);
+      ['app_place@created', (data) => {
+        // console.log('app_place@created', data);
       }],
-      ['test@aaa', (ev) => {
-        // console.log(ev);
-      }],
-      ['test@bbb', (ev) => {
-        // console.log(ev);
+      ['app_file@updated', (data) => {
+        alert(data.name);
       }],
     ],
   });

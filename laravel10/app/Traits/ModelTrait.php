@@ -13,8 +13,28 @@ trait ModelTrait
       $model->mutatorRetrieve();
     });
 
+    static::created(function($model) {
+      $model->mutatorRetrieve();
+      $model->emitEvent('created', $model->toArray());
+      $model->emitEvent("created_{$model->id}", $model->toArray());
+    });
+
+    static::updated(function($model) {
+      $model->mutatorRetrieve();
+      $model->emitEvent('updated', $model->toArray());
+      $model->emitEvent("updated_{$model->id}", $model->toArray());
+    });
+
     static::saved(function($model) {
         $model->mutatorRetrieve();
+        $model->emitEvent('saved', $model->toArray());
+        $model->emitEvent("saved_{$model->id}", $model->toArray());
+    });
+
+    static::deleted(function($model) {
+      $model->mutatorRetrieve();
+      $model->emitEvent('deleted', $model->toArray());
+      $model->emitEvent("deleted_{$model->id}", $model->toArray());
     });
 
     static::saving(function($model) {
@@ -336,6 +356,12 @@ trait ModelTrait
     $model->save();
     
     return $model;
+  }
+
+
+  public function emitEvent($event, $data, $private=false)
+  {
+    return event(new \App\Events\Event($this->getTable(), $event, $data, $private));
   }
 
 
