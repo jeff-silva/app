@@ -4,8 +4,6 @@ services:
     image: node:18.16.0
     working_dir: /nuxt3
     command: bash -c "yarn install && yarn dev"
-    env_file:
-      - ./.env
     ports:
       - ${NUXT_PORT:-3000}:3000
       - 24678:24678
