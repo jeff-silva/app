@@ -361,7 +361,7 @@ trait ModelTrait
 
   public function emitEvent($event, $data, $private=false)
   {
-    return event(new \App\Events\Event($this->getTable(), $event, $data, $private));
+    // return event(new \App\Events\Event($this->getTable(), $event, $data, $private));
   }
 
 
